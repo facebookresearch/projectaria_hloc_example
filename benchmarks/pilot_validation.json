@@ -1,0 +1,1700 @@
+{
+  "dataset": "Aria Gen 2 Pilot Dataset",
+  "release": "v1.0",
+  "map_camera_set": "rgb",
+  "validation_query_count": 850,
+  "summary_verification": "All raw result rows checked against gate, reference-success, accuracy and outlier counts; raw ZIP CRC checked. No inference or MPS recomputation by release integrator.",
+  "raw_results_sha256": "7d5e78635bd86960be8c5236a71d8c8e31e41e4d97eaaa074fe7cad3b8a428d0",
+  "map_package_publication": "Separate review only; no map archive or private download URL distributed in source repo.",
+  "reference_map_totals": {
+    "asset_count": 8,
+    "total_keyframes": 7420,
+    "total_landmarks": 855986,
+    "total_archive_bytes": 9484709950,
+    "native_runtime_qualification_count": 8,
+    "remote_upload_verification_count": 8
+  },
+  "conditions": {
+    "hloc_commit": "c13273bd0ecc2917a35910fd843712a1c6243193",
+    "lightglue_commit": "edb2b838efb2ecfe3f88097c5fad9887d95aedad",
+    "torch": "2.6.0",
+    "torchvision": "0.21.0",
+    "projectaria_tools": "2.3.0",
+    "pycolmap": "4.2.1",
+    "numpy": "2.2.6",
+    "batch_opencv_distribution": "opencv-python-headless 4.11",
+    "batch_producer": "Linux x86_64 CPU, Python 3.12, three parallel jobs/eight CPU threads per job; container shared memory required zero DataLoader workers",
+    "original_play_rgb_producer": "M4 Max CPU / Python 3.12.12; complete outputs and ended process verified, original CLI exit not observed",
+    "play_slam_supplement": "Linux CPU single supplementary qualification job; no validation map rebuild",
+    "query_timing": "Includes repeated model initialization; environments differ, not warm-service latency or controlled hardware comparison"
+  },
+  "limitations": [
+    "Gate acceptance is not accuracy or safety assurance",
+    "MPS joint reference is not independent physical ground truth",
+    "No cross-day or unseen-location claim",
+    "Full-reference maps are separate from validation maps",
+    "Single-recording time splits must not be averaged with cross-device scores",
+    "Digital-twin quality/export checks are separate from these localization measurements"
+  ],
+  "groups": [
+    {
+      "asset_id": "cook_0",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "cook_0"
+        ],
+        "testing_public_sequence_uid": "cook_0",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.006582741474400471,
+            "p90": 0.015940155868636535,
+            "max": 0.04252998082842069
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.3871605539986964,
+            "p90": 0.7483342145392093,
+            "max": 1.5951685173597376
+          },
+          "query_duration_sec": {
+            "median": 11.788092055008747,
+            "p90": 12.986442329455167,
+            "max": 13.70880569703877
+          },
+          "query_timestamp_span_sec": 66.496782906,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.005220658826357069,
+            "p90": 0.008745905588933088,
+            "max": 0.01144745128287753
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.24169751046019436,
+            "p90": 0.4095161509425295,
+            "max": 0.4936576188970547
+          },
+          "query_duration_sec": {
+            "median": 20.318889149464667,
+            "p90": 22.203218678315174,
+            "max": 27.562062469078228
+          },
+          "query_timestamp_span_sec": 66.599993085,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "clean_0",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "clean_0"
+        ],
+        "testing_public_sequence_uid": "clean_0",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 48,
+          "gate_success_rate": 0.96,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 48,
+          "accuracy_10cm_5deg_count": 48,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 0.96,
+          "accuracy_25cm_5deg_count": 48,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 0.96,
+          "translation_disagreement_m": {
+            "median": 0.010053525804845892,
+            "p90": 0.022020363230285948,
+            "max": 0.04145966391749905
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.24575004837736691,
+            "p90": 0.5521779306737815,
+            "max": 1.541938339866875
+          },
+          "query_duration_sec": {
+            "median": 9.966190879989881,
+            "p90": 10.518461955105886,
+            "max": 11.029962199972942
+          },
+          "query_timestamp_span_sec": 65.695970906,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {
+            "no_matches": 2
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 4,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 4,
+              "accuracy_10cm_5deg": 4
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 49,
+          "gate_success_rate": 0.98,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 49,
+          "accuracy_10cm_5deg_count": 49,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 0.98,
+          "accuracy_25cm_5deg_count": 49,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 0.98,
+          "translation_disagreement_m": {
+            "median": 0.008837814654902217,
+            "p90": 0.014138372864414522,
+            "max": 0.03012547426810277
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.255807085187914,
+            "p90": 0.3469721668159576,
+            "max": 0.6342112425698667
+          },
+          "query_duration_sec": {
+            "median": 16.32621215801919,
+            "p90": 17.154676305234897,
+            "max": 17.83982484403532
+          },
+          "query_timestamp_span_sec": 65.799995303,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {
+            "no_matches": 1
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 4,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "play_common",
+      "validation_protocol": {
+        "type": "cross_device_same_session",
+        "mapping_public_sequence_uids": [
+          "play_0"
+        ],
+        "testing_public_sequence_uid": "play_1",
+        "original_rgb_cli_exit_observed": false,
+        "original_rgb_complete_output_and_process_finished_verified": true,
+        "slam_query_cli_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 100,
+          "gate_successes": 97,
+          "gate_success_rate": 0.97,
+          "reference_covered_queries": 99,
+          "successful_reference_queries": 96,
+          "accuracy_10cm_5deg_count": 76,
+          "accuracy_10cm_5deg_denominator": 99,
+          "accuracy_10cm_5deg_rate": 0.7676767676767676,
+          "accuracy_25cm_5deg_count": 88,
+          "accuracy_25cm_5deg_denominator": 99,
+          "accuracy_25cm_5deg_rate": 0.8888888888888888,
+          "translation_disagreement_m": {
+            "median": 0.042584122576167754,
+            "p90": 0.15765117227669162,
+            "max": 1.7348248146942618
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.9356891483606213,
+            "p90": 3.4778596287614634,
+            "max": 179.58385804009885
+          },
+          "query_duration_sec": {
+            "median": 5.67992706305813,
+            "p90": 6.383053404046223,
+            "max": 12.081646875012666
+          },
+          "query_timestamp_span_sec": 336.577930769,
+          "gate_successes_translation_over_1m": 2,
+          "gate_successes_rotation_over_90deg": 2,
+          "failure_reasons": {
+            "no_matches": 3
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 9
+            },
+            {
+              "time_decile": 1,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 8
+            },
+            {
+              "time_decile": 2,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 10
+            },
+            {
+              "time_decile": 3,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 8
+            },
+            {
+              "time_decile": 4,
+              "queries": 10,
+              "gate_successes": 8,
+              "accuracy_10cm_5deg": 3
+            },
+            {
+              "time_decile": 5,
+              "queries": 10,
+              "gate_successes": 9,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 6,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 7,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 10
+            },
+            {
+              "time_decile": 8,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 10
+            },
+            {
+              "time_decile": 9,
+              "queries": 10,
+              "gate_successes": 10,
+              "accuracy_10cm_5deg": 10
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 48,
+          "gate_success_rate": 0.96,
+          "reference_covered_queries": 48,
+          "successful_reference_queries": 46,
+          "accuracy_10cm_5deg_count": 44,
+          "accuracy_10cm_5deg_denominator": 48,
+          "accuracy_10cm_5deg_rate": 0.9166666666666666,
+          "accuracy_25cm_5deg_count": 44,
+          "accuracy_25cm_5deg_denominator": 48,
+          "accuracy_25cm_5deg_rate": 0.9166666666666666,
+          "translation_disagreement_m": {
+            "median": 0.02414248461084488,
+            "p90": 0.04426604219718265,
+            "max": 1.6331389131391458
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.6360159393121432,
+            "p90": 1.1539598776076079,
+            "max": 179.10099329389723
+          },
+          "query_duration_sec": {
+            "median": 24.72878668800695,
+            "p90": 26.431628392694982,
+            "max": 27.53693540696986
+          },
+          "query_timestamp_span_sec": 339.999952094,
+          "gate_successes_translation_over_1m": 1,
+          "gate_successes_rotation_over_90deg": 1,
+          "failure_reasons": {
+            "no_matches": 2
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 3,
+              "accuracy_10cm_5deg": 3
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "eat_0",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "eat_0"
+        ],
+        "testing_public_sequence_uid": "eat_0",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.006051598280927169,
+            "p90": 0.015108515945264944,
+            "max": 0.038479907444981955
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.16628803847463497,
+            "p90": 0.5263344649215694,
+            "max": 1.2770714967702836
+          },
+          "query_duration_sec": {
+            "median": 12.748160290007945,
+            "p90": 14.542685195663944,
+            "max": 15.611452586948872
+          },
+          "query_timestamp_span_sec": 64.495808781,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.006669290401937022,
+            "p90": 0.020838645787989166,
+            "max": 0.061072002323692816
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.31568218598046155,
+            "p90": 0.5458329688752186,
+            "max": 1.6309076185959597
+          },
+          "query_duration_sec": {
+            "median": 19.23071870545391,
+            "p90": 20.356872721679974,
+            "max": 21.193935591960326
+          },
+          "query_timestamp_span_sec": 64.53332902,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "eat_1",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "eat_1"
+        ],
+        "testing_public_sequence_uid": "eat_1",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.0030120258660413547,
+            "p90": 0.008826346402594425,
+            "max": 0.014766811085600979
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.10482762372737045,
+            "p90": 0.33686454172159863,
+            "max": 0.53781308280978
+          },
+          "query_duration_sec": {
+            "median": 13.309310134034604,
+            "p90": 14.000890736922155,
+            "max": 14.916111779981293
+          },
+          "query_timestamp_span_sec": 64.59612,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.004505871559142161,
+            "p90": 0.010679006568851221,
+            "max": 0.015182430422078008
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.17582691630486086,
+            "p90": 0.2848126280908242,
+            "max": 2.3570845040063735
+          },
+          "query_duration_sec": {
+            "median": 19.774991354555823,
+            "p90": 20.932220681279432,
+            "max": 21.739555939100683
+          },
+          "query_timestamp_span_sec": 64.633325113,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "eat_2",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "eat_2"
+        ],
+        "testing_public_sequence_uid": "eat_2",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.0020910211468751173,
+            "p90": 0.006724644520602698,
+            "max": 0.010544334449825244
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.13949128433819327,
+            "p90": 0.4910529359074225,
+            "max": 0.8119760025022524
+          },
+          "query_duration_sec": {
+            "median": 12.853126674483065,
+            "p90": 13.374274904606864,
+            "max": 14.100942987948656
+          },
+          "query_timestamp_span_sec": 68.495675731,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.0034551635566420994,
+            "p90": 0.0060502552985634665,
+            "max": 0.012019356356419902
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.23930133475006454,
+            "p90": 0.3572228017555585,
+            "max": 0.5583477419406061
+          },
+          "query_duration_sec": {
+            "median": 19.50664770498406,
+            "p90": 20.68745643926086,
+            "max": 22.03415607905481
+          },
+          "query_timestamp_span_sec": 68.63332477,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "walk_common",
+      "validation_protocol": {
+        "type": "cross_device_same_session",
+        "mapping_public_sequence_uids": [
+          "walk_0"
+        ],
+        "testing_public_sequence_uid": "walk_1",
+        "mapping_prefix_fraction": 1.0,
+        "testing_start_fraction": 0.0,
+        "gap_fraction": 0,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 47,
+          "gate_success_rate": 0.94,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 47,
+          "accuracy_10cm_5deg_count": 42,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 0.84,
+          "accuracy_25cm_5deg_count": 47,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 0.94,
+          "translation_disagreement_m": {
+            "median": 0.031698613781204456,
+            "p90": 0.08917415028473216,
+            "max": 0.17253534460935127
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.20989076347739238,
+            "p90": 0.5591704844129475,
+            "max": 1.6571645036818488
+          },
+          "query_duration_sec": {
+            "median": 14.966342061467003,
+            "p90": 17.971120114659428,
+            "max": 31.851819103001617
+          },
+          "query_timestamp_span_sec": 300.580382332,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {
+            "no_matches": 3
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 2
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 4
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 2,
+              "accuracy_10cm_5deg": 2
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 48,
+          "gate_success_rate": 0.96,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 48,
+          "accuracy_10cm_5deg_count": 48,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 0.96,
+          "accuracy_25cm_5deg_count": 48,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 0.96,
+          "translation_disagreement_m": {
+            "median": 0.02167043536645879,
+            "p90": 0.03790868618911189,
+            "max": 0.09586375234851856
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.26905056107580905,
+            "p90": 0.3641888300940926,
+            "max": 0.41919864748940616
+          },
+          "query_duration_sec": {
+            "median": 22.696005066041835,
+            "p90": 24.231261121085844,
+            "max": 26.283021252020262
+          },
+          "query_timestamp_span_sec": 300.566628176,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {
+            "no_matches": 2
+          },
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 3,
+              "accuracy_10cm_5deg": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "eat_3",
+      "validation_protocol": {
+        "type": "single_recording_time_disjoint_not_independent_recording",
+        "mapping_public_sequence_uids": [
+          "eat_3"
+        ],
+        "testing_public_sequence_uid": "eat_3",
+        "mapping_prefix_fraction": 0.7,
+        "testing_start_fraction": 0.8,
+        "gap_fraction": 0.1,
+        "batch_worker_exit_observed": true
+      },
+      "results": [
+        {
+          "mode": "rgb",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.002785036363803496,
+            "p90": 0.010379546762622401,
+            "max": 0.02011916608823252
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.20236089946437674,
+            "p90": 0.6852129266973535,
+            "max": 1.29737013136582
+          },
+          "query_duration_sec": {
+            "median": 13.547978474001866,
+            "p90": 15.068586094665807,
+            "max": 16.42574475100264
+          },
+          "query_timestamp_span_sec": 66.996536344,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        },
+        {
+          "mode": "slam",
+          "queries": 50,
+          "gate_successes": 50,
+          "gate_success_rate": 1.0,
+          "reference_covered_queries": 50,
+          "successful_reference_queries": 50,
+          "accuracy_10cm_5deg_count": 50,
+          "accuracy_10cm_5deg_denominator": 50,
+          "accuracy_10cm_5deg_rate": 1.0,
+          "accuracy_25cm_5deg_count": 50,
+          "accuracy_25cm_5deg_denominator": 50,
+          "accuracy_25cm_5deg_rate": 1.0,
+          "translation_disagreement_m": {
+            "median": 0.003460209467963601,
+            "p90": 0.011087399324145486,
+            "max": 0.021347991142981363
+          },
+          "rotation_disagreement_deg": {
+            "median": 0.30123570775383235,
+            "p90": 0.6132020927780665,
+            "max": 1.1417144915868556
+          },
+          "query_duration_sec": {
+            "median": 20.35317609552294,
+            "p90": 21.157406518573406,
+            "max": 21.996044853935018
+          },
+          "query_timestamp_span_sec": 67.099992948,
+          "gate_successes_translation_over_1m": 0,
+          "gate_successes_rotation_over_90deg": 0,
+          "failure_reasons": {},
+          "time_deciles": [
+            {
+              "time_decile": 0,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 1,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 2,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 3,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 4,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 5,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 6,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 7,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 8,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            },
+            {
+              "time_decile": 9,
+              "queries": 5,
+              "gate_successes": 5,
+              "accuracy_10cm_5deg": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

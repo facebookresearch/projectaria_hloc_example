@@ -1,0 +1,129 @@
+{
+  "format": "pilot-resident-runtime-v1",
+  "measured_utc": "2026-11-05T21:04:52.049210+00:00",
+  "dataset": "Aria Gen 2 Pilot",
+  "mapping_recordings": ["play_0"],
+  "testing_recordings": ["play_1"],
+  "mapping_cameras": "rgb",
+  "query_cameras": "rgb",
+  "query_count": 100,
+  "query_stride": 34,
+  "baseline_commit": "b29dfacc8120a85b58ba5ed892fee1aff1d10a87",
+  "baseline_source_zip_sha256": "cdf2d956e28898e67eac2d331934ba26c35e6a42d26f63396b13745c48bf5657",
+  "resident_source_zip_sha256": "89a0f0e530e59269f7730c5dce89084a19f6a03db459fc35c1ca839a9d43a2bf",
+  "raw_query_evidence_zip_sha256": "87cfd29a9d9deb262763285f35c901f1cdd128b1046942a165eef3c6291cfed7",
+  "environment": {
+    "platform": "same x86_64 function-compute container and host, sequential arms",
+    "device": "cpu",
+    "threads": 8,
+    "torch_interop_threads": 1,
+    "opencv_threads": 8,
+    "data_loader_workers": 0,
+    "native_random_seed": 12345,
+    "torch": "2.6.0",
+    "torchvision": "0.21.0",
+    "numpy": "2.2.6",
+    "pycolmap": "4.2.1",
+    "projectaria_tools": "2.3.0",
+    "h5py": "3.14.0",
+    "opencv_python_headless": "4.11.0.86",
+    "hloc_commit": "c13273bd0ecc2917a35910fd843712a1c6243193",
+    "lightglue_commit": "edb2b838efb2ecfe3f88097c5fad9887d95aedad"
+  },
+  "protocol": {
+    "backend_instances_per_arm": 1,
+    "arms": "one old batch followed by one resident batch, no concurrent neural jobs or MPS input transfer on the benchmark host",
+    "baseline": "Path-based V5; upstream models, map and retrieval arrays reload naturally within each query, not100separateCLIinvocations",
+    "resident": "Map/model preparation once; in-memory queries and a byte-bounded CPU reference-feature cache",
+    "timing": "Query and frame-to-result wall times exclude preflight checksums, reference-error calculation and after-clock oracle/report I/O. Old PNG staging is included only in frame-to-result duration.",
+    "filesystem_cache": "OS file caches were not flushed; initialization is process/model cold, not physical-disk cold",
+    "reference": "Published MPS Multi-SLAM reference; not independent physical ground truth"
+  },
+  "timing_sec": {
+    "query_all100": {
+      "old_median": 11.322238149994519,
+      "old_p90": 12.274937122582925,
+      "resident_median": 5.888123783515766,
+      "resident_p90": 6.878199155593757,
+      "median_speed_ratio": 1.9228940433779522
+    },
+    "query_same99_excluding_first": {
+      "old_median": 11.286203679977916,
+      "old_p90": 12.249795242235995,
+      "resident_median": 5.8781227769795805,
+      "resident_p90": 6.770854778378271,
+      "median_speed_ratio": 1.920035376630433
+    },
+    "frame_to_result_all100": {
+      "old_median": 11.6258904915303,
+      "old_p90": 12.579065567045474,
+      "resident_median": 6.072377513570245,
+      "resident_p90": 7.06426662306767
+    },
+    "first_query": {"old": 14.273848592070863, "resident": 7.637298633926548},
+    "resident_initialization": {
+      "reconstruction": 1.063371126074344,
+      "map_features": 0.12708634498994797,
+      "models": 5.99590629094746,
+      "total": 7.186402310966514
+    },
+    "resident_stage_medians": {
+      "extraction": 1.6014400069834664,
+      "retrieval": 0.000849770032800734,
+      "matching": 4.223965553508606,
+      "correspondence": 0.010403321066405624,
+      "pose": 0.01074899802915752
+    },
+    "old_stage_medians": {
+      "global_model_initialization_nested": 4.861392425489612,
+      "reconstruction_load": 0.10323759203311056,
+      "retrieval": 0.11617377848597243,
+      "matching_inclusive": 4.355856725014746,
+      "pose": 0.010624565475154668
+    },
+    "resident_recording_open_separate": 18.751230979105458
+  },
+  "equivalence": {
+    "gates_equal": true,
+    "inlier_counts_equal": true,
+    "retrieval_order_exact": true,
+    "matching_pairs_exact": true,
+    "feature_array_checks": 500,
+    "feature_arrays_bit_exact": 400,
+    "global_descriptor_max_abs_difference": 7.189810276031494e-7,
+    "float_tolerance_set_before_new_run": 1e-6,
+    "successful_pose_max_translation_delta_m": 0.0,
+    "successful_pose_max_rotation_delta_deg": 0.0,
+    "map_file_hashes_unchanged": true
+  },
+  "accuracy_both_arms": {
+    "gate_successes": 96,
+    "reference_covered_queries": 99,
+    "successful_reference_queries": 95,
+    "accuracy_10cm_5deg_count": 76,
+    "accuracy_25cm_5deg_count": 86,
+    "gate_passing_translation_over1m_indices": [42, 53],
+    "gate_fail_indices": [45, 49, 50, 75]
+  },
+  "memory": {
+    "old_peak_rss_kib": 3951560,
+    "resident_peak_rss_kib": 4116652,
+    "peak_rss_increase_mib": 161.22265625,
+    "cache_bound_bytes": 268435456,
+    "cache_max_observed_bytes": 268410768,
+    "cache_hits": 1501,
+    "cache_misses": 499,
+    "cache_evictions": 273,
+    "cache_oversize_bypasses": 0,
+    "cache_scope": "Retained numerical local-feature array payloads only; not total RSS, reconstruction/global index, models or query tensors"
+  },
+  "limitations": [
+    "These are exposed regression queries, not a new blind accuracy study or threshold tuning set.",
+    "Results preserve accepted metre-scale and near180degree errors; this optimization is not a reliability fix.",
+    "The new fixed-seed Linux run is separate from historical Mac97/100 or the original850-query corpus; neither is overwritten.",
+    "Only RGB100-query runtime timing is measured. Four-SLAM preprocessing parity and native gPnP regression are not full rig runtime qualification.",
+    "No GPU, Jetson, Mac warm-runtime, physical SDK streaming or cross-day performance is claimed.",
+    "A256MiB feature cache increases steady-state memory; the measured peak RSS increased rather than decreased.",
+    "Stage medians are not additive; inclusive old stages already contain model initialization and must not be double-counted."
+  ]
+}

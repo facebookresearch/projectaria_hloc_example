@@ -1,0 +1,142 @@
+{
+  "dataset": "Aria Gen 2 Pilot v1.0",
+  "mapping_records": [
+    "play_0"
+  ],
+  "testing_record": "play_1",
+  "map_camera_set": "rgb",
+  "query_camera_set": "rgb",
+  "map": {
+    "num_keyframes": 666,
+    "num_pairs": 8094,
+    "num_landmarks": 66261,
+    "mean_reprojection_error_px": 1.6959737570883238,
+    "build_duration_sec": 1512.5601746249013
+  },
+  "queries": 100,
+  "gate_successes": 97,
+  "gate_success_rate": 0.97,
+  "reference_covered_queries": 99,
+  "successful_reference_queries": 96,
+  "accuracy_0_25m_5deg_count": 88,
+  "accuracy_0_1m_5deg_count": 76,
+  "translation_disagreement_m": {
+    "median": 0.042584122576167754,
+    "p90": 0.15765117227669162,
+    "max": 1.7348248146942618
+  },
+  "rotation_disagreement_deg": {
+    "median": 0.9356891483606213,
+    "p90": 3.4778596287614634,
+    "max": 179.58385804009885
+  },
+  "query_duration_sec": {
+    "median": 5.67992706305813,
+    "p90": 6.383053404046223,
+    "max": 12.081646875012666
+  },
+  "query_time_span_sec": 336.577930769,
+  "gate_successes_over_1m": 2,
+  "failure_reasons": {
+    "no_matches": 3
+  },
+  "time_deciles": [
+    {
+      "decile": 0,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 9
+    },
+    {
+      "decile": 1,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    },
+    {
+      "decile": 2,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    },
+    {
+      "decile": 3,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    },
+    {
+      "decile": 4,
+      "queries": 10,
+      "gate_successes": 8,
+      "accuracy_0_25m_5deg": 4
+    },
+    {
+      "decile": 5,
+      "queries": 10,
+      "gate_successes": 9,
+      "accuracy_0_25m_5deg": 6
+    },
+    {
+      "decile": 6,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 9
+    },
+    {
+      "decile": 7,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    },
+    {
+      "decile": 8,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    },
+    {
+      "decile": 9,
+      "queries": 10,
+      "gate_successes": 10,
+      "accuracy_0_25m_5deg": 10
+    }
+  ],
+  "source_membership_verified": true,
+  "query_source_sha256": "569d9dc63b8d5fb9c7c252f28392ad040d7860fc92eb5cd17fe3350b520ebe09",
+  "original_process_finished": true,
+  "original_cli_exit_observed": false,
+  "protocol_caveat": "Cross-device same-session validation. Query imagery/features excluded from map; MPS MST reference may jointly optimize both recordings and is not independent physical ground truth. Not cross-day/generalization.",
+  "conditions": {
+    "python": "3.12.12",
+    "hardware": "Apple M4 Max, 64 GiB",
+    "neural_inference": "CPU",
+    "omp_num_threads": 8,
+    "openblas_num_threads": 8,
+    "hloc_commit": "c13273bd0ecc2917a35910fd843712a1c6243193",
+    "lightglue_commit": "edb2b838efb2ecfe3f88097c5fad9887d95aedad",
+    "projectaria_tools": "2.3.0",
+    "pycolmap": "4.2.1",
+    "query_stride": 34,
+    "map_keyframe_limit": 0,
+    "repetitions": 1,
+    "model_weights_cached": true,
+    "query_timing": "After image staging, includes repeated model initialization; not warm-service latency"
+  },
+  "accuracy_denominators": {
+    "0.10m_and_5deg": 99,
+    "0.25m_and_5deg": 99,
+    "translation_and_rotation_statistics": 96,
+    "failure_handling": "Reference-covered failures count against accuracy; no segment selection or gate adjustment"
+  },
+  "input_fingerprints": {
+    "play_0": {
+      "bytes": 3181905165,
+      "sha256": "4ea6d4981da37c65fdc39e44f96438f41170ebeecaa29eeebd71f203f77ad3aa"
+    },
+    "play_1": {
+      "bytes": 3432199472,
+      "sha256": "569d9dc63b8d5fb9c7c252f28392ad040d7860fc92eb5cd17fe3350b520ebe09"
+    }
+  }
+}

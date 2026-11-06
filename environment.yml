@@ -1,0 +1,25 @@
+name: aria_hloc
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12.12
+  - pip
+  - pip:
+      - numpy==2.2.6
+      - scipy==1.13.1
+      - pillow==11.3.0
+      - h5py==3.14.0
+      - opencv-python==4.11.0.86
+      - torch==2.6.0
+      - torchvision==0.21.0
+      - projectaria-tools==2.3.0
+      - projectaria-client-sdk==2.5.1
+      - rerun-sdk==0.33.0
+      - pycolmap==4.2.1
+      - kornia==0.8.1
+      - tqdm==4.67.1
+      - matplotlib==3.10.3
+      - plotly==6.1.2
+      - pytest==8.4.1
+      - jupyterlab==4.4.3
+      - lightglue @ git+https://github.com/cvg/LightGlue.git@edb2b838efb2ecfe3f88097c5fad9887d95aedad
