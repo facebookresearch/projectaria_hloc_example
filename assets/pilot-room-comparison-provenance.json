@@ -1,0 +1,85 @@
+{
+  "format_version": 1,
+  "scene": "living",
+  "component_members": [
+    "clean_0",
+    "play_0",
+    "play_1",
+    "play_2",
+    "play_3"
+  ],
+  "map_graph_uid": "334ef120-0f94-a1bb-34c9-f0ec7b8c8d39",
+  "asset_role": "full-reference visualization, NOT public-demo localization evaluation",
+  "MPS": {
+    "raw_record_count": 23758300,
+    "official_display_count": 3871690,
+    "rule": "inv_dist_std<0.001 AND dist_std<0.05",
+    "global_unique_landmarks_unknown": true
+  },
+  "HLOC": {
+    "raw_landmarks": 303741,
+    "stable_landmarks": 144324,
+    "display_pass_landmarks": 127842,
+    "stable_rule": ">=3 distinct image views AND native mean reprojection<=2px",
+    "additional_display_rule": ">=8 other stable landmarks within15cm"
+  },
+  "Twin": {
+    "asset_id": "living_v1",
+    "kind": "existing observed model rigidly aligned, NOT reconstructed from all new MPS inputs",
+    "vertices": 1748736,
+    "triangles": 3511309,
+    "full_metadata_sha256": "5ec3938d879c1aca3cc999280e704b727d030f040adeaa2b4894bb52deb76297"
+  },
+  "camera": {
+    "shared_all_three_panes": true,
+    "projection": "perspective",
+    "center_m": [
+      -1.05,
+      1.067,
+      -0.15
+    ],
+    "distance_m": 10,
+    "pitch_radians": 0.65,
+    "yaw_angles_radians": [
+      0.4,
+      0.65,
+      0.9,
+      1.15,
+      1.4,
+      1.65,
+      1.9,
+      2.15
+    ]
+  },
+  "display": {
+    "point_size_CSS_px": 0.5,
+    "MPS_opacity": 0.18,
+    "HLOC_opacity": 0.65,
+    "matching_roof_cutaway_all_layers": true,
+    "cutaway_height_m": 0.65,
+    "listed_counts_before_cutaway": true,
+    "native_files_changed": false,
+    "source_LOD_or_random_sampling": false
+  },
+  "capture": "Actual Mac Chrome WebGL screenshot, then viewport crop and text labels only; no synthetic geometry",
+  "animation": {
+    "frames": 14,
+    "seconds": 8.4,
+    "fps": 1.6666666666666667,
+    "motion": "eight rendered angles, then reverse; no synthetic intermediate geometry"
+  },
+  "GL_errors": [],
+  "source_screenshot_SHA256": {
+    "frame_1.png": "c3e41e5cbb6445d115c190ec3ca6ded704f704f9e2c384fc271fe834d5bae181",
+    "frame_2.png": "48032ae45dc09b05c2662441b3287876775ba0df9bcd672bd29e55290e1956bd",
+    "frame_3.png": "89a58a13f1c6cf408060440bd0b140f0bd35011af9b7b2d40374f4c603bc41b8",
+    "frame_4.png": "572bba9aabd79da2ed9c45fe351f8a9210769f788a111e2844b83277ad46df2d",
+    "frame_5.png": "39e4ac862399d403c7393107a789c6b6ebef74eef6185209c6ff96895701d728",
+    "frame_6.png": "2f0dc9b4cbee82b7bcc27ea11b58b9de95c319361a1f4e6de93bf4324eb774f4",
+    "frame_7.png": "5cc83b2cca835aaa5bc55f9326efae793e7e84b6676eded447127a0d86df2d8e",
+    "frame_8.png": "1a76c45425ea12c732def044ca514f1bcee0c15bc4f5b268c75c972147d45dda"
+  },
+  "source_HLOC_SHA256": "885861d4aca6a6d06a1dcb1fba6d643f6da5bf8bb6c3f8c5dd60aec9e35fe1fc",
+  "source_stable_mask_SHA256": "90a294a4bf423efd731e59ae4c1e9ab63f8688f510e07fd842f1ec7b27dfb165",
+  "additional_density_mask_SHA256": "ca1f2f469727c3662317e05a35a53bd6d95df646d0b9326aabfdaa153f62ffb2"
+}

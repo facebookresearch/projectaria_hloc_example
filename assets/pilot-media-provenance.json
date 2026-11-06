@@ -1,0 +1,118 @@
+{
+  "format_version": 1,
+  "dataset": "Aria Gen 2 Pilot, original released MPS",
+  "mapping_recordings": [
+    "play_0",
+    "play_2"
+  ],
+  "query_recording": "play_1",
+  "map_graph_uid": "66b69ebb-d521-8496-7d42-6cb7f295b5d4",
+  "source_VRS_SHA256": {
+    "play_0": "4ea6d4981da37c65fdc39e44f96438f41170ebeecaa29eeebd71f203f77ad3aa",
+    "play_2": "dd76b72cc1e9c022f1942a60f60c6d6708ad91491d674bd831aa80779c753ca6",
+    "play_1": "569d9dc63b8d5fb9c7c252f28392ad040d7860fc92eb5cd17fe3350b520ebe09"
+  },
+  "source_map_pointcloud_sha256": "10acf08e99237c83b5c6abe4ed57b01f7ed2c3a5cdeb42ca92682063f7c0f215",
+  "source_replay_JSONL_sha256": "2587e65b80ccd4c9508f418efa3f18b2bb98b37d2cc3750738654d3a61017660",
+  "native_map_landmarks": 135213,
+  "source_mapped_pose_rows": 265344,
+  "rendering": {
+    "mapped_device_interval_sec": 330.425307,
+    "presentation_sec": 18,
+    "GIF": {
+      "frames": 72,
+      "fps": 4,
+      "resolution": [
+        800,
+        475
+      ],
+      "colors": 128
+    },
+    "video": {
+      "frames": 144,
+      "fps": 8,
+      "resolution": [
+        1280,
+        760
+      ],
+      "codec": "VP9",
+      "color_range": "tv"
+    },
+    "RGB_sampling": "uniform presentation times, nearest actual corrected-timestamp exposure",
+    "map_projection": "all source points read; fixed oblique 2D viewport framing",
+    "pose_trail": "sampled from immutable measured-delay mapped-VIO output",
+    "not_live_stream_or_GUI_capture": true,
+    "no_neural_inference": true
+  },
+  "sequence_panel": [
+    {
+      "panel_source": "s000/camera-rgb/00000878.png",
+      "PNG_sha256": "ae79885472d09899257285f9b2358c6830d8844ad10b9a644db389e268de4aab",
+      "recording": "play_0",
+      "rgb_index": 878,
+      "raw_capture_timestamp_ns": 5144164092246,
+      "corrected_capture_timestamp_ns": 5144164092246
+    },
+    {
+      "panel_source": "s000/camera-rgb/00001712.png",
+      "PNG_sha256": "3a1b7753500afe6bbffa9e3dc0a4fcbc9be18775de1a26690323810f4fe8d837",
+      "recording": "play_0",
+      "rgb_index": 1712,
+      "raw_capture_timestamp_ns": 5227560033746,
+      "corrected_capture_timestamp_ns": 5227560033746
+    },
+    {
+      "panel_source": "s001/camera-rgb/00000811.png",
+      "PNG_sha256": "45b05e13a626cc5a85b7638e511bb107658f6d7999575f83a36314bfd85ae5f4",
+      "recording": "play_2",
+      "rgb_index": 811,
+      "raw_capture_timestamp_ns": 5285467821229,
+      "corrected_capture_timestamp_ns": 5285467821229
+    },
+    {
+      "panel_source": "s001/camera-rgb/00001758.png",
+      "PNG_sha256": "b5b4456a7c08b2ba7bb09704f23f81b41cf25b7010e12e44335499b52c7b7be4",
+      "recording": "play_2",
+      "rgb_index": 1758,
+      "raw_capture_timestamp_ns": 5380162148469,
+      "corrected_capture_timestamp_ns": 5380162148469
+    },
+    {
+      "panel_source": "play_1-001344.png",
+      "PNG_sha256": "b700ce7977dbe64c35c6d823583c0cec2926cc19414e9d3ad283767d793e9205",
+      "sequence": "play_1",
+      "rgb_index": 1344,
+      "raw_capture_ns": 5167820157656,
+      "corrected_capture_ns": 5167820157656,
+      "pixel_array_sha256": "6543401e5e6dcdfddf662e3edd1d4ab84b0413a419252ade7d34eb5a505311c7"
+    },
+    {
+      "panel_source": "play_1-002407.png",
+      "PNG_sha256": "4327cebf1e1a3dee85c4c2d16301da62a204991e9c9dcae938a7167a31f45efd",
+      "sequence": "play_1",
+      "rgb_index": 2407,
+      "raw_capture_ns": 5274113695114,
+      "corrected_capture_ns": 5274113695114,
+      "pixel_array_sha256": "fbbed3888b53f19910550aa46693a5b63d0c4286325ab26e2f60f57c27fa3df1"
+    }
+  ],
+  "query_plot": {
+    "raw_RGB_results_sha256": "e14476bac776e762f8ecf4d759703dc57ada4f1549bf71fdd1495609ea5a19df",
+    "raw_rig_results_sha256": "5722776e04c0231c7ea960eef47e0117f210662afc847dbff18f899be0e30302",
+    "RGB_queries": 100,
+    "rig_queries": 50,
+    "accuracy_denominator": "All MPS-reference-covered queries, including failures",
+    "rotation_threshold_deg": 5,
+    "RGB_failed_indices": [
+      37,
+      75
+    ],
+    "rig_failed_indices": [
+      0,
+      5
+    ],
+    "shared_MPS_not_independent_physical_ground_truth": true,
+    "previously_exposed_anchors": true,
+    "CPU_timing": "eight-thread concurrent batch; not a controlled comparison"
+  }
+}
