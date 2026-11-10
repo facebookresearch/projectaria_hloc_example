@@ -17,6 +17,8 @@
 from __future__ import annotations
 
 import importlib
+import inspect
+import os
 import subprocess
 import sys
 import time
@@ -48,8 +50,13 @@ from resident_hloc import (
 
 MIN_INLIER_LANDMARKS: int = 20
 MIN_INLIER_RATIO: float = 0.2
-# Citrine C4: parallel loading on Linux; macOS subprocess loaders hang at shutdown.
-DATA_LOADER_WORKERS: int = 0 if sys.platform == "darwin" else 2
+# Parallel loading on Linux; macOS subprocess loaders hang at shutdown. Containers
+# with a small /dev/shm can set ARIA_HLOC_DATA_LOADER_WORKERS=0.
+DATA_LOADER_WORKERS: int = int(
+    os.environ.get(
+        "ARIA_HLOC_DATA_LOADER_WORKERS", "0" if sys.platform == "darwin" else "2"
+    )
+)
 
 
 class PoseTransform(Protocol):
@@ -219,6 +226,10 @@ class HlocBackend:
             raise
 
     def _load_adapters(self) -> None:
+        # hloc imports pycolmap at import time. On macOS the pycolmap and torch
+        # wheels each bundle libomp; loading pycolmap's copy first makes the
+        # first torch inference segfault. Loading torch first avoids that.
+        importlib.import_module("torch")
         hloc = importlib.import_module("hloc")
         if hloc.__file__ is None:
             raise ValueError("HLOC must have a source checkout")
@@ -230,6 +241,15 @@ class HlocBackend:
         self.colmap = importlib.import_module("pycolmap")
         if self.colmap.__version__ != "4.2.1":
             raise ValueError("This example requires pycolmap==4.2.1")
+        parameters = inspect.signature(self.extractor.main).parameters
+        if "num_workers" not in parameters and not any(
+            parameter.kind is inspect.Parameter.VAR_KEYWORD
+            for parameter in parameters.values()
+        ):
+            raise ValueError(
+                "HLOC checkout is missing the worker patch; run "
+                "`git -C Hierarchical-Localization apply ../patches/hloc-workers.patch`"
+            )
         self.feature_conf = self.extractor.confs["superpoint_aachen"]
         self.match_conf = self.matcher.confs["superpoint+lightglue"]
 
@@ -432,11 +452,16 @@ class HlocBackend:
                 result = estimate_pose(
                     [frame.camera for frame in frames], *correspondences
                 )
-            if result.get("success") and (
-                not best.get("success")
-                or cast(int, result["num_inlier_landmarks"])
-                > cast(int, best["num_inlier_landmarks"])
-            ):
+            if result.get("success"):
+                if not best.get("success") or cast(
+                    int, result["num_inlier_landmarks"]
+                ) > cast(int, best["num_inlier_landmarks"]):
+                    best = result
+            elif not best.get("success") and cast(
+                int, result.get("num_inlier_landmarks", -1)
+            ) >= cast(int, best.get("num_inlier_landmarks", -1)):
+                # Keep the most informative failure (e.g. insufficient_inliers
+                # with counts) instead of reporting every failure as no_matches.
                 best = result
         return best
 

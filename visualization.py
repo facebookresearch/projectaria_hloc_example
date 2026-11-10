@@ -38,6 +38,8 @@ class RerunView:
     ) -> None:
         self.rr = importlib.import_module("rerun")
         blueprint = importlib.import_module("rerun.blueprint")
+        # Load torch's libomp before pycolmap's (see HlocBackend._load_adapters).
+        importlib.import_module("torch")
         colmap = importlib.import_module("pycolmap")
         self.lock = threading.Lock()
         self.origin_timestamp_ns: int | None = None
