@@ -1,4 +1,4 @@
-#!/usr/bin/env fbpython
+#!/usr/bin/env python3
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Download the public Aria Gen 2 VRS/MPS sample used by Depth From Stereo."""
+"""Download the public single-recording Aria Gen 2 VRS/MPS sample for a smoke test."""
 
 from __future__ import annotations
 

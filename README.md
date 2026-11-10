@@ -84,8 +84,8 @@ quickstart approximates that coverage, not those exact anchors or scores.
 ![Recorded Pilot RGB and mapped VIO replay](assets/pilot-relocalization.gif)
 
 *The 330.4-second mapped interval is shown in 18 seconds (18.4× playback).
-Visual fixes retain measured query delays; presentation speed is not inference
-speed or a live-device measurement.*
+Visual fixes retain measured HLOC query delays (decode and rectification are not
+included); presentation speed is not inference speed or a live-device measurement.*
 
 [Higher-resolution video](assets/pilot-relocalization.webm) ·
 [Media provenance](assets/README.md)
@@ -113,15 +113,14 @@ inference. This workflow does not accept dataset terms or request MPS for you.
 <details>
 <summary><strong>1. Install the pinned environment</strong></summary>
 
-Use these clone commands when the public repository is available:
-
 ```bash
 git clone --recurse-submodules https://github.com/facebookresearch/projectaria_hloc_example.git
 cd projectaria_hloc_example
 conda env create -f environment.yml
 conda activate aria_hloc
 python -m pip install --no-deps -e ./Hierarchical-Localization
-git -C Hierarchical-Localization apply ../patches/hloc-workers.patch
+git -C Hierarchical-Localization apply --reverse --check ../patches/hloc-workers.patch 2>/dev/null \
+  || git -C Hierarchical-Localization apply ../patches/hloc-workers.patch
 ```
 
 HLOC is pinned to `c13273bd0ecc2917a35910fd843712a1c6243193`, LightGlue to
@@ -129,13 +128,22 @@ HLOC is pinned to `c13273bd0ecc2917a35910fd843712a1c6243193`, LightGlue to
 Runtime checks the HLOC commit and COLMAP version. Recursive cloning initializes
 nested submodules; `--no-deps` preserves environment pins.
 
-Apply the worker patch **once** to the exact checkout. Algorithm defaults stay
-fixed; the wrapper uses zero DataLoader workers on macOS and two on Linux.
-Zero avoids a reproduced macOS shutdown hang; the CPU-container measurements
-also used zero because shared memory could not support two.
+The patch command above is safe to rerun; the backend refuses to start without
+the patch. Algorithm defaults stay fixed; the wrapper uses zero DataLoader workers
+on macOS and two on Linux. Zero avoids a reproduced macOS shutdown hang; the
+CPU-container measurements also used zero because shared memory could not
+support two. In containers with a small `/dev/shm`, set
+`ARIA_HLOC_DATA_LOADER_WORKERS=0`.
 
-**macOS OpenMP troubleshooting.** If separate torch/pycolmap copies cause
-`OMP: Error #15` or `#179`, unify them only inside the activated example environment:
+On Apple Silicon, the pinned `pycolmap` and `projectaria-tools` wheels need
+**macOS 14 or newer**.
+
+**macOS OpenMP.** torch and pycolmap each bundle `libomp`. If pycolmap's copy
+loads first, the first torch inference crashes with a bare segmentation fault
+(no `OMP: Error` message). The scripts import torch before hloc/pycolmap to
+avoid this; in your own code or notebook, `import torch` before `import hloc` or
+`import pycolmap`. If you still see a crash or `OMP: Error #15`/`#179`, unify the
+copies only inside the activated example environment:
 
 ```python
 from pathlib import Path
@@ -187,8 +195,9 @@ data/pilot/
   play_1/mps/slam/{closed_loop_trajectory.csv,online_calibration.jsonl}
 ```
 
-Check every listed file before building. `check_inputs.py` decodes/rectifies all
-five camera streams and checks MPS coverage without HLOC inference; its default
+Check every listed file before building. `check_inputs.py` opens all five camera
+streams, decodes and rectifies one MPS-covered frame from each, and reports
+covered frame counts and the trajectory `graph_uid` without HLOC inference; its default
 is `play_0`, so check the others explicitly. All three trajectories must share
 one **nonempty `graph_uid`**, not merely a scene name. The notebook checks this
 and the three VRS fingerprints before building.
@@ -211,7 +220,10 @@ own clock and calibration. The two full-VRS SHA-256 values must be distinct;
 neither may equal `play_1`. Disconnected/empty graphs are rejected before inference.
 
 Pass `rgb` explicitly: the CLI default is `slam`; `slam`/`all` are supported
-builder variants, not this measured map. Leave `--max-keyframes 0` (uncapped).
+builder variants, not this measured map. Leave `--max-keyframes 0` (uncapped);
+a nonzero cap keeps that many keyframes spread evenly over each recording.
+Frames more than 1 s from any online-calibration sample (for example before MPS
+SLAM starts) are skipped by every script rather than rejecting the recording.
 Use a new output directory. The builder writes rectified images, known-pose
 `reference/`, COLMAP `sfm/`, features/retrieval/matches HDF5, pairs, statistics
 and `map.json`; failed builds do not receive a completed manifest.
@@ -379,8 +391,8 @@ unverified; recorded-data Rerun web inspection is not live-glasses validation.
 This is a standalone reference example, not a core Aria Research Kit component,
 hosted localization service, internal algorithm, agent, dense reconstruction or
 other-device port. Raw recordings, generated map binaries and model weights are
-not shipped with runtime source. Recorded-data checks are not complete asset/public-release approval or
-safety-critical tracking assurance. Maintenance covers the released snapshot,
+not shipped with runtime source. Recorded-data checks are not safety-critical
+tracking assurance. Maintenance covers the released snapshot,
 not continuous upstream upgrades or internal pipeline parity.
 
 ```bash
@@ -397,3 +409,13 @@ Example/setup issues belong here; upstream algorithm issues may go to
 [Project Aria Tools](https://github.com/facebookresearch/projectaria_tools/issues).
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [LICENSE](LICENSE). Meta-authored code
 is Apache 2.0; data, dependencies and weights retain their source terms.
+
+### Third-party licenses
+
+HLOC itself is Apache 2.0, but the models this example runs are not all
+permissively licensed. SuperPoint (used for every map and query) comes from
+Magic Leap's SuperGluePretrainedNetwork, licensed for **academic or non-profit
+non-commercial research use only**. The recursive clone also fetches d2net,
+r2d2 and deep-image-retrieval, which carry their own non-commercial terms.
+NetVLAD and LightGlue code and weights follow their upstream licenses. Check
+these terms before any commercial use.

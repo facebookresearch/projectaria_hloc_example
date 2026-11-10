@@ -16,3 +16,4 @@ queries/
 *.h5
 *.bin
 .ipynb_checkpoints/
+.DS_Store
