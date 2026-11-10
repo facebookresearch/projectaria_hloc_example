@@ -83,12 +83,18 @@ def extract_views(
     output: Path,
     max_keyframes: int,
 ) -> list[View]:
-    """Select motion-separated keyframes independently for each camera and recording."""
+    """Select motion-separated keyframes independently for each camera and recording.
+
+    A nonzero ``max_keyframes`` keeps that many keyframes spread evenly over the
+    recording instead of only its beginning.
+    """
     views = []
     for label in recording.select_labels(camera_set):
         last_pose = None
-        selected = 0
+        selected = []
         for index, timestamp_ns in enumerate(recording.corrected_timestamps_ns[label]):
+            if not recording.has_calibration(label, index):
+                continue
             pose = trajectory.at(timestamp_ns)
             if pose is None:
                 continue
@@ -98,6 +104,12 @@ def extract_views(
                 and rotation_error_deg(last_pose, pose) < 10
             ):
                 continue
+            selected.append(index)
+            last_pose = pose
+        if max_keyframes and len(selected) > max_keyframes:
+            picks = np.linspace(0, len(selected) - 1, max_keyframes).round()
+            selected = [selected[int(i)] for i in picks]
+        for index in selected:
             frame = recording.frame(label, index)
             pose = trajectory.at(frame.corrected_timestamp_ns)
             if pose is None:
@@ -117,10 +129,6 @@ def extract_views(
                     frame.time_offset_ns,
                 )
             )
-            last_pose = pose
-            selected += 1
-            if max_keyframes and selected >= max_keyframes:
-                break
     return views
 
 
@@ -146,6 +154,10 @@ def build_map(
             "Recordings do not share one graph_uid; run MPS Multi-SLAM and select a connected component"
         )
     source_hashes = [file_sha256(vrs) for vrs in vrs_paths]
+    if len(set(source_hashes)) != len(source_hashes):
+        raise ValueError(
+            "Mapping recordings must have distinct VRS SHA-256 values; a file was passed twice"
+        )
     backend = HlocBackend()
     output.mkdir(parents=True, exist_ok=False)
     start_time_sec = time.monotonic()

@@ -165,6 +165,7 @@ def replay(  # noqa: C901
             recording.corrected_timestamps_ns[labels[0]]
         )
         if samples[0].timestamp_ns <= timestamp_ns <= samples[-1].timestamp_ns
+        and recording.has_calibration(labels[0], index)
     ]
     accepted_fixes = 0
     first_pose_timestamp_ns = None

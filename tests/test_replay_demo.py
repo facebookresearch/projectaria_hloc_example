@@ -276,6 +276,7 @@ def replay_inputs(monkeypatch, tmp_path, camera, vio_samples):
         provider=provider,
         select_labels=Mock(return_value=("camera-rgb",)),
         corrected_timestamps_ns={"camera-rgb": timestamps_ns},
+        has_calibration=lambda label, index: True,
         frame=Mock(
             side_effect=lambda label, index: Frame(
                 label,

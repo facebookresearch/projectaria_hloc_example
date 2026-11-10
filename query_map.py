@@ -178,6 +178,11 @@ def query_map(
         if source_hashes is not None
         else None
     )
+    if query_in_mapping_recordings:
+        logging.warning(
+            "Query VRS is one of the mapping recordings; only exact keyframes are "
+            "skipped, so results are not a held-out evaluation"
+        )
     if source_hashes is None:
         logging.warning(
             "Legacy map uses path identity only; cannot establish cross-recording independence"
@@ -192,8 +197,33 @@ def query_map(
         resources.callback(backend.close)
         initialization_durations_sec = backend.prepare_map(map_path)
         for anchor_index in range(0, len(recording.timestamps_ns[labels[0]]), stride):
+            if not recording.has_calibration(labels[0], anchor_index):
+                continue
             start_time_sec = time.monotonic()
-            frames = recording.frameset(labels, anchor_index)
+            try:
+                frames = recording.frameset(labels, anchor_index)
+            except ValueError as error:
+                # One unusable anchor (unsynchronized rig, missing calibration,
+                # invalid image) is recorded as a failure, not fatal to the run.
+                corrected_ns = recording.corrected_timestamps_ns[labels[0]]
+                queries.append(
+                    {
+                        "success": False,
+                        "reason": "invalid_frames",
+                        "error": str(error),
+                        "anchor_index": anchor_index,
+                        "capture_timestamp_ns": recording.timestamps_ns[labels[0]][
+                            anchor_index
+                        ],
+                        "corrected_timestamp_ns": corrected_ns[anchor_index],
+                        "query_duration_sec": 0.0,
+                        "query_end_to_end_duration_sec": time.monotonic()
+                        - start_time_sec,
+                    }
+                )
+                if len(queries) >= num_queries:
+                    break
+                continue
             if is_keyframe(frames, vrs, metadata, source_sha256=query_sha256):
                 continue
             result = localize_frames(backend, map_path, frames)

@@ -463,3 +463,24 @@ def test_frameset_nearest_selection_uses_corrected_not_raw_clock(
     assert [frame.index for frame in frames] == [0, 1, 0, 0]
     assert [frame.corrected_timestamp_ns for frame in frames] == [10_000_000] * 4
     assert frames[1].capture_timestamp_ns == 15_000_000
+
+
+def test_frames_outside_online_calibration_are_marked_not_fatal(recording, pat):
+    uncovered_ns = 1_000_001 + aria.MAX_CALIBRATION_GAP_NS
+    pat.provider.get_timestamps_ns.return_value = [1_000_000, 2_000_000, uncovered_ns]
+    assert recording.select_labels("rgb") == ("camera-rgb",)
+    assert [recording.has_calibration("camera-rgb", i) for i in range(3)] == [
+        True,
+        True,
+        False,
+    ]
+    assert recording.corrected_timestamps_ns["camera-rgb"][2] == uncovered_ns
+    with pytest.raises(ValueError, match="No online calibration"):
+        recording.time_offset_ns("camera-rgb", uncovered_ns)
+
+
+def test_stream_without_any_calibrated_frame_is_rejected(recording, pat):
+    start_ns = 1_000_001 + aria.MAX_CALIBRATION_GAP_NS
+    pat.provider.get_timestamps_ns.return_value = [start_ns, start_ns + 1_000_000]
+    with pytest.raises(ValueError, match="No camera-rgb frames are covered"):
+        recording.select_labels("rgb")

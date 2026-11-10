@@ -32,12 +32,14 @@ def check_inputs(vrs: Path, mps: Path) -> dict[str, object]:
     recording = Recording(vrs, slam / "online_calibration.jsonl")
     labels = recording.select_labels("all")
     frame_counts = {}
+    covered_counts = {}
     for label in labels:
         timestamps = recording.corrected_timestamps_ns[label]
         candidates = [
             index
             for index, timestamp_ns in enumerate(timestamps)
-            if trajectory.at(timestamp_ns) is not None
+            if recording.has_calibration(label, index)
+            and trajectory.at(timestamp_ns) is not None
         ]
         if not candidates:
             raise ValueError(f"No {label} frames covered by the MPS trajectory")
@@ -45,9 +47,12 @@ def check_inputs(vrs: Path, mps: Path) -> dict[str, object]:
         if trajectory.at(frame.corrected_timestamp_ns) is None:
             raise ValueError(f"Decoded {label} frame is outside MPS coverage")
         frame_counts[label] = len(timestamps)
+        covered_counts[label] = len(candidates)
     return {
         "camera_frames": frame_counts,
+        "mps_covered_frames": covered_counts,
         "trajectory_samples": len(trajectory.timestamps_ns),
+        "graph_uid": trajectory.graph_uid,
     }
 
 
