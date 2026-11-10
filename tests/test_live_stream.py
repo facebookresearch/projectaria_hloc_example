@@ -1398,3 +1398,35 @@ def test_already_stopped_never_imports_sdk_or_connects(sdk_harness):
     sdk_harness.event.set()
     run_sdk(sdk_harness)
     sdk_harness.importer.assert_not_called()
+
+
+def test_interrupt_during_cleanup_still_stops_receiver_and_worker(sdk_harness):
+    order = []
+    sdk_harness.localizer.request_stop.side_effect = lambda: order.append("request")
+
+    def interrupted():
+        order.append("device")
+        raise KeyboardInterrupt
+
+    sdk_harness.device.stop_streaming.side_effect = interrupted
+    sdk_harness.receiver.stop_server.side_effect = lambda: order.append("receiver")
+    sdk_harness.localizer.stop.side_effect = lambda: order.append("worker")
+    with pytest.raises(KeyboardInterrupt):
+        run_sdk(sdk_harness)
+    assert order == ["request", "device", "receiver", "worker"]
+
+
+@pytest.mark.parametrize(
+    "status,usable",
+    [
+        (None, True),
+        ("VioStatus.VALID", True),
+        ("VioStatus.FILTER_NOT_INITIALIZED", False),
+        ("VioStatus.INVALID", False),
+    ],
+)
+def test_regular_vio_requires_valid_status(status, usable):
+    vio = regular()
+    if status is not None:
+        vio.status = status
+    assert live.vio_status_valid(vio) is usable
