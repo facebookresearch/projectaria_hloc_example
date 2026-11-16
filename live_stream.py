@@ -683,6 +683,10 @@ def run_live(
                     # e.g. a second Ctrl+C: finish the remaining cleanup first.
                     interrupt = interrupt or error
         if interrupt is not None:
+            if errors:
+                raise BaseExceptionGroup(
+                    "Live streaming cleanup failed", [interrupt, *errors]
+                )
             raise interrupt
         if errors:
             raise ExceptionGroup("Live streaming cleanup failed", errors)

@@ -11,6 +11,32 @@ We actively welcome your pull requests.
 4. Ensure the test suite passes (`python -m pytest`).
 5. If you haven't already, complete the Contributor License Agreement ("CLA").
 
+## Tests and GitHub CI
+
+The GitHub workflow runs on pushes to `main` (including ShipIt syncs), pull
+requests targeting `main`, and manual dispatches. It runs the mocked core suite
+on Ubuntu and macOS, plus the four native COLMAP pose tests on
+Ubuntu. These tests need no glasses, recordings, online MPS, or model weights.
+
+For the lightweight core suite in Python 3.12:
+
+```bash
+python -m pip install --only-binary=:all: -r .github/ci-requirements.txt
+python -m pytest tests --ignore=tests/test_native_pose.py
+```
+
+To run the native geometry tests as well:
+
+```bash
+python -m pip install --only-binary=:all: pycolmap==4.2.1
+python -m pytest tests/test_native_pose.py
+```
+
+This is regression coverage, not an end-to-end recording or live-device
+qualification. Workflow runs use read-only repository permissions and hosted
+runners, with no repository secrets. Changes to the workflow follow the same
+review path as source changes; do not add GitHub-only files to synced `main`.
+
 ## Contributor License Agreement ("CLA")
 In order to accept your pull request, we need you to submit a CLA. You only need
 to do this once to work on any of Meta's open source projects.

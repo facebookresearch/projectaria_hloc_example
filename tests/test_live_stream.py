@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import gc
+import sys
 import threading
 import traceback
 import weakref
@@ -22,6 +23,7 @@ from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import Mock
 
+import live_demo as demo
 import live_stream as live
 import numpy as np
 import pytest
@@ -1463,3 +1465,91 @@ def test_regular_vio_requires_valid_status_in_live_adapter(harness, status, usab
         assert harness.poses == []
         assert harness.localizer._alignment.state == "lost"
         vio.transform_odometry_bodyimu.to_matrix.assert_not_called()
+
+
+@pytest.fixture
+def mixed_cleanup(harness, sdk_harness, request):
+    localizer = harness.localizer
+    sdk_harness.constructor.return_value = localizer
+    prepared = threading.Event()
+    preparation = dict(harness.backend.prepare_map.return_value)
+    first_interrupt = KeyboardInterrupt("streaming interrupted")
+    cleanup_interrupt = KeyboardInterrupt("cleanup interrupted")
+    ordinary_error = OSError("cleanup failed")
+
+    def prepare(map_path):
+        prepared.set()
+        return preparation
+
+    def start_server():
+        assert prepared.wait(2.0)
+        raise first_interrupt
+
+    harness.backend.prepare_map.side_effect = prepare
+    sdk_harness.receiver.start_server.side_effect = start_server
+    if request.param == "device":
+        sdk_harness.device.stop_streaming.side_effect = ordinary_error
+        sdk_harness.receiver.stop_server.side_effect = cleanup_interrupt
+    else:
+        sdk_harness.device.stop_streaming.side_effect = cleanup_interrupt
+        harness.backend.close.side_effect = ordinary_error
+    return SimpleNamespace(
+        harness=harness,
+        sdk=sdk_harness,
+        first_interrupt=first_interrupt,
+        cleanup_interrupt=cleanup_interrupt,
+        ordinary_error=ordinary_error,
+    )
+
+
+@pytest.mark.parametrize("mixed_cleanup", ["device", "worker"], indirect=True)
+def test_mixed_cleanup_preserves_interrupt_and_ordinary_failure(mixed_cleanup):
+    scenario = mixed_cleanup
+    with pytest.raises(BaseExceptionGroup, match="cleanup failed") as captured:
+        run_sdk(scenario.sdk)
+    interrupt, error = captured.value.exceptions
+    assert interrupt is scenario.cleanup_interrupt
+    assert (
+        error is scenario.ordinary_error or error.__cause__ is scenario.ordinary_error
+    )
+    assert captured.value.__context__ is scenario.first_interrupt
+    scenario.sdk.device.stop_streaming.assert_called_once()
+    scenario.sdk.receiver.stop_server.assert_called_once()
+    scenario.harness.backend.close.assert_called_once()
+    assert not scenario.harness.localizer._thread.daemon
+    assert not scenario.harness.localizer._thread.is_alive()
+
+
+@pytest.mark.parametrize("mixed_cleanup", ["device", "worker"], indirect=True)
+def test_live_cli_mixed_cleanup_failure_is_not_success(
+    mixed_cleanup, monkeypatch, tmp_path, capsys
+):
+    output = tmp_path / "mixed-output"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live_demo",
+            "--map",
+            str(mixed_cleanup.sdk.map_path),
+            "--device-ip",
+            "169.254.1.2",
+            "--bind-address",
+            "169.254.1.1",
+            "--output-dir",
+            str(output),
+            "--viewer",
+            "none",
+        ],
+    )
+    viewer = Mock(spec_set=["on_pose", "on_image", "on_status", "close"])
+    monkeypatch.setattr(demo, "RerunView", Mock(return_value=viewer))
+    with pytest.raises(BaseExceptionGroup, match="cleanup failed") as captured:
+        demo.main()
+    assert captured.value.exceptions[0] is mixed_cleanup.cleanup_interrupt
+    assert not capsys.readouterr().out
+    assert (output / "poses.jsonl").is_file()
+    viewer.close.assert_called_once()
+    mixed_cleanup.sdk.receiver.stop_server.assert_called_once()
+    mixed_cleanup.harness.backend.close.assert_called_once()
+    assert not mixed_cleanup.harness.localizer._thread.is_alive()
