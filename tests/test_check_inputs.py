@@ -35,6 +35,9 @@ def test_checks_recorded_cameras_without_inference(tmp_path, monkeypatch, failur
                 "slam-front-left": [10, 20, 30],
             }
 
+        def has_calibration(self, label, index):
+            return True
+
         def select_labels(self, mode):
             assert mode == "all"
             return tuple(self.corrected_timestamps_ns)
@@ -46,6 +49,7 @@ def test_checks_recorded_cameras_without_inference(tmp_path, monkeypatch, failur
             )
 
     trajectory = SimpleNamespace(
+        graph_uid="graph",
         timestamps_ns=[10, 20, 30],
         at=lambda timestamp_ns: None
         if failure == "no_coverage" or timestamp_ns == 200
@@ -61,7 +65,9 @@ def test_checks_recorded_cameras_without_inference(tmp_path, monkeypatch, failur
         result = checker.check_inputs(tmp_path / "scan.vrs", tmp_path / "mps")
         assert result == {
             "camera_frames": {"camera-rgb": 3, "slam-front-left": 3},
+            "mps_covered_frames": {"camera-rgb": 3, "slam-front-left": 3},
             "trajectory_samples": 3,
+            "graph_uid": "graph",
         }
         assert calls[1:] == [("camera-rgb", 1), ("slam-front-left", 1)]
 

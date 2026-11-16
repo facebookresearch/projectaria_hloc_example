@@ -147,6 +147,7 @@ def test_extract_views_motion_gating_actual_timestamps_and_camera_isolation(
         select_labels=lambda mode: SLAM_LABELS[:2],
         timestamps_ns={label: [0, *poses] for label in SLAM_LABELS[:2]},
         corrected_timestamps_ns={label: [0, *poses] for label in SLAM_LABELS[:2]},
+        has_calibration=lambda label, index: True,
         frame=lambda label, index: frame_factory(
             index, 1_000_000_000 if index == 5 else list(poses)[index - 1], label
         ),
@@ -188,6 +189,7 @@ def fake_build_dependencies(monkeypatch, slam_dirs, frame_factory, tmp_path):
             select_labels=lambda mode: ("camera-rgb",),
             timestamps_ns={"camera-rgb": timestamps_ns},
             corrected_timestamps_ns={"camera-rgb": timestamps_ns},
+            has_calibration=lambda label, index: True,
             frame=lambda label, index: frame_factory(
                 index, timestamps_ns[index], label
             ),
@@ -376,6 +378,7 @@ def fake_query_dependencies(monkeypatch, frame_factory, tmp_path):
         select_labels=Mock(return_value=("camera-rgb",)),
         timestamps_ns={"camera-rgb": timestamps_ns},
         corrected_timestamps_ns={"camera-rgb": timestamps_ns},
+        has_calibration=lambda label, index: True,
         frameset=Mock(
             side_effect=lambda labels, index: [
                 frame_factory(index, timestamps_ns[index])
@@ -731,6 +734,7 @@ def test_extract_views_maps_corrected_time_but_serializes_raw_capture(
         select_labels=lambda mode: ("camera-rgb",),
         timestamps_ns={"camera-rgb": raw_ns},
         corrected_timestamps_ns={"camera-rgb": corrected_ns},
+        has_calibration=lambda label, index: True,
         frame=lambda label, index: frame_factory(
             index, raw_ns[index], label, offset_ns
         ),
@@ -760,6 +764,7 @@ def test_extract_views_never_uses_raw_pose_when_corrected_time_is_uncovered(
         select_labels=lambda mode: ("camera-rgb",),
         timestamps_ns={"camera-rgb": [3_000_000]},
         corrected_timestamps_ns={"camera-rgb": [cached_timestamp_ns]},
+        has_calibration=lambda label, index: True,
         frame=frame,
     )
     assert build.extract_views(recording, trajectory, 0, "rgb", tmp_path, 0) == []
@@ -993,3 +998,85 @@ def test_fingerprint_keyframe_lookup_matches_all_duplicate_content_namespaces(
         source_sha256=digest,
     )
     assert hashed.call_count == 1
+
+
+def test_builder_rejects_duplicate_recording_bytes_under_new_name(
+    tmp_path, slam_dirs, fake_build_dependencies
+):
+    backend, _ = fake_build_dependencies
+    copy = tmp_path / "recording9.vrs"
+    copy.write_bytes((tmp_path / "recording0.vrs").read_bytes())
+    output = tmp_path / "duplicate-map"
+    with pytest.raises(ValueError, match="distinct VRS SHA-256"):
+        build.build_map([tmp_path / "recording0.vrs", copy], slam_dirs, output)
+    build.HlocBackend.assert_not_called()
+    assert not output.exists()
+
+
+def test_extract_views_skips_uncalibrated_frames_and_spreads_keyframe_cap(
+    tmp_path, frame_factory
+):
+    timestamps_ns = list(range(10))
+    poses = {
+        t: transform_from_quaternion([1, 0, 0, 0], [0.2 * t, 0, 0])
+        for t in timestamps_ns
+    }
+    decoded = []
+
+    def frame(label, index):
+        decoded.append(index)
+        return frame_factory(index, timestamps_ns[index], label)
+
+    recording = SimpleNamespace(
+        select_labels=lambda mode: ("camera-rgb",),
+        timestamps_ns={"camera-rgb": timestamps_ns},
+        corrected_timestamps_ns={"camera-rgb": timestamps_ns},
+        has_calibration=lambda label, index: index != 0,
+        frame=frame,
+    )
+    trajectory = SimpleNamespace(at=lambda timestamp_ns: poses.get(timestamp_ns))
+    views = build.extract_views(recording, trajectory, 0, "rgb", tmp_path, 3)
+    assert decoded == [1, 5, 9]
+    assert [view.index for view in views] == [1, 5, 9]
+
+
+def test_query_records_unusable_anchor_and_skips_uncalibrated_anchor(
+    map_directory, slam_dirs, tmp_path, fake_query_dependencies, frame_factory
+):
+    path, _ = map_directory
+    recording, backend = fake_query_dependencies
+    recording.has_calibration = lambda label, index: index != 0
+
+    def frameset(labels, index):
+        if index == 2:
+            raise ValueError("SLAM frameset spans more than 2 ms")
+        return [frame_factory(index, recording.timestamps_ns["camera-rgb"][index])]
+
+    recording.frameset = Mock(side_effect=frameset)
+    result = query.query_map(path, tmp_path / "heldout.vrs", slam_dirs[0])
+    assert [call.args[1] for call in recording.frameset.call_args_list] == [1, 2]
+    assert result["num_queries"] == 2
+    failed = result["queries"][1]
+    assert failed["success"] is False
+    assert failed["reason"] == "invalid_frames"
+    assert failed["anchor_index"] == 2
+    assert failed["corrected_timestamp_ns"] == 7_000_000
+    assert backend.query.call_count == 1
+
+
+def test_invalid_frames_consume_requested_query_quota(
+    map_directory, slam_dirs, tmp_path, fake_query_dependencies
+):
+    path, _ = map_directory
+    recording, backend = fake_query_dependencies
+    recording.has_calibration = lambda label, index: index != 0
+    recording.frameset = Mock(side_effect=ValueError("unsynchronized companion"))
+    result = query.query_map(
+        path, tmp_path / "heldout.vrs", slam_dirs[0], num_queries=1
+    )
+    assert result["num_queries"] == 1
+    assert result["num_successes"] == 0
+    assert result["queries"][0]["reason"] == "invalid_frames"
+    assert result["queries"][0]["anchor_index"] == 1
+    assert [call.args[1] for call in recording.frameset.call_args_list] == [1]
+    backend.query.assert_not_called()

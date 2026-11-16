@@ -8,9 +8,8 @@ We actively welcome your pull requests.
 1. Fork the repo and create your branch from `main`.
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
-4. Ensure the notebooks and any test suites passes.
-5. Make sure your code lints.
-6. If you haven't already, complete the Contributor License Agreement ("CLA").
+4. Ensure the test suite passes (`python -m pytest`).
+5. If you haven't already, complete the Contributor License Agreement ("CLA").
 
 ## Contributor License Agreement ("CLA")
 In order to accept your pull request, we need you to submit a CLA. You only need
@@ -28,7 +27,7 @@ outlined on that page and do not file a public issue.
 
 ## Coding Style
 * 4 spaces for indentation rather than tabs
-* Follow the repository's formatter.
+* Match the style of the surrounding code.
 
 ## License
 By contributing to projectaria_hloc_example, you agree that your

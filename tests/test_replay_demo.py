@@ -77,6 +77,59 @@ def test_read_vio_uses_official_fields_and_composes_regular_bodyimu_extrinsics(
         provider.get_vio_high_freq_data_by_index.assert_not_called()
 
 
+@pytest.mark.parametrize(
+    "status,usable",
+    [
+        (None, True),
+        ("VioStatus.VALID", True),
+        ("VioStatus.FILTER_NOT_INITIALIZED", False),
+        ("VioStatus.INVALID", False),
+    ],
+)
+def test_regular_vio_status_controls_recorded_alignment(status, usable):
+    provider = Mock()
+    provider.get_stream_id_from_label.side_effect = (
+        lambda label: "regular" if label == "vio" else None
+    )
+    provider.get_num_data.return_value = 3
+
+    def read_regular(stream, index):
+        timestamp_ns = [100_000_000, 200_000_000, 210_000_000][index]
+        odometry = transform_from_quaternion(
+            [1, 0, 0, 0], [[1, 0, 0], [2, 0, 0], [2.1, 0, 0]][index]
+        )
+        value = SimpleNamespace(
+            capture_timestamp_ns=timestamp_ns,
+            transform_odometry_bodyimu=transform_value(odometry),
+            transform_bodyimu_device=transform_value(np.eye(4)),
+            frontend_session_uid="session-a",
+            pose_quality="PoseQuality.GOOD",
+        )
+        selected_status = "VioStatus.VALID" if index < 2 else status
+        if selected_status is not None:
+            value.status = selected_status
+        return value
+
+    provider.get_vio_data_by_index.side_effect = read_regular
+    samples = replay.read_vio(SimpleNamespace(provider=provider))
+    assert all(sample.quality_good for sample in samples[:2])
+    assert samples[2].quality_good is usable
+    aligner = PoseAlignment()
+    assert [aligner.add_vio(sample) for sample in samples[:2]] == [None, None]
+    assert aligner.add_fix(
+        150_000_000, transform_from_quaternion([1, 0, 0, 0], [10, 0, 0]), "session-a"
+    )
+    pose = aligner.add_vio(samples[2])
+    if usable:
+        assert pose is not None
+        assert pose.timestamp_ns == 210_000_000
+        assert pose.T_map_device[0, 3] == pytest.approx(10.6)
+    else:
+        assert pose is None
+        assert aligner.state == "lost"
+    provider.get_vio_high_freq_data_by_index.assert_not_called()
+
+
 @pytest.mark.parametrize("quality", [0.499, float("nan"), float("inf")])
 def test_bad_high_frequency_quality_is_python_bool_ignored_by_aligner(quality):
     provider = Mock()
@@ -276,6 +329,7 @@ def replay_inputs(monkeypatch, tmp_path, camera, vio_samples):
         provider=provider,
         select_labels=Mock(return_value=("camera-rgb",)),
         corrected_timestamps_ns={"camera-rgb": timestamps_ns},
+        has_calibration=lambda label, index: True,
         frame=Mock(
             side_effect=lambda label, index: Frame(
                 label,

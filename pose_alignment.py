@@ -47,6 +47,16 @@ def _session(session_uid: str) -> str:
     return session_uid
 
 
+def vio_status_valid(vio: object) -> bool:
+    """Regular VIO (FrontendOutput) is usable only when its status is VALID.
+
+    A GOOD pose_quality can accompany FILTER_NOT_INITIALIZED or INVALID status.
+    Records without a status field (e.g. high-frequency poses) are accepted.
+    """
+    status = getattr(vio, "status", None)
+    return status is None or str(status).split(".")[-1] == "VALID"
+
+
 @dataclass(frozen=True)
 class VioSample:
     """One supplied VIO observation; bad-quality matrices are never consumed."""

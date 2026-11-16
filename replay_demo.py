@@ -1,4 +1,4 @@
-#!/usr/bin/env fbpython
+#!/usr/bin/env python3
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ from typing import cast
 import numpy as np
 from aria_utils import Recording
 from map_utils import file_sha256, mps_slam_dir, rigid_transform, write_json
-from pose_alignment import PoseAlignment, VioSample
+from pose_alignment import PoseAlignment, vio_status_valid, VioSample
 from query_map import load_map
 from visualization import PoseWriter, RerunView
 
@@ -60,7 +60,8 @@ def read_vio(recording: Recording) -> list[VioSample]:
                 value.transform_odometry_bodyimu.to_matrix()
                 @ value.transform_bodyimu_device.to_matrix(),
                 str(value.frontend_session_uid),
-                str(value.pose_quality).split(".")[-1] == "GOOD",
+                str(value.pose_quality).split(".")[-1] == "GOOD"
+                and vio_status_valid(value),
             )
         samples.append(sample)
     if len(samples) < 2 or any(
@@ -100,6 +101,7 @@ def schedule_fixes(
         index = max(next_index, latest_index)
         query = candidates[index]
         capture_timestamp_ns = timestamps_ns[index]
+        # Measured HLOC query time only; decode and rectification are excluded.
         duration_sec = float(cast(float, query["query_duration_sec"]))
         if not np.isfinite(duration_sec) or duration_sec < 0:
             raise ValueError("Cached query duration must be finite and nonnegative")
@@ -165,6 +167,7 @@ def replay(  # noqa: C901
             recording.corrected_timestamps_ns[labels[0]]
         )
         if samples[0].timestamp_ns <= timestamp_ns <= samples[-1].timestamp_ns
+        and recording.has_calibration(labels[0], index)
     ]
     accepted_fixes = 0
     first_pose_timestamp_ns = None

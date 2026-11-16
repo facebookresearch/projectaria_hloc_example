@@ -82,6 +82,7 @@ class Recording:
         self.stream_ids = {}
         self.timestamps_ns = {}
         self.corrected_timestamps_ns = {}
+        self.calibration_covered = {}
 
     def select_labels(self, camera_set: str) -> tuple[str, ...]:
         """Require the requested streams rather than silently using fewer cameras."""
@@ -113,8 +114,15 @@ class Recording:
             raise ValueError(
                 f"Image timestamps must be nonempty and strictly increasing for {label}"
             )
+        # Frames far from any online-calibration sample (e.g. before MPS SLAM
+        # starts) stay addressable by index but are skipped by every consumer.
+        covered = [
+            self._calibration_gap_ns(t) <= MAX_CALIBRATION_GAP_NS for t in timestamps
+        ]
+        if not any(covered):
+            raise ValueError(f"No {label} frames are covered by online calibration")
         corrected = [
-            timestamp_ns - self.time_offset_ns(label, timestamp_ns)
+            timestamp_ns - self.time_offset_ns(label, timestamp_ns, strict=False)
             for timestamp_ns in timestamps
         ]
         if any(a >= b for a, b in zip(corrected, corrected[1:])):
@@ -123,18 +131,36 @@ class Recording:
             )
         self.timestamps_ns[label] = timestamps
         self.corrected_timestamps_ns[label] = corrected
+        self.calibration_covered[label] = covered
 
-    def _online_camera(self, label: str, timestamp_ns: int):
+    def has_calibration(self, label: str, index: int) -> bool:
+        """Whether frame ``index`` of ``label`` has online calibration within the gap limit."""
+        return self.calibration_covered[label][index]
+
+    def _nearest_calibration(self, timestamp_ns: int) -> int:
         insertion = bisect.bisect_left(self.calibration_timestamps_ns, timestamp_ns)
         candidates = [
             i for i in (insertion - 1, insertion) if 0 <= i < len(self.calibrations)
         ]
-        index = min(
+        return min(
             candidates,
             key=lambda i: abs(self.calibration_timestamps_ns[i] - timestamp_ns),
         )
+
+    def _calibration_gap_ns(self, timestamp_ns: int) -> int:
+        index = self._nearest_calibration(timestamp_ns)
+        return abs(self.calibration_timestamps_ns[index] - timestamp_ns)
+
+    def _online_camera(
+        self,
+        label: str,
+        timestamp_ns: int,
+        strict: bool = True,
+    ):
+        index = self._nearest_calibration(timestamp_ns)
         if (
-            abs(self.calibration_timestamps_ns[index] - timestamp_ns)
+            strict
+            and abs(self.calibration_timestamps_ns[index] - timestamp_ns)
             > MAX_CALIBRATION_GAP_NS
         ):
             raise ValueError(f"No online calibration near {timestamp_ns} ns")
@@ -143,9 +169,18 @@ class Recording:
             raise ValueError(f"Online calibration is missing {label}")
         return source
 
-    def time_offset_ns(self, label: str, timestamp_ns: int) -> int:
-        """Read the online camera offset in the same recording's clock domain."""
-        camera = self._online_camera(label, timestamp_ns)
+    def time_offset_ns(
+        self,
+        label: str,
+        timestamp_ns: int,
+        strict: bool = True,
+    ) -> int:
+        """Read the online camera offset in the same recording's clock domain.
+
+        ``strict=False`` uses the nearest sample regardless of the gap limit; it is
+        only used to order uncovered frames, which are never decoded.
+        """
+        camera = self._online_camera(label, timestamp_ns, strict)
         return round(float(camera.get_time_offset_sec_device_camera()) * 1e9)
 
     def _source_calibration(

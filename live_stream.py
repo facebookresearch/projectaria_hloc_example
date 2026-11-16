@@ -39,7 +39,7 @@ from aria_utils import Frame
 from hloc_backend import HlocBackend
 from map_utils import Camera, FloatArray, rigid_transform
 from numpy.typing import NDArray
-from pose_alignment import MappedPose, PoseAlignment, VioSample
+from pose_alignment import MappedPose, PoseAlignment, vio_status_valid, VioSample
 from query_map import load_map, localize_frames
 
 HIGH_FREQUENCY_VIO_QUEUE_SIZE: int = 4096
@@ -212,11 +212,16 @@ class LiveLocalizer:
                 self._thread.start()
         return self
 
-    def stop(self) -> None:
+    def request_stop(self) -> None:
+        """Signal the worker to exit without joining; safe before blocking cleanup."""
         with self._condition:
             self._stopped = True
             self._pending = None
             self._condition.notify_all()
+
+    def stop(self) -> None:
+        self.request_stop()
+        with self._condition:
             thread = self._thread
         if thread is not None:
             if thread is threading.current_thread():
@@ -370,7 +375,9 @@ class LiveLocalizer:
 
     def on_vio(self, vio: RegularVio) -> None:
         try:
-            quality_good = str(vio.pose_quality).split(".")[-1] == "GOOD"
+            quality_good = str(vio.pose_quality).split(".")[-1] == "GOOD" and (
+                vio_status_valid(vio)
+            )
             pose = (
                 vio.transform_odometry_bodyimu.to_matrix()
                 @ vio.transform_bodyimu_device.to_matrix()
@@ -658,6 +665,10 @@ def run_live(
             localizer.raise_if_failed()
         localizer.raise_if_failed()
     finally:
+        # Unblock the non-daemon worker first, so an interrupt during a slow
+        # device call below cannot leave it waiting forever.
+        localizer.request_stop()
+        interrupt: BaseException | None = None
         for cleanup in (
             device.stop_streaming if device is not None else None,
             stream_receiver.stop_server if stream_receiver is not None else None,
@@ -668,5 +679,10 @@ def run_live(
                     cleanup()
                 except Exception as error:
                     errors.append(error)
+                except BaseException as error:  # noqa: B036
+                    # e.g. a second Ctrl+C: finish the remaining cleanup first.
+                    interrupt = interrupt or error
+        if interrupt is not None:
+            raise interrupt
         if errors:
             raise ExceptionGroup("Live streaming cleanup failed", errors)

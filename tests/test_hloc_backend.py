@@ -36,6 +36,7 @@ def backend(monkeypatch, tmp_path):
         confs={"superpoint+lightglue": {"name": "match"}}, main=Mock()
     )
     modules = {
+        "torch": SimpleNamespace(),
         "hloc": SimpleNamespace(__file__=str(tmp_path / "hloc" / "__init__.py")),
         "hloc.extract_features": extractor,
         "hloc.match_features": matcher,
@@ -88,7 +89,7 @@ def test_hloc_requires_real_checkout_file_before_loading_model_adapters(monkeypa
     monkeypatch.setattr(hloc, "validate_hloc_checkout", validate)
     with pytest.raises(ValueError, match="source checkout"):
         hloc.HlocBackend()
-    imported.assert_called_once_with("hloc")
+    assert [call.args[0] for call in imported.call_args_list] == ["torch", "hloc"]
     validate.assert_not_called()
 
 
@@ -589,7 +590,8 @@ def test_query_scores_independent_covisibility_clusters_without_ground_truth(
     if successful:
         assert result["num_inlier_landmarks"] == 25
     else:
-        assert result["reason"] == "no_matches"
+        # The most informative failure (most inlier landmarks) is reported.
+        assert result["num_inlier_landmarks"] == 25
     assert [call.args[4] for call in solve.call_args_list] == [[1], [2], [3]]
     assert not unused_query_path.exists()
     backend.extractor.main.assert_not_called()
@@ -819,10 +821,10 @@ def test_empty_camera_query_does_not_skip_other_camera_matches(
         (empty_features, descriptor),
         (original_features, descriptor),
     ]
-    solve = Mock(return_value={"success": False})
+    solve = Mock(return_value={"success": False, "reason": "insufficient_inliers"})
     monkeypatch.setattr(hloc, "estimate_pose", solve)
     result = backend.query(map_path, [frames[0], frames[0]])
-    assert result["reason"] == "no_matches"
+    assert result["reason"] == "insufficient_inliers"
     assert models.match.call_count == 3
     assert result["cache_statistics"]["cache_misses"] == 3
     assert result["cache_statistics"]["cache_hits"] == 0
@@ -847,3 +849,27 @@ def test_cache_bound_rejected_before_neural_import(monkeypatch, max_bytes):
     with pytest.raises(ValueError, match="positive integer"):
         hloc.HlocBackend(cache_max_bytes=max_bytes)
     imported.assert_not_called()
+
+
+def test_unpatched_hloc_is_reported_with_the_patch_command(monkeypatch, tmp_path):
+    def unpatched_main(conf, image_dir, export_dir=None, as_half=True):
+        raise AssertionError("must not run")
+
+    modules = {
+        "torch": SimpleNamespace(),
+        "hloc": SimpleNamespace(__file__=str(tmp_path / "hloc" / "__init__.py")),
+        "hloc.extract_features": SimpleNamespace(confs={}, main=unpatched_main),
+        "hloc.match_features": SimpleNamespace(confs={}, main=Mock()),
+        "hloc.triangulation": SimpleNamespace(main=Mock()),
+        "hloc.utils.io": SimpleNamespace(),
+        "pycolmap": SimpleNamespace(__version__="4.2.1"),
+    }
+    original_import = hloc.importlib.import_module
+    monkeypatch.setattr(
+        hloc.importlib,
+        "import_module",
+        lambda name: modules[name] if name in modules else original_import(name),
+    )
+    monkeypatch.setattr(hloc, "validate_hloc_checkout", Mock())
+    with pytest.raises(ValueError, match="hloc-workers.patch"):
+        hloc.HlocBackend()

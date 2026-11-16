@@ -86,7 +86,12 @@ def rerun_modules(monkeypatch):
         }
     )
     colmap = SimpleNamespace(Reconstruction=Mock(return_value=model))
-    modules = {"rerun": rr, "rerun.blueprint": blueprint, "pycolmap": colmap}
+    modules = {
+        "rerun": rr,
+        "rerun.blueprint": blueprint,
+        "torch": SimpleNamespace(),
+        "pycolmap": colmap,
+    }
     original = viz.importlib.import_module
     monkeypatch.setattr(
         viz.importlib,

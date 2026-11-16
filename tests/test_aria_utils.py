@@ -21,7 +21,8 @@ from unittest.mock import Mock
 import aria_utils as aria
 import numpy as np
 import pytest
-from map_utils import SLAM_LABELS
+import query_map as query
+from map_utils import HLOC_COMMIT, SLAM_LABELS, write_json
 
 
 @pytest.fixture
@@ -463,3 +464,83 @@ def test_frameset_nearest_selection_uses_corrected_not_raw_clock(
     assert [frame.index for frame in frames] == [0, 1, 0, 0]
     assert [frame.corrected_timestamp_ns for frame in frames] == [10_000_000] * 4
     assert frames[1].capture_timestamp_ns == 15_000_000
+
+
+def test_frames_outside_online_calibration_are_marked_not_fatal(recording, pat):
+    uncovered_ns = 1_000_001 + aria.MAX_CALIBRATION_GAP_NS
+    pat.provider.get_timestamps_ns.return_value = [1_000_000, 2_000_000, uncovered_ns]
+    assert recording.select_labels("rgb") == ("camera-rgb",)
+    assert [recording.has_calibration("camera-rgb", i) for i in range(3)] == [
+        True,
+        True,
+        False,
+    ]
+    assert recording.corrected_timestamps_ns["camera-rgb"][2] == uncovered_ns
+    with pytest.raises(ValueError, match="No online calibration"):
+        recording.time_offset_ns("camera-rgb", uncovered_ns)
+
+
+def test_stream_without_any_calibrated_frame_is_rejected(recording, pat):
+    start_ns = 1_000_001 + aria.MAX_CALIBRATION_GAP_NS
+    pat.provider.get_timestamps_ns.return_value = [start_ns, start_ns + 1_000_000]
+    with pytest.raises(ValueError, match="No camera-rgb frames are covered"):
+        recording.select_labels("rgb")
+
+
+def test_four_camera_query_records_secondary_calibration_gap(
+    pat, tmp_path, trajectory_file, make_view, monkeypatch
+):
+    timestamps_ns = {label: [1_000_100_000, 1_200_000_000] for label in SLAM_LABELS}
+    timestamps_ns[SLAM_LABELS[1]] = [999_999_900, 1_200_000_000]
+    pat.sample.tracking_timestamp = timedelta(seconds=2)
+    pat.provider.get_num_data.return_value = 2
+    pat.provider.get_timestamps_ns.side_effect = lambda stream, domain: timestamps_ns[
+        stream
+    ]
+    pat.provider.get_image_data_by_index.side_effect = lambda stream, index: (
+        pat.data,
+        SimpleNamespace(capture_timestamp_ns=timestamps_ns[stream][index]),
+    )
+    trajectory_file(
+        name="mps/slam/closed_loop_trajectory.csv",
+        timestamps_us=(1_000_100, 1_200_000),
+    )
+    mps = tmp_path / "mps"
+    online = mps / "slam" / "online_calibration.jsonl"
+    online.write_text("{}\n")
+    vrs = tmp_path / "query.vrs"
+    vrs.write_bytes(b"query recording")
+    recording = aria.Recording(vrs, online)
+    monkeypatch.setattr(query, "Recording", lambda *args: recording)
+    map_path = tmp_path / "map"
+    map_path.mkdir()
+    for name in ("features.h5", "global.h5"):
+        (map_path / name).touch()
+    (map_path / "sfm").mkdir()
+    write_json(
+        map_path / "map.json",
+        {
+            "format_version": 1,
+            "hloc_commit": HLOC_COMMIT,
+            "graph_uid": "graph-A",
+            "source_vrs": ["mapping.vrs"],
+            "source_vrs_sha256": ["a" * 64],
+            "views": [make_view("mapping.png").to_dict()],
+        },
+    )
+    backend = Mock()
+    backend.prepare_map.return_value = {}
+    backend.query.return_value = {"success": False, "reason": "no_matches"}
+    monkeypatch.setattr(query, "HlocBackend", Mock(return_value=backend))
+    result = query.query_map(map_path, vrs, mps, mode="slam", num_queries=2)
+    assert result["num_queries"] == 2
+    assert result["queries"][0]["reason"] == "invalid_frames"
+    assert result["queries"][0]["anchor_index"] == 0
+    assert result["queries"][0]["corrected_timestamp_ns"] == 1_000_100_000
+    assert "No online calibration" in result["queries"][0]["error"]
+    assert recording.calibration_covered[SLAM_LABELS[1]] == [False, True]
+    backend.query.assert_called_once()
+    frames = backend.query.call_args.args[1]
+    assert [frame.label for frame in frames] == list(SLAM_LABELS)
+    assert [frame.index for frame in frames] == [1] * 4
+    backend.close.assert_called_once()

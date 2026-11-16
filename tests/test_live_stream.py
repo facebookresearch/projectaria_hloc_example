@@ -1398,3 +1398,68 @@ def test_already_stopped_never_imports_sdk_or_connects(sdk_harness):
     sdk_harness.event.set()
     run_sdk(sdk_harness)
     sdk_harness.importer.assert_not_called()
+
+
+def test_interrupt_during_cleanup_still_stops_receiver_and_worker(harness, sdk_harness):
+    localizer = harness.localizer
+    sdk_harness.constructor.return_value = localizer
+    worker_prepared = threading.Event()
+    preparation = dict(harness.backend.prepare_map.return_value)
+
+    def prepare(map_path):
+        worker_prepared.set()
+        return preparation
+
+    def start_server():
+        assert worker_prepared.wait(2.0)
+        sdk_harness.event.set()
+
+    interrupt = KeyboardInterrupt("interrupted device cleanup")
+
+    def interrupted():
+        assert localizer._stopped
+        assert localizer._pending is None
+        raise interrupt
+
+    harness.backend.prepare_map.side_effect = prepare
+    sdk_harness.receiver.start_server.side_effect = start_server
+    sdk_harness.device.stop_streaming.side_effect = interrupted
+    with pytest.raises(KeyboardInterrupt) as captured:
+        run_sdk(sdk_harness)
+    assert captured.value is interrupt
+    sdk_harness.receiver.stop_server.assert_called_once()
+    harness.backend.close.assert_called_once()
+    assert localizer._thread is not None
+    assert not localizer._thread.daemon
+    assert not localizer._thread.is_alive()
+
+
+@pytest.mark.parametrize(
+    "status,usable",
+    [
+        (None, True),
+        ("VioStatus.VALID", True),
+        ("VioStatus.FILTER_NOT_INITIALIZED", False),
+        ("VioStatus.INVALID", False),
+    ],
+)
+def test_regular_vio_requires_valid_status_in_live_adapter(harness, status, usable):
+    seed(harness)
+    assert harness.localizer._alignment.add_fix(150_000_000, transform(10), "A")
+    vio = regular(210, 2.1)
+    if status is not None:
+        vio.status = status
+    if not usable:
+        vio.transform_odometry_bodyimu.to_matrix = Mock(
+            side_effect=AssertionError("invalid-status matrix must not be read")
+        )
+    harness.localizer.on_vio(vio)
+    harness.localizer.raise_if_failed()
+    if usable:
+        assert len(harness.poses) == 1
+        assert harness.poses[0].timestamp_ns == 210_000_000
+        assert harness.poses[0].T_map_device[0, 3] == pytest.approx(10.6)
+    else:
+        assert harness.poses == []
+        assert harness.localizer._alignment.state == "lost"
+        vio.transform_odometry_bodyimu.to_matrix.assert_not_called()
