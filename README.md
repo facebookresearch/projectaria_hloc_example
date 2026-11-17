@@ -13,8 +13,8 @@ queries, and carry visual corrections forward with recorded or live VIO.
   <kbd>Rerun</kbd>
 </p>
 
-[Quickstart](#quickstart) · [Results](#results-on-pilot) ·
-[Runtime & frames](#runtime-and-frame-contracts) ·
+[Quickstart](#quickstart) · [Your own recordings](#use-your-own-recordings) ·
+[Results](#results-on-pilot) · [Runtime & frames](#runtime-and-frame-contracts) ·
 [Notebook](hloc_example.ipynb) · [Benchmark](benchmarks/pilot_multitrajectory.json)
 
 ![MPS, HLOC and Digital Twin shown from the same room camera](assets/pilot-room-comparison.gif)
@@ -109,6 +109,9 @@ or a textured reconstruction; separate original-color point exports are not bund
 Use **Python 3.12**, the pinned environment and local disk space for all three
 recordings plus generated maps. Upstream models download weights on first
 inference. This workflow does not accept dataset terms or request MPS for you.
+
+**Using your own environment?** [Start with your own recordings](#use-your-own-recordings)
+instead. The Pilot steps below use already-processed public data.
 
 <details>
 <summary><strong>1. Install the pinned environment</strong></summary>
@@ -286,6 +289,29 @@ are intentionally unexecuted with no fabricated outputs.
 
 </details>
 
+## Use your own recordings
+
+**Your glasses. Your environment. The same VRS + MPS input contract.**
+
+![Aria capture and USB export feed separate mapping and query MPS workflows, then HLOC localization](assets/own-recording-workflow.svg)
+
+*Record with the Companion App, configured action button, Aria Studio or public
+SDK. Export the VRS over USB. Process only mapping recordings together; keep the
+query recording separate.*
+
+1. **Record:** choose a profile with RGB, four SLAM cameras and IMUs; include VIO
+   if you want replay.
+2. **Transfer:** copy the VRS from the glasses to your computer with Studio or
+   the SDK CLI.
+3. **Process:** request MPS SLAM, or Multi-SLAM for multiple mapping recordings.
+   Process the independent query separately for its calibration.
+4. **Localize:** check the inputs, build an RGB map, query the new recording and
+   optionally replay its recorded VIO in Rerun.
+
+[Capture options, MPS commands and own-data quickstart](docs/own_recordings.md).
+This path uses standard external Aria Gen 2 tools and your Project Aria account;
+it does not run recording or MPS requests for you.
+
 ## Runtime and frame contracts
 
 <details>
@@ -351,8 +377,8 @@ assets are separate future work, not inputs to matching, localization or ground 
 <summary><strong>Live map-frame VIO for your own environment</strong></summary>
 
 Pilot replay needs no glasses; its apartment map will not localize an unrelated
-room. For physical streaming, first map your environment and pair/configure
-USB-NCM with the public SDK:
+room. For physical streaming, first [record and map your environment](docs/own_recordings.md),
+then pair/configure USB-NCM with the public SDK:
 
 ```bash
 python live_demo.py --map maps/MY_ENVIRONMENT_RGB --profile profile9 \

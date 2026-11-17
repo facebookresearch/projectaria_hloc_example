@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="620" viewBox="0 0 1400 620" role="img" aria-labelledby="title desc">
+  <title id="title">Your Aria recordings: capture, USB export, MPS processing and HLOC localization</title>
+  <desc id="desc">Companion App, the configured action button, Aria Studio or the public SDK records VRS on Aria Gen 2 glasses. Export over USB to your computer. Process only mapping recordings with SLAM or Multi-SLAM and build a metric HLOC map. Process an independent query recording separately for calibration, then localize its images against the map. Recorded VIO replay is optional. This is a workflow diagram, not a device test or benchmark.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0B1827"/><stop offset="1" stop-color="#132A3D"/></linearGradient>
+    <marker id="blue-arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0L9 4L0 8Z" fill="#70BFFF"/></marker>
+    <marker id="violet-arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0L9 4L0 8Z" fill="#B4A6F5"/></marker>
+  </defs>
+  <rect width="1400" height="620" rx="24" fill="url(#bg)"/>
+  <g font-family="DejaVu Sans,Arial,sans-serif">
+    <text x="38" y="48" fill="#F1F7FF" font-size="27" font-weight="700">Your Aria recordings → a map of your environment</text>
+    <text x="38" y="79" fill="#A8BED5" font-size="17">Public capture tools · local VRS files · cloud MPS · mapping and query kept separate</text>
+    <g fill="#172F43" stroke="#395B78" stroke-width="1.5">
+      <rect x="38" y="108" width="418" height="114" rx="13"/>
+      <rect x="492" y="108" width="420" height="114" rx="13"/>
+      <rect x="948" y="108" width="414" height="114" rx="13"/>
+    </g>
+    <g fill="#ECF4FF" font-size="21" font-weight="700">
+      <text x="58" y="142">01  RECORD ON THE GLASSES</text>
+      <text x="512" y="142">02  EXPORT OVER USB</text>
+      <text x="968" y="142">03  PROCESS, BUILD, LOCALIZE</text>
+    </g>
+    <g fill="#AFC7DE" font-size="18">
+      <text x="58" y="177">Companion App · action button</text>
+      <text x="58" y="202">Aria Studio · SDK CLI / Python</text>
+      <text x="512" y="177">VRS → your computer</text>
+      <text x="512" y="202">Keep mapping and query files separate</text>
+      <text x="968" y="177">MPS trajectories + online calibration</text>
+      <text x="968" y="202">Follow the two paths below</text>
+    </g>
+    <g stroke="#70BFFF" stroke-width="2.5" fill="none" marker-end="url(#blue-arrow)">
+      <path d="M459 165H487"/>
+      <path d="M915 165H943"/>
+    </g>
+    <text x="38" y="262" fill="#70BFFF" font-size="17" font-weight="700">MAPPING  ·  jointly process mapping recordings only</text>
+    <g fill="#172F43" stroke="#395B78" stroke-width="1.5">
+      <rect x="38" y="278" width="240" height="120" rx="13"/>
+      <rect x="322" y="278" width="306" height="120" rx="13"/>
+      <rect x="672" y="278" width="306" height="120" rx="13"/>
+      <rect x="1022" y="278" width="340" height="120" rx="13"/>
+    </g>
+    <g fill="#ECF4FF" font-size="21" font-weight="700">
+      <text x="58" y="313">MAPPING VRS</text>
+      <text x="342" y="313">SLAM / MULTI-SLAM</text>
+      <text x="692" y="313">BUILD HLOC MAP</text>
+      <text x="1042" y="313">METRIC RGB MAP</text>
+    </g>
+    <g fill="#AFC7DE" font-size="18">
+      <text x="58" y="348">One or more VRS files</text>
+      <text x="58" y="374">Same environment</text>
+      <text x="342" y="348">Known poses + calibration</text>
+      <text x="342" y="374">One graph for map inputs</text>
+      <text x="692" y="348">Rectify · match · triangulate</text>
+      <text x="692" y="374">Mapping images only</text>
+      <text x="1042" y="348">Reuse the same map</text>
+      <text x="1042" y="374">for independent queries</text>
+    </g>
+    <g stroke="#70BFFF" stroke-width="2.5" fill="none" marker-end="url(#blue-arrow)">
+      <path d="M281 338H317"/>
+      <path d="M631 338H667"/>
+      <path d="M981 338H1017"/>
+      <path d="M1192 400V424H826V448"/>
+    </g>
+    <text x="872" y="420" fill="#A8BED5" font-size="15">reuse map</text>
+    <text x="38" y="437" fill="#B4A6F5" font-size="17" font-weight="700">QUERY  ·  never add this recording to the mapping request</text>
+    <g fill="#212D45" stroke="#655E8D" stroke-width="1.5">
+      <rect x="38" y="452" width="240" height="120" rx="13"/>
+      <rect x="322" y="452" width="306" height="120" rx="13"/>
+      <rect x="672" y="452" width="306" height="120" rx="13"/>
+      <rect x="1022" y="452" width="340" height="120" rx="13"/>
+    </g>
+    <g fill="#ECF4FF" font-size="21" font-weight="700">
+      <text x="58" y="487">QUERY VRS</text>
+      <text x="342" y="487">SINGLE SLAM</text>
+      <text x="692" y="487">HLOC LOCALIZATION</text>
+      <text x="1042" y="487">MAP-FRAME POSES</text>
+    </g>
+    <g fill="#BFC7E2" font-size="18">
+      <text x="58" y="522">A new recording</text>
+      <text x="58" y="548">Same environment</text>
+      <text x="342" y="522">Process query separately</text>
+      <text x="342" y="548">Use its own calibration</text>
+      <text x="692" y="522">Query images + saved map</text>
+      <text x="692" y="548">Retrieve · match · solve pose</text>
+      <text x="1042" y="522">Optional recorded VIO replay</text>
+      <text x="1042" y="548">and Rerun visualization</text>
+    </g>
+    <g stroke="#B4A6F5" stroke-width="2.5" fill="none" marker-end="url(#violet-arrow)">
+      <path d="M281 512H317"/>
+      <path d="M631 512H667"/>
+      <path d="M981 512H1017"/>
+    </g>
+    <text x="38" y="603" fill="#A8BED5" font-size="16">Streaming alone does not create the on-glasses VRS used by this workflow. Replay needs recorded VIO.</text>
+  </g>
+</svg>

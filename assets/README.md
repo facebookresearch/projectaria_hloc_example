@@ -2,6 +2,14 @@
 
 The release README uses these small, repository-local media files:
 
+## Own-recording workflow
+
+`own-recording-workflow.svg` is an original explanatory diagram of public Aria
+Gen 2 capture, USB VRS export, MPS processing and HLOC localization. Mapping and
+independent query recordings follow separate paths. It contains no captured
+sensor data and is not a hardware test, MPS request or benchmark result.
+See [the own-recording guide](../docs/own_recordings.md) for commands and sources.
+
 ## Same-camera asset comparison
 
 `pilot-room-comparison.jpg` / `.gif` show the new joint-MPS living component
