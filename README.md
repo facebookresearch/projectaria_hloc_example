@@ -106,6 +106,11 @@ or a textured reconstruction; separate original-color point exports are not bund
 
 ## Quickstart
 
+> **A passed pose gate is not a correctness guarantee.** Incorrect poses can
+> still be accepted, including large position or rotation errors. An incorrect
+> visual fix can cause a map-frame pose jump and affect subsequent VIO-propagated
+> outputs. Validate with a separate recording before relying on the result.
+
 Use **Python 3.12**, the pinned environment and local disk space for all three
 recordings plus generated maps. Upstream models download weights on first
 inference. This workflow does not accept dataset terms or request MPS for you.

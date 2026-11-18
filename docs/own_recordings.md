@@ -13,6 +13,20 @@ The [Pilot quickstart](../README.md#quickstart) uses already-processed public da
 no glasses or new MPS request are needed. Its notebook keeps those fixed inputs.
 For your own recordings, run the commands below from this repository's root.
 
+## Map your own space
+
+A walked route alone does not cover every viewing direction:
+
+- Make at least two passes, walking each route in both directions.
+- Turn slowly in place at room centers and doorways to capture overlapping views.
+- Cover sitting and standing head heights.
+- Map in lighting similar to the conditions in which you will localize.
+
+For multiple mapping recordings, process **only those recordings together**
+with [Multi-SLAM](#3-process-with-mps). Validate using
+an independent query recording and process its MPS separately. Better coverage
+is not a guarantee that every accepted pose is correct.
+
 ## 1. Record on the glasses
 
 Pair the [Companion App][companion-setup], then select a [recording profile][profiles]
