@@ -16,7 +16,9 @@
 
 One serialized worker owns each session. A map is an immutable snapshot: stop
 queries before replacing its files, then explicitly close/reinitialize the
-backend. Neither map files nor upstream modules are modified here.
+backend. Neither map files nor upstream modules are modified here. Within one
+rig query, per-camera extraction and matching may run on bounded worker threads
+with one CUDA stream each; the call returns only after every worker finished.
 """
 
 from __future__ import annotations
@@ -25,11 +27,12 @@ import importlib
 import time
 from collections import OrderedDict
 from collections.abc import Callable, Iterator, Mapping, Sequence
+from concurrent.futures import Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 from types import MappingProxyType, ModuleType, SimpleNamespace
-from typing import cast, Protocol
+from typing import cast, Protocol, TypeVar
 
 import h5py
 import numpy as np
@@ -39,6 +42,9 @@ FeatureArray = NDArray[np.generic]
 Features = Mapping[str, FeatureArray]
 DEFAULT_CACHE_MAX_BYTES: int = 256 * 1024 * 1024
 MAX_KEYPOINTS: int = 4096
+RIG_EXECUTION_MODES: tuple[str, ...] = ("auto", "serial", "parallel")
+MAX_RIG_WORKERS: int = 4
+TaskResult = TypeVar("TaskResult")
 
 
 class CpuPrediction(Protocol):
@@ -47,6 +53,12 @@ class CpuPrediction(Protocol):
     def cpu(self) -> CpuPrediction: ...
 
     def numpy(self) -> FeatureArray: ...
+
+
+class CudaStream(Protocol):
+    """The public stream method rig workers use before returning."""
+
+    def synchronize(self) -> None: ...
 
 
 def prediction_arrays(prediction: object) -> dict[str, FeatureArray]:
@@ -333,15 +345,77 @@ def preprocess_image(
     return {"image": image / 255.0, "original_size": np.array(size)}
 
 
+def rig_execution_plan(
+    requested: str, device: str, num_cameras: int
+) -> dict[str, object]:
+    """Resolve how one query runs its cameras; only CUDA rigs run in parallel."""
+    if requested not in RIG_EXECUTION_MODES:
+        raise ValueError(f"rig_execution must be one of {RIG_EXECUTION_MODES}")
+    if num_cameras < 2:
+        mode, reason = "serial", "single_camera"
+    elif requested == "serial":
+        mode, reason = "serial", "requested"
+    elif device != "cuda":
+        mode, reason = "serial", "requires_cuda"
+    else:
+        mode, reason = "parallel", requested
+    return {
+        "requested": requested,
+        "mode": mode,
+        "workers": min(num_cameras, MAX_RIG_WORKERS) if mode == "parallel" else 1,
+        "cameras": num_cameras,
+        "device": str(device),
+        "reason": reason,
+    }
+
+
+def collect_failures(
+    futures: Sequence[Future[None]],
+    failed: Sequence[Sequence[tuple[int, Exception]]],
+    cleanup: Sequence[Sequence[Exception]],
+) -> list[tuple[BaseException, str]]:
+    """Every worker error with its note, in raise priority: fatal, task, cleanup."""
+    notes: list[tuple[BaseException, str]] = [
+        (error, f"Rig worker stopped: {error!r}")
+        for error in (future.exception() for future in futures)
+        if error is not None
+    ]
+    notes += [
+        (error, f"Rig camera task {index} also failed: {error!r}")
+        for index, error in sorted(
+            (failure for errors in failed for failure in errors),
+            key=lambda failure: failure[0],
+        )
+    ]
+    notes += [
+        (error, f"Rig stream/device synchronization failed: {error!r}")
+        for errors in cleanup
+        for error in errors
+    ]
+    return notes
+
+
+def annotate(
+    primary: BaseException, notes: Sequence[tuple[BaseException, str]]
+) -> None:
+    for error, note in notes:
+        if error is not primary:
+            primary.add_note(note)
+
+
 class ResidentModels:
     """Pinned upstream extractor/matcher instances, retained across map queries."""
 
     def __init__(self, extractor: ModuleType, matcher: ModuleType) -> None:
         self.extractor = extractor
         self.local_model = self.global_model = self.match_model = None
+        self.device_index: int | None = None
+        self._rig_streams: list[CudaStream] = []
         try:
             self.torch = importlib.import_module("torch")
             self.device = "cuda" if self.torch.cuda.is_available() else "cpu"
+            if self.device == "cuda":
+                self.device_index = int(self.torch.cuda.current_device())
             self.local_conf = deepcopy(extractor.confs["superpoint_aachen"])
             self.global_conf = deepcopy(extractor.confs["netvlad"])
             self.local_model = extractor.dynamic_load(
@@ -366,7 +440,115 @@ class ResidentModels:
 
     def synchronize(self) -> None:
         if self.device == "cuda":
-            self.torch.cuda.synchronize()
+            self.torch.cuda.synchronize(self.device_index)
+
+    def _streams(self, count: int) -> list[CudaStream]:
+        """Persistent per-worker streams for this resident session on its model device.
+
+        Reusing them bounds this session's cached allocator blocks to at most four
+        streams; a new session after a map transition gets its own streams. If
+        creating a stream fails, existing streams are kept and no new one is added.
+        """
+        if len(self._rig_streams) < count:
+            created = [
+                self.torch.cuda.Stream(device=self.device_index)
+                for _ in range(count - len(self._rig_streams))
+            ]
+            self._rig_streams.extend(created)
+        return self._rig_streams[:count]
+
+    def run_parallel(
+        self, tasks: Sequence[Callable[[], TaskResult]], workers: int
+    ) -> list[TaskResult]:
+        """Run independent per-camera tasks on bounded threads, one CUDA stream each.
+
+        Worker k runs tasks k, k + workers, ... on the device holding the weights;
+        results keep task order. All started workers are joined, their streams and
+        the device synchronized before this returns or raises. A fatal worker error
+        is raised first, else the lowest-index task failure; others become notes.
+        """
+        if (
+            self.local_model is None
+            or self.global_model is None
+            or self.match_model is None
+        ):
+            raise RuntimeError("Resident models are closed")
+        if self.device != "cuda":
+            raise RuntimeError("Parallel rig execution requires a CUDA device")
+        if type(workers) is not int or not 1 <= workers <= min(
+            len(tasks), MAX_RIG_WORKERS
+        ):
+            raise ValueError("Rig workers must be between 1 and min(cameras, 4)")
+        streams = self._streams(workers)
+        results: list[TaskResult | None] = [None] * len(tasks)
+        failed: list[list[tuple[int, Exception]]] = [[] for _ in range(workers)]
+        cleanup: list[list[Exception]] = [[] for _ in range(workers + 1)]
+        futures: list[Future[None]] = []
+        self.synchronize()
+        try:
+            with ThreadPoolExecutor(
+                workers, thread_name_prefix="aria-hloc-rig"
+            ) as pool:
+                for slot in range(workers):
+                    jobs = [
+                        (index, tasks[index])
+                        for index in range(slot, len(tasks), workers)
+                    ]
+                    futures.append(
+                        pool.submit(
+                            self._run_worker,
+                            streams[slot],
+                            jobs,
+                            results,
+                            failed[slot],
+                            cleanup[slot],
+                        )
+                    )
+        finally:
+            # Leaving the pool joined every started worker; also drain the device.
+            try:
+                self.synchronize()
+            except Exception as error:
+                cleanup[workers].append(error)
+            except BaseException as error:
+                annotate(error, collect_failures(futures, failed, cleanup))
+                raise
+        notes = collect_failures(futures, failed, cleanup)
+        if notes:
+            annotate(notes[0][0], notes[1:])
+            raise notes[0][0]
+        return cast(list[TaskResult], results)
+
+    def _run_worker(
+        self,
+        stream: CudaStream,
+        jobs: Sequence[tuple[int, Callable[[], TaskResult]]],
+        results: list[TaskResult | None],
+        failed: list[tuple[int, Exception]],
+        cleanup: list[Exception],
+    ) -> None:
+        """Run one worker's tasks in order on its own stream, always draining it.
+
+        Errors are recorded in the caller's lists; a fatal BaseException still
+        propagates, after this worker's stream has been synchronized.
+        """
+        try:
+            device = self.torch.cuda.device(self.device_index)
+            with device, self.torch.cuda.stream(stream):
+                try:
+                    for index, task in jobs:
+                        try:
+                            results[index] = task()
+                        except Exception as error:
+                            failed.append((index, error))
+                            break
+                finally:
+                    try:
+                        stream.synchronize()
+                    except Exception as error:
+                        cleanup.append(error)
+        except Exception as error:
+            cleanup.append(error)
 
     def _extract_prediction(
         self,
@@ -463,6 +645,7 @@ class ResidentModels:
 
     def close(self) -> None:
         self.local_model = self.global_model = self.match_model = None
+        self._rig_streams.clear()
 
 
 class StageTimings:
@@ -478,9 +661,22 @@ class StageTimings:
         self.synchronize()
         try:
             yield
-        finally:
-            self.synchronize()
-            key = name + "_duration_sec"
-            self.durations_sec[key] = (
-                self.durations_sec.get(key, 0.0) + time.perf_counter() - start_time_sec
-            )
+        except BaseException as error:
+            # Keep the stage's own failure; a failing cleanup sync becomes a note.
+            try:
+                self.synchronize()
+            except Exception as cleanup_error:
+                error.add_note(
+                    f"{name} stage synchronization failed: {cleanup_error!r}"
+                )
+            finally:
+                self._record(name, start_time_sec)
+            raise
+        self.synchronize()
+        self._record(name, start_time_sec)
+
+    def _record(self, name: str, start_time_sec: float) -> None:
+        key = name + "_duration_sec"
+        self.durations_sec[key] = (
+            self.durations_sec.get(key, 0.0) + time.perf_counter() - start_time_sec
+        )

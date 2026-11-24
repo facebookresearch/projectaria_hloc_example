@@ -17,7 +17,9 @@
 from __future__ import annotations
 
 import json
+import threading
 from contextlib import contextmanager
+from functools import partial
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -301,24 +303,65 @@ class FakeTensor:
         return self
 
 
+class FakeStream:
+    def __init__(self, device):
+        self.device = device
+        self.synchronize = Mock()
+
+
+class FakeCuda:
+    """The CUDA calls the resident models make; device and stream are thread-local."""
+
+    def __init__(self, available):
+        self.is_available = lambda: available
+        self.synchronize = Mock()
+        self.empty_cache = Mock()
+        self.current_device = Mock(return_value=1)
+        self.Stream = Mock(side_effect=lambda device: FakeStream(device))
+        self.local = threading.local()
+
+    @contextmanager
+    def device(self, index):
+        previous = getattr(self.local, "device", None)
+        self.local.device = index
+        try:
+            yield
+        finally:
+            self.local.device = previous
+
+    @contextmanager
+    def stream(self, stream):
+        previous = getattr(self.local, "stream", None)
+        self.local.stream = stream
+        try:
+            yield
+        finally:
+            self.local.stream = previous
+
+    def active(self):
+        return getattr(self.local, "device", None), getattr(self.local, "stream", None)
+
+
 class FakeTorch:
     def __init__(self, cuda=False):
-        self.cuda = SimpleNamespace(
-            is_available=lambda: cuda, synchronize=Mock(), empty_cache=Mock()
-        )
-        self.grad_depth = 0
+        self.cuda = FakeCuda(cuda)
+        self.grad = threading.local()
         self.from_numpy = Mock(side_effect=FakeTensor)
         self.empty = Mock(
             side_effect=lambda shape: FakeTensor(np.empty(shape, dtype=np.float32))
         )
 
+    @property
+    def grad_depth(self):
+        return getattr(self.grad, "depth", 0)
+
     @contextmanager
     def no_grad(self):
-        self.grad_depth += 1
+        self.grad.depth = self.grad_depth + 1
         try:
             yield
         finally:
-            self.grad_depth -= 1
+            self.grad.depth -= 1
 
 
 class FakeModel:
@@ -328,6 +371,7 @@ class FakeModel:
         self.eval_calls = 0
         self.devices = []
         self.calls = []
+        self.contexts = []
         self.failure = None
 
     def eval(self):
@@ -341,6 +385,7 @@ class FakeModel:
     def __call__(self, data):
         assert self.torch.grad_depth == 1
         self.calls.append(data)
+        self.contexts.append(self.torch.cuda.active())
         if self.failure is not None:
             raise self.failure
         return self.output
@@ -473,13 +518,16 @@ def test_cuda_selected_and_synchronized_without_global_empty_cache(neural_abi):
     torch, extractor, matcher, local, global_model, matcher_model = neural_abi
     torch.cuda.is_available = lambda: True
     session = resident.ResidentModels(extractor, matcher)
-    assert session.device == "cuda"
+    assert session.device == "cuda" and session.device_index == 1
     assert all(
         model.devices == ["cuda"] for model in (local, global_model, matcher_model)
     )
-    torch.cuda.synchronize.assert_called_once()
+    torch.cuda.synchronize.assert_called_once_with(1)
+    torch.cuda.current_device.return_value = 0
     session.synchronize()
     assert torch.cuda.synchronize.call_count == 2
+    # Later syncs keep the weights' device even if the caller's default changed.
+    torch.cuda.synchronize.assert_called_with(1)
     session.close()
     torch.cuda.empty_cache.assert_not_called()
 
@@ -714,3 +762,375 @@ def test_stage_timing_units_accumulation_and_sync_overhead(monkeypatch):
             raise RuntimeError("stage failed")
     assert timings.durations_sec == {"matching_duration_sec": 0.625}
     assert synchronize.call_count == 4
+
+
+def test_stage_failure_survives_a_failing_cleanup_sync_and_is_timed(monkeypatch):
+    clock = iter([10.0, 10.25, 11.0])
+    monkeypatch.setattr(resident.time, "perf_counter", lambda: next(clock))
+    synchronize = Mock(side_effect=[None, RuntimeError("device sync failed")])
+    timings = resident.StageTimings(synchronize)
+    with pytest.raises(ValueError, match="worker failed") as raised:
+        with timings.stage("extraction"):
+            raise ValueError("worker failed")
+    assert any("device sync failed" in note for note in raised.value.__notes__)
+    assert timings.durations_sec == {"extraction_duration_sec": 0.25}
+    synchronize.side_effect = [None, RuntimeError("success-path sync failed")]
+    with pytest.raises(RuntimeError, match="success-path sync failed"):
+        with timings.stage("matching"):
+            pass
+    assert "matching_duration_sec" not in timings.durations_sec
+
+
+def test_fatal_stage_cleanup_keeps_the_body_error_and_records_elapsed(monkeypatch):
+    clock = iter([20.0, 20.5])
+    monkeypatch.setattr(resident.time, "perf_counter", lambda: next(clock))
+    synchronize = Mock(side_effect=[None, KeyboardInterrupt("sync interrupted")])
+    timings = resident.StageTimings(synchronize)
+    with pytest.raises(KeyboardInterrupt) as raised:
+        with timings.stage("matching"):
+            raise ValueError("worker failed")
+    assert isinstance(raised.value.__context__, ValueError)
+    assert timings.durations_sec == {"matching_duration_sec": 0.5}
+
+
+@pytest.mark.parametrize(
+    "requested,device,cameras,mode,workers,reason",
+    [
+        ("auto", "cuda", 2, "parallel", 2, "auto"),
+        ("auto", "cuda", 4, "parallel", 4, "auto"),
+        ("parallel", "cuda", 5, "parallel", 4, "parallel"),
+        ("auto", "cpu", 2, "serial", 1, "requires_cuda"),
+        ("parallel", "cpu", 4, "serial", 1, "requires_cuda"),
+        ("serial", "cuda", 4, "serial", 1, "requested"),
+        ("auto", "cuda", 1, "serial", 1, "single_camera"),
+        ("parallel", "cuda", 0, "serial", 1, "single_camera"),
+    ],
+)
+def test_rig_plan_runs_cameras_in_parallel_only_for_cuda_rigs(
+    requested, device, cameras, mode, workers, reason
+):
+    assert resident.rig_execution_plan(requested, device, cameras) == {
+        "requested": requested,
+        "mode": mode,
+        "workers": workers,
+        "cameras": cameras,
+        "device": device,
+        "reason": reason,
+    }
+
+
+@pytest.mark.parametrize("requested", ["fast", "", None, "SERIAL"])
+def test_rig_plan_rejects_unknown_modes(requested):
+    with pytest.raises(ValueError, match="rig_execution"):
+        resident.rig_execution_plan(requested, "cuda", 2)
+
+
+@pytest.fixture
+def cuda_session(neural_abi):
+    torch, extractor, matcher, *_ = neural_abi
+    torch.cuda.is_available = lambda: True
+    session = resident.ResidentModels(extractor, matcher)
+    yield torch, session
+    session.close()
+
+
+def live_rig_workers():
+    return [
+        thread
+        for thread in threading.enumerate()
+        if thread.name.startswith("aria-hloc-rig")
+    ]
+
+
+def test_parallel_tasks_overlap_keep_order_and_use_one_stream_per_worker(
+    cuda_session,
+):
+    torch, session = cuda_session
+    barrier = threading.Barrier(2, timeout=10)
+
+    def camera(name):
+        # Both cameras must be in flight at once, or the barrier times out.
+        barrier.wait()
+        return name, threading.current_thread().name, torch.cuda.active()
+
+    syncs = torch.cuda.synchronize.call_count
+    results = session.run_parallel(
+        [partial(camera, "left"), partial(camera, "right")], 2
+    )
+    assert [name for name, _, _ in results] == ["left", "right"]
+    streams = [stream for _, _, (_, stream) in results]
+    assert streams == session._rig_streams and streams[0] is not streams[1]
+    assert all(device == 1 for _, _, (device, _) in results)
+    assert all(stream.device == 1 for stream in streams)
+    assert all(name.startswith("aria-hloc-rig") for _, name, _ in results)
+    assert [stream.synchronize.call_count for stream in streams] == [1, 1]
+    assert torch.cuda.synchronize.call_count == syncs + 2
+    torch.cuda.synchronize.assert_called_with(1)
+    assert torch.cuda.active() == (None, None)
+    assert not live_rig_workers()
+    again = session.run_parallel([lambda: torch.cuda.active()[1]] * 2, 2)
+    assert again == streams
+    assert torch.cuda.Stream.call_count == 2
+
+
+def test_more_tasks_than_workers_partition_statically_onto_bounded_streams(
+    cuda_session,
+):
+    torch, session = cuda_session
+    tasks = [
+        partial(lambda index: (index, torch.cuda.active()[1]), index)
+        for index in range(4)
+    ]
+    results = session.run_parallel(tasks, 2)
+    left, right = session._rig_streams
+    assert results == [(0, left), (1, right), (2, left), (3, right)]
+    assert torch.cuda.Stream.call_count == 2
+
+
+def test_parallel_failure_drains_workers_and_raises_lowest_camera_task(cuda_session):
+    torch, session = cuda_session
+    later_failed = threading.Event()
+    finished = []
+
+    def first():
+        assert later_failed.wait(10)
+        raise RuntimeError("camera 0 failed")
+
+    def second():
+        later_failed.set()
+        raise ValueError("camera 1 failed")
+
+    def third():
+        assert later_failed.wait(10)
+        finished.append("camera 2")
+        return "ok"
+
+    syncs = torch.cuda.synchronize.call_count
+    with pytest.raises(RuntimeError, match="camera 0 failed") as raised:
+        session.run_parallel([first, second, third], 3)
+    assert any("camera task 1 also failed" in note for note in raised.value.__notes__)
+    assert finished == ["camera 2"]
+    assert [stream.synchronize.call_count for stream in session._rig_streams] == [
+        1,
+        1,
+        1,
+    ]
+    assert torch.cuda.synchronize.call_count == syncs + 2
+    assert not live_rig_workers()
+    # A Python task error leaves the session usable; device faults are not simulated.
+    assert session.run_parallel([lambda: "left", lambda: "right"], 2) == [
+        "left",
+        "right",
+    ]
+
+
+def test_static_partition_raises_lowest_failing_task_not_first_worker(cuda_session):
+    _, session = cuda_session
+    ran = []
+
+    def task(index):
+        ran.append(index)
+        if index in (1, 2):
+            raise RuntimeError(f"task {index} failed")
+        return index
+
+    with pytest.raises(RuntimeError, match="task 1 failed") as raised:
+        session.run_parallel([partial(task, index) for index in range(5)], 2)
+    assert any("camera task 2 also failed" in note for note in raised.value.__notes__)
+    # Worker 0 stops at task 2 (skipping 4); worker 1 stops at task 1 (skipping 3).
+    assert sorted(ran) == [0, 1, 2]
+
+
+@pytest.mark.parametrize("failure", ["task", "none"])
+def test_stream_and_device_sync_failures_never_mask_the_primary_error(
+    cuda_session, failure
+):
+    torch, session = cuda_session
+    session.run_parallel([lambda: 0, lambda: 1], 2)
+    left, right = session._rig_streams
+    right.synchronize.side_effect = RuntimeError("stream sync failed")
+
+    def failing_device_sync(*_):
+        # Pre-launch sync succeeds; the post-join sync fails.
+        if torch.cuda.synchronize.call_count > syncs + 1:
+            raise RuntimeError("device sync failed")
+
+    syncs = torch.cuda.synchronize.call_count
+    torch.cuda.synchronize.side_effect = failing_device_sync
+    tasks = [
+        Mock(side_effect=ValueError("model forward failed"))
+        if failure == "task"
+        else Mock(return_value=0),
+        Mock(return_value=1),
+    ]
+    expected = "model forward failed" if failure == "task" else "stream sync failed"
+    with pytest.raises(Exception, match=expected) as raised:
+        session.run_parallel(tasks, 2)
+    notes = raised.value.__notes__
+    assert any("device sync failed" in note for note in notes)
+    if failure == "task":
+        assert isinstance(raised.value, ValueError)
+        assert any("stream sync failed" in note for note in notes)
+    assert left.synchronize.call_count == right.synchronize.call_count == 2
+    assert not live_rig_workers()
+
+
+def test_device_context_failure_raises_without_partial_results(cuda_session):
+    torch, session = cuda_session
+    task = Mock(return_value="never returned")
+    torch.cuda.device = Mock(side_effect=RuntimeError("device context failed"))
+    with pytest.raises(RuntimeError, match="device context failed"):
+        session.run_parallel([task, task], 2)
+    task.assert_not_called()
+    assert not live_rig_workers()
+
+
+def test_fatal_worker_error_still_drains_every_stream_and_the_device(cuda_session):
+    torch, session = cuda_session
+    stopped = threading.Event()
+    finished = []
+
+    def camera_0():
+        assert stopped.wait(10)
+        raise ValueError("camera 0 failed")
+
+    def camera_1():
+        stopped.set()
+        raise SystemExit("worker stopped")
+
+    def camera_2():
+        assert stopped.wait(10)
+        finished.append(2)
+        return 2
+
+    syncs = torch.cuda.synchronize.call_count
+    with pytest.raises(SystemExit, match="worker stopped") as raised:
+        session.run_parallel([camera_0, camera_1, camera_2], 3)
+    assert any("camera task 0 also failed" in note for note in raised.value.__notes__)
+    assert finished == [2]
+    streams = session._rig_streams
+    assert [stream.synchronize.call_count for stream in streams] == [1, 1, 1]
+    assert torch.cuda.synchronize.call_count == syncs + 2
+    assert not live_rig_workers()
+
+
+def test_fatal_worker_keeps_its_stream_sync_failure_as_a_note(cuda_session):
+    _, session = cuda_session
+    session.run_parallel([lambda: 0, lambda: 1], 2)
+    left, right = session._rig_streams
+    right.synchronize.side_effect = RuntimeError("stream sync failed")
+    with pytest.raises(SystemExit) as raised:
+        session.run_parallel([lambda: 0, Mock(side_effect=SystemExit("stop"))], 2)
+    assert any("stream sync failed" in note for note in raised.value.__notes__)
+    assert left.synchronize.call_count == right.synchronize.call_count == 2
+    assert not live_rig_workers()
+
+
+def test_fatal_stream_sync_keeps_the_workers_task_error_as_a_note(cuda_session):
+    _, session = cuda_session
+    session.run_parallel([lambda: 0, lambda: 1], 2)
+    left, right = session._rig_streams
+    left.synchronize.side_effect = KeyboardInterrupt("stream sync interrupted")
+    with pytest.raises(KeyboardInterrupt) as raised:
+        session.run_parallel(
+            [Mock(side_effect=ValueError("camera 0 failed")), Mock()], 2
+        )
+    assert any("camera task 0 also failed" in note for note in raised.value.__notes__)
+    assert right.synchronize.call_count == 2
+    assert not live_rig_workers()
+
+
+def test_fatal_device_sync_keeps_completed_worker_errors_as_notes(cuda_session):
+    torch, session = cuda_session
+    syncs = torch.cuda.synchronize.call_count
+
+    def interrupted_after_join(*_):
+        if torch.cuda.synchronize.call_count > syncs + 1:
+            raise KeyboardInterrupt("device sync interrupted")
+
+    torch.cuda.synchronize.side_effect = interrupted_after_join
+    with pytest.raises(KeyboardInterrupt, match="device sync interrupted") as raised:
+        session.run_parallel(
+            [Mock(side_effect=ValueError("camera 0 failed")), Mock()], 2
+        )
+    assert any("camera task 0 also failed" in note for note in raised.value.__notes__)
+    assert [stream.synchronize.call_count for stream in session._rig_streams] == [1, 1]
+    assert not live_rig_workers()
+
+
+def test_failed_stream_creation_adds_no_partial_streams(cuda_session):
+    torch, session = cuda_session
+    torch.cuda.Stream.side_effect = [FakeStream(1), RuntimeError("no stream")]
+    task = Mock()
+    with pytest.raises(RuntimeError, match="no stream"):
+        session.run_parallel([task, task], 2)
+    task.assert_not_called()
+    assert session._rig_streams == []
+    torch.cuda.Stream.side_effect = lambda device: FakeStream(device)
+    assert session.run_parallel([lambda: 1, lambda: 2], 2) == [1, 2]
+    existing = list(session._rig_streams)
+    torch.cuda.Stream.side_effect = [FakeStream(1), RuntimeError("no third stream")]
+    with pytest.raises(RuntimeError, match="no third stream"):
+        session.run_parallel([task] * 4, 4)
+    task.assert_not_called()
+    # Existing streams stay valid; none of the new ones is kept.
+    assert session._rig_streams == existing
+    session.close()
+    assert session._rig_streams == []
+
+
+def test_parallel_execution_is_refused_on_cpu(neural_abi):
+    _, extractor, matcher, *_ = neural_abi
+    session = resident.ResidentModels(extractor, matcher)
+    task = Mock()
+    with pytest.raises(RuntimeError, match="requires a CUDA device"):
+        session.run_parallel([task, task], 2)
+    task.assert_not_called()
+    session.close()
+
+
+@pytest.mark.parametrize("count,workers", [(2, 0), (2, 3), (5, 5), (2, True), (2, 2.0)])
+def test_parallel_workers_are_bounded_by_cameras_and_four(cuda_session, count, workers):
+    torch, session = cuda_session
+    task = Mock()
+    with pytest.raises(ValueError, match="between 1"):
+        session.run_parallel([task] * count, workers)
+    task.assert_not_called()
+    torch.cuda.Stream.assert_not_called()
+
+
+def test_parallel_execution_is_refused_after_close(cuda_session):
+    _, session = cuda_session
+    session.close()
+    task = Mock()
+    with pytest.raises(RuntimeError, match="closed"):
+        session.run_parallel([task, task], 2)
+    task.assert_not_called()
+
+
+def test_extract_and_match_run_no_grad_inside_each_worker_stream(
+    cuda_session, neural_abi
+):
+    torch, session = cuda_session
+    _, _, _, local, global_model, matcher_model = neural_abi
+    image = np.zeros((24, 32), dtype=np.uint8)
+    query, descriptor = session.extract(image)
+    extracted = session.run_parallel([partial(session.extract, image)] * 2, 2)
+    for features_, descriptor_ in extracted:
+        for key, value in query.items():
+            np.testing.assert_array_equal(features_[key], value)
+        np.testing.assert_array_equal(descriptor_, descriptor)
+    matched = session.run_parallel([partial(session.match, query, features())] * 2, 2)
+    for match in matched:
+        np.testing.assert_array_equal(match, [[0, 2], [2, 0]])
+    # Each concurrent pair gets its own input dict and tensors (the matcher mutates it).
+    left, right = matcher_model.calls[-2:]
+    assert left is not right
+    assert not np.shares_memory(left["descriptors1"].array, right["descriptors1"].array)
+    streams = {id(stream) for stream in session._rig_streams}
+    for model in (local, global_model, matcher_model):
+        workers = model.contexts[-2:]
+        assert {device for device, _ in workers} == {1}
+        assert {id(stream) for _, stream in workers} == streams
+    assert local.contexts[0] == (None, None)
+    assert torch.grad_depth == 0

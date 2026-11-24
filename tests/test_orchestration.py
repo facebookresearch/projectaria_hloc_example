@@ -539,6 +539,48 @@ def test_query_rejects_bad_options_before_files(tmp_path, kwargs):
         query.query_map(tmp_path, tmp_path, tmp_path, **kwargs)
 
 
+@pytest.mark.parametrize("rig_execution", ["fast", "", None])
+def test_query_rejects_unknown_rig_execution_before_files(tmp_path, rig_execution):
+    with pytest.raises(ValueError, match="rig_execution"):
+        query.query_map(tmp_path, tmp_path, tmp_path, rig_execution=rig_execution)
+
+
+@pytest.mark.parametrize("rig_execution", ["auto", "serial", "parallel"])
+def test_query_cli_passes_rig_execution_to_the_backend(
+    map_directory, slam_dirs, tmp_path, fake_query_dependencies, rig_execution
+):
+    path, _ = map_directory
+    output = tmp_path / "rig.json"
+    query.main(
+        [
+            "--map",
+            str(path),
+            "--vrs",
+            str(tmp_path / "heldout.vrs"),
+            "--mps",
+            str(slam_dirs[0]),
+            "--num-queries",
+            "1",
+            "--rig-execution",
+            rig_execution,
+            "--output",
+            str(output),
+        ]
+    )
+    query.HlocBackend.assert_called_once_with(rig_execution=rig_execution)
+    assert json.loads(output.read_text())["rig_execution_requested"] == rig_execution
+
+
+def test_query_cli_rejects_unknown_rig_execution(capsys):
+    with pytest.raises(SystemExit) as error:
+        query.main(
+            ["--map", "m", "--vrs", "v", "--mps", "p", "--output", "o"]
+            + ["--rig-execution", "fast"]
+        )
+    assert error.value.code == 2
+    assert "--rig-execution" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize("module", [build, query])
 def test_cli_requires_arguments(module):
     with pytest.raises(SystemExit) as error:
@@ -636,7 +678,9 @@ def test_query_cli_writes_full_results_but_prints_only_summary(
             str(output),
         ]
     )
-    run.assert_called_once_with(Path("map"), Path("a.vrs"), Path("mps"), "slam", 2, 3)
+    run.assert_called_once_with(
+        Path("map"), Path("a.vrs"), Path("mps"), "slam", 2, 3, "auto"
+    )
     assert json.loads(output.read_text()) == result
     assert json.loads(capsys.readouterr().out) == {"num_queries": 1}
 

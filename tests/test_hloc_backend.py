@@ -15,6 +15,8 @@
 from __future__ import annotations
 
 import subprocess
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -873,3 +875,273 @@ def test_unpatched_hloc_is_reported_with_the_patch_command(monkeypatch, tmp_path
     monkeypatch.setattr(hloc, "validate_hloc_checkout", Mock())
     with pytest.raises(ValueError, match="hloc-workers.patch"):
         hloc.HlocBackend()
+
+
+@pytest.mark.parametrize("mode", ["fast", None, ""])
+def test_invalid_rig_execution_rejected_before_neural_import(monkeypatch, mode):
+    imported = Mock()
+    monkeypatch.setattr(hloc.importlib, "import_module", imported)
+    with pytest.raises(ValueError, match="rig_execution"):
+        hloc.HlocBackend(rig_execution=mode)
+    imported.assert_not_called()
+
+
+def sequential_reversed(tasks, workers):
+    """Out-of-order completion: the last camera finishes first."""
+    assert 2 <= workers <= 4 and workers <= len(tasks)
+    results = [None] * len(tasks)
+    for index in reversed(range(len(tasks))):
+        results[index] = tasks[index]()
+    return results
+
+
+def threaded(tasks, workers):
+    with ThreadPoolExecutor(workers) as pool:
+        return list(pool.map(lambda task: task(), tasks))
+
+
+@pytest.fixture
+def rig_query(resident_backend, camera):
+    backend, map_path, models, _, _ = resident_backend
+    with h5py.File(map_path / "features.h5", "a") as source:
+        for tag, name in enumerate(("a", "b", "c")):
+            source[name]["tag"] = np.array([tag], dtype=np.float32)
+    frames = [
+        Frame(
+            camera.label,
+            index,
+            1_000_000,
+            np.zeros((camera.height, camera.width), dtype=np.uint8),
+            camera,
+        )
+        for index in range(2)
+    ]
+    local, _ = models.extract.return_value
+    extracted = {
+        id(frame.image): (
+            {**local, "tag": np.array([index], dtype=np.float32)},
+            np.array([1.0, 0.0]) if index == 0 else np.array([0.0, 1.0]),
+        )
+        for index, frame in enumerate(frames)
+    }
+    models.extract.side_effect = lambda image: extracted[id(image)]
+    produced = {}
+
+    def match(query, reference):
+        pair = np.array([[0, 0]])
+        produced[id(pair)] = (int(query["tag"][0]), int(reference["tag"][0]))
+        return pair
+
+    models.match.side_effect = match
+    models.device = "cuda"
+    models.run_parallel.side_effect = sequential_reversed
+    return backend, map_path, models, frames, produced
+
+
+def record_scoring(monkeypatch):
+    recorded = []
+    original = hloc.HlocBackend._score_resident_clusters
+
+    def spy(self, map_session, candidates, features, matches, frames, timings):
+        recorded.append((candidates, features, matches))
+        return original(
+            self, map_session, candidates, features, matches, frames, timings
+        )
+
+    monkeypatch.setattr(hloc.HlocBackend, "_score_resident_clusters", spy)
+    return recorded
+
+
+def test_parallel_rig_query_equals_the_serial_reference_path(rig_query, monkeypatch):
+    backend, map_path, models, frames, produced = rig_query
+    serial_backend = hloc.HlocBackend(rig_execution="serial")
+    solve = Mock(return_value={"success": False, "reason": "insufficient_inliers"})
+    monkeypatch.setattr(hloc, "estimate_pose", solve)
+    recorded = record_scoring(monkeypatch)
+    parallel = backend.query(map_path, frames)
+    serial = serial_backend.query(map_path, frames)
+    (
+        (parallel_candidates, _, parallel_matches),
+        (serial_candidates, _, serial_matches),
+    ) = recorded
+    assert (
+        parallel_candidates
+        == serial_candidates
+        == {
+            "q0.png": ["a", "b", "c"],
+            "q1.png": ["c", "b", "a"],
+        }
+    )
+    expected_keys = [(0, "a"), (0, "b"), (0, "c"), (1, "c"), (1, "b"), (1, "a")]
+    assert list(parallel_matches) == list(serial_matches) == expected_keys
+    for matches in (parallel_matches, serial_matches):
+        for (camera_index, reference), pair in matches.items():
+            assert produced[id(pair)] == (camera_index, "abc".index(reference))
+    assert parallel["cache_statistics"] == serial["cache_statistics"]
+    assert parallel["cache_statistics"]["cache_misses"] == 3
+    assert parallel["cache_statistics"]["cache_hits"] == 3
+    assert {
+        key: value
+        for key, value in parallel.items()
+        if key not in ("rig_execution", "stage_durations_sec")
+    } == {
+        key: value
+        for key, value in serial.items()
+        if key not in ("rig_execution", "stage_durations_sec")
+    }
+    parallel_calls, serial_calls = solve.call_args_list[:3], solve.call_args_list[3:]
+    assert len(serial_calls) == 3
+    for left, right in zip(parallel_calls, serial_calls):
+        assert left.args[0] == right.args[0]
+        for left_array, right_array in zip(left.args[1:], right.args[1:]):
+            np.testing.assert_array_equal(left_array, right_array)
+    session = backend._map
+    reference_bytes = sum(
+        array.nbytes for name in "abc" for array in session.features(name).values()
+    )
+    assert parallel["rig_execution"] == {
+        "requested": "auto",
+        "mode": "parallel",
+        "workers": 2,
+        "cameras": 2,
+        "device": "cuda",
+        "reason": "auto",
+        "reference_prefetch_bytes": reference_bytes,
+    }
+    assert serial["rig_execution"]["mode"] == "serial"
+    assert serial["rig_execution"]["reason"] == "requested"
+    assert [call.args[1] for call in models.run_parallel.call_args_list] == [2, 2]
+    assert all(len(call.args[0]) == 2 for call in models.run_parallel.call_args_list)
+    assert set(parallel["stage_durations_sec"]) == set(serial["stage_durations_sec"])
+    backend.close()
+    serial_backend.close()
+
+
+@pytest.mark.parametrize("empty_camera", [None, 0])
+def test_parallel_matching_reads_map_features_only_on_the_coordinator_in_serial_order(
+    rig_query, monkeypatch, empty_camera
+):
+    backend, map_path, models, frames, produced = rig_query
+    models.run_parallel.side_effect = threaded
+    if empty_camera is not None:
+        image = frames[empty_camera].image
+        local, descriptor = models.extract.side_effect(image)
+        empty = {
+            **local,
+            "keypoints": np.empty((0, 2), dtype=np.float32),
+            "descriptors": np.empty((256, 0), dtype=np.float32),
+        }
+        original_extract = models.extract.side_effect
+        models.extract.side_effect = lambda frame_image: (
+            (empty, descriptor)
+            if frame_image is image
+            else original_extract(frame_image)
+        )
+    backend.prepare_map(map_path)
+    session = backend._map
+    coordinator = threading.get_ident()
+    reads = []
+    original_features = session.features
+
+    def read(name):
+        reads.append((name, threading.get_ident() == coordinator))
+        return original_features(name)
+
+    monkeypatch.setattr(session, "features", read)
+    monkeypatch.setattr(hloc, "estimate_pose", Mock(return_value={"success": False}))
+    recorded = record_scoring(monkeypatch)
+    result = backend.query(map_path, frames)
+    expected = (
+        ["a", "b", "c", "c", "b", "a"] if empty_camera is None else ["c", "b", "a"]
+    )
+    assert reads == [(name, True) for name in expected]
+    matched = [
+        produced[id(pair)] for pair in recorded[0][2].values() if id(pair) in produced
+    ]
+    assert sorted({camera for camera, _ in matched}) == (
+        [0, 1] if empty_camera is None else [1]
+    )
+    if empty_camera is not None:
+        assert all(
+            recorded[0][2][(empty_camera, name)].shape == (0, 2) for name in "abc"
+        )
+    assert result["rig_execution"]["reference_prefetch_bytes"] > 0
+    backend.close()
+
+
+@pytest.mark.parametrize(
+    "requested,device,cameras,reason",
+    [
+        ("parallel", "cpu", 2, "requires_cuda"),
+        ("auto", "cuda", 1, "single_camera"),
+        ("serial", "cuda", 2, "requested"),
+    ],
+)
+def test_reference_serial_path_runs_when_parallel_is_unavailable_or_not_requested(
+    rig_query, monkeypatch, requested, device, cameras, reason
+):
+    _, map_path, models, frames, _ = rig_query
+    backend = hloc.HlocBackend(rig_execution=requested)
+    models.device = device
+    monkeypatch.setattr(hloc, "estimate_pose", Mock(return_value={"success": False}))
+    result = backend.query(map_path, frames[:cameras])
+    models.run_parallel.assert_not_called()
+    assert result["rig_execution"] == {
+        "requested": requested,
+        "mode": "serial",
+        "workers": 1,
+        "cameras": cameras,
+        "device": device,
+        "reason": reason,
+        "reference_prefetch_bytes": 0,
+    }
+    assert models.match.call_count == 3 * cameras
+    backend.close()
+
+
+@pytest.mark.parametrize("stage", ["extraction", "matching"])
+def test_parallel_worker_failure_propagates_and_the_next_query_runs(
+    rig_query, monkeypatch, stage
+):
+    backend, map_path, models, frames, _ = rig_query
+    monkeypatch.setattr(hloc, "estimate_pose", Mock(return_value={"success": False}))
+    failure = RuntimeError(f"{stage} worker failed")
+    effects = iter(
+        ([failure] if stage == "extraction" else [sequential_reversed, failure])
+        + [sequential_reversed, sequential_reversed]
+    )
+
+    def run(tasks, workers):
+        effect = next(effects)
+        if isinstance(effect, BaseException):
+            raise effect
+        return effect(tasks, workers)
+
+    models.run_parallel.side_effect = run
+    with pytest.raises(RuntimeError, match=f"{stage} worker failed"):
+        backend.query(map_path, frames)
+    result = backend.query(map_path, frames)
+    assert result["rig_execution"]["mode"] == "parallel"
+    assert not backend._closed
+    backend.close()
+
+
+def test_parallel_worker_error_survives_a_failing_stage_sync(rig_query, monkeypatch):
+    backend, map_path, models, frames, _ = rig_query
+    backend.prepare_map(map_path)
+    failure = RuntimeError("camera worker failed")
+    models.run_parallel.side_effect = failure
+    syncs = iter([None, RuntimeError("stage sync failed")])
+
+    def synchronize():
+        effect = next(syncs)
+        if effect is not None:
+            raise effect
+
+    models.synchronize.side_effect = synchronize
+    with pytest.raises(RuntimeError, match="camera worker failed") as raised:
+        backend.query(map_path, frames)
+    assert raised.value is failure
+    assert any("stage sync failed" in note for note in failure.__notes__)
+    models.match.assert_not_called()
+    backend.close()

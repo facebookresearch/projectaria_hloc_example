@@ -23,6 +23,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Sequence
+from functools import partial
 from pathlib import Path
 from typing import cast, Protocol
 
@@ -45,6 +46,8 @@ from resident_hloc import (
     Features,
     ResidentMap,
     ResidentModels,
+    RIG_EXECUTION_MODES,
+    rig_execution_plan,
     StageTimings,
 )
 
@@ -183,6 +186,20 @@ def pose_result(
     return output
 
 
+def match_camera(
+    models: ResidentModels,
+    query: Features,
+    references: Sequence[tuple[str, Features | None]],
+) -> list[np.ndarray]:
+    """One camera's matches in retrieval order; None marks a skipped empty query."""
+    return [
+        models.match(query, features)
+        if features is not None
+        else np.empty((0, 2), dtype=np.int64)
+        for _, features in references
+    ]
+
+
 def write_reference_model(directory: Path, views: Sequence[View]) -> None:
     """Write known camera poses in COLMAP's camera-from-world convention."""
     directory.mkdir()
@@ -208,14 +225,23 @@ class HlocBackend:
     prepare_map is explicit initialization; a query may initialize a fresh backend
     for compatibility, but never silently switches or reloads an active map.
     Stop the worker before replacing map files. close is terminal; create a new
-    backend after closing or initialization failure.
+    backend after closing or initialization failure. rig_execution "auto" runs a
+    rig query's cameras concurrently on CUDA; "serial" keeps the reference path.
     """
 
-    def __init__(self, *, cache_max_bytes: int = DEFAULT_CACHE_MAX_BYTES) -> None:
+    def __init__(
+        self,
+        *,
+        cache_max_bytes: int = DEFAULT_CACHE_MAX_BYTES,
+        rig_execution: str = "auto",
+    ) -> None:
         self._map: ResidentMap | None = None
         self._models: ResidentModels | None = None
         self._closed = False
         self._cache_max_bytes = FeatureCache(cache_max_bytes).max_bytes
+        if rig_execution not in RIG_EXECUTION_MODES:
+            raise ValueError(f"rig_execution must be one of {RIG_EXECUTION_MODES}")
+        self._rig_execution = rig_execution
         try:
             self._load_adapters()
         except BaseException as error:
@@ -383,6 +409,10 @@ class HlocBackend:
             raise ValueError(
                 "Query map differs from active snapshot; call prepare_map explicitly"
             )
+        plan = rig_execution_plan(self._rig_execution, models.device, len(frames))
+        plan["reference_prefetch_bytes"] = 0
+        parallel = plan["mode"] == "parallel"
+        workers = cast(int, plan["workers"])
         timings = StageTimings(models.synchronize)
         with timings.stage("extraction"):
             for frame in frames:
@@ -390,36 +420,95 @@ class HlocBackend:
                     raise ValueError(
                         "Query image dimensions differ from camera calibration"
                     )
-            predictions = [models.extract(frame.image) for frame in frames]
+            if parallel:
+                predictions = models.run_parallel(
+                    [partial(models.extract, frame.image) for frame in frames], workers
+                )
+            else:
+                predictions = [models.extract(frame.image) for frame in frames]
         with timings.stage("retrieval"):
             candidates = map_session.retrieve(
                 [descriptor for _, descriptor in predictions]
             )
         features = [prediction[0] for prediction in predictions]
         with timings.stage("matching"):
-            matches = {
-                (camera_index, reference): (
-                    models.match(
-                        features[camera_index], map_session.features(reference)
-                    )
-                    if len(features[camera_index]["keypoints"])
-                    else np.empty((0, 2), dtype=np.int64)
+            if parallel:
+                matches, plan["reference_prefetch_bytes"] = self._parallel_matches(
+                    models, map_session, candidates, features, workers
                 )
-                for camera_index, references in enumerate(candidates.values())
-                for reference in references
-            }
+            else:
+                matches = {
+                    (camera_index, reference): (
+                        models.match(
+                            features[camera_index], map_session.features(reference)
+                        )
+                        if len(features[camera_index]["keypoints"])
+                        else np.empty((0, 2), dtype=np.int64)
+                    )
+                    for camera_index, references in enumerate(candidates.values())
+                    for reference in references
+                }
         best = self._score_resident_clusters(
             map_session, candidates, features, matches, frames, timings
         )
         output: dict[str, object] = {
             **best,
             "cache_statistics": map_session.cache.snapshot(),
+            "rig_execution": plan,
         }
         output["stage_durations_sec"] = {
             **timings.durations_sec,
             "end_to_end_duration_sec": time.perf_counter() - start_time_sec,
         }
         return output
+
+    @staticmethod
+    def _parallel_matches(
+        models: ResidentModels,
+        map_session: ResidentMap,
+        candidates: dict[str, list[str]],
+        features: Sequence[Features],
+        workers: int,
+    ) -> tuple[dict[tuple[int, str], np.ndarray], int]:
+        """Match cameras concurrently; only this thread reads the feature cache.
+
+        References load in the serial order, so cache statistics match the serial
+        path. The transient working set (returned in bytes) is at most
+        cameras x 20 reference feature sets.
+        """
+        loaded = [
+            [
+                (
+                    reference,
+                    map_session.features(reference)
+                    if len(features[camera_index]["keypoints"])
+                    else None,
+                )
+                for reference in references
+            ]
+            for camera_index, references in enumerate(candidates.values())
+        ]
+        retained = {
+            id(values): sum(array.nbytes for array in values.values())
+            for references in loaded
+            for _, values in references
+            if values is not None
+        }
+        per_camera = models.run_parallel(
+            [
+                partial(match_camera, models, features[camera_index], references)
+                for camera_index, references in enumerate(loaded)
+            ],
+            workers,
+        )
+        matches = {
+            (camera_index, reference): camera_matches[rank]
+            for camera_index, (references, camera_matches) in enumerate(
+                zip(loaded, per_camera)
+            )
+            for rank, (reference, _) in enumerate(references)
+        }
+        return matches, sum(retained.values())
 
     def _score_resident_clusters(
         self,

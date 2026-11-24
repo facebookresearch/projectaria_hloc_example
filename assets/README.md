@@ -28,7 +28,17 @@ anchors in two separate panels, RGB queries (one 1024×768 image, 20 matches) an
 two-SLAM-camera queries (two 512×512 images, 40 matches), each on the SLAM map and
 on the RGB map, with accepted and reference-covered counts. Compare maps only within
 one panel: the panels are different workloads, and the times are this
-implementation's totals, not a per-image or parallel comparison.
+implementation's totals, not a per-image or parallel comparison. It records the
+serial dual-map run and is no longer embedded in the main README.
+
+`lamaria-r03-parallel-query.svg` compares serial and parallel rig execution on the
+same 50 anchors and both maps: empirical CDFs of all 100 warm decode-plus-backend
+query times per variant, drawn directly from each cohort's
+`joined_decode_backend_duration_sec` array in
+[the parallel-query benchmark](../benchmarks/lamaria_r03_parallel_query.json), for
+two-SLAM-camera queries and for RGB queries, which have one camera and run serially in
+both variants. Its timer excludes the harness's checks, so its times are not
+comparable with `lamaria-dual-map-results.svg`.
 
 ### Dated RGB-only baseline media
 

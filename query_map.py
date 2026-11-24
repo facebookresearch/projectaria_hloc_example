@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Evaluate recorded RGB queries or synchronized four-SLAM-camera gPnP queries."""
+"""Evaluate recorded RGB queries or synchronized native SLAM-camera rig gPnP queries."""
 
 from __future__ import annotations
 
@@ -40,6 +40,7 @@ from map_utils import (
     View,
     write_json,
 )
+from resident_hloc import RIG_EXECUTION_MODES
 
 
 def _validate_source_hashes(hashes: object, num_sources: int) -> None:
@@ -158,6 +159,16 @@ def localize_frames(
     return result
 
 
+def validate_query_options(
+    mode: str, num_queries: int, stride: int, rig_execution: str
+) -> None:
+    """Reject unsupported query options before any map, recording or model work."""
+    if mode not in ("rgb", "slam") or num_queries <= 0 or stride <= 0:
+        raise ValueError("Use rgb/slam mode with positive query count and stride")
+    if rig_execution not in RIG_EXECUTION_MODES:
+        raise ValueError(f"rig_execution must be one of {RIG_EXECUTION_MODES}")
+
+
 def query_map(
     map_path: Path,
     vrs: Path,
@@ -165,10 +176,10 @@ def query_map(
     mode: str = "rgb",
     num_queries: int = 50,
     stride: int = 1,
+    rig_execution: str = "auto",
 ) -> dict[str, object]:
     """Query without a ground-truth retrieval prior; MPS poses are used only for diagnostics."""
-    if mode not in ("rgb", "slam") or num_queries <= 0 or stride <= 0:
-        raise ValueError("Use rgb/slam mode with positive query count and stride")
+    validate_query_options(mode, num_queries, stride, rig_execution)
     metadata = load_map(map_path)
     query_sha256 = file_sha256(vrs)
     source_hashes = metadata.get("source_vrs_sha256")
@@ -193,7 +204,7 @@ def query_map(
     labels = recording.select_labels(mode)
     queries = []
     with ExitStack() as resources:
-        backend = HlocBackend()
+        backend = HlocBackend(rig_execution=rig_execution)
         resources.callback(backend.close)
         initialization_durations_sec = backend.prepare_map(map_path)
         for anchor_index in range(0, len(recording.timestamps_ns[labels[0]]), stride):
@@ -255,6 +266,7 @@ def query_map(
     return {
         "initialization_durations_sec": initialization_durations_sec,
         "mode": mode,
+        "rig_execution_requested": rig_execution,
         "map_graph_uid": metadata["graph_uid"],
         "query_vrs_sha256": query_sha256,
         "source_identity_check": source_identity_check,
@@ -275,6 +287,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--mode", choices=("rgb", "slam"), default="rgb")
     parser.add_argument("--num-queries", type=int, default=50)
     parser.add_argument("--stride", type=int, default=1)
+    parser.add_argument(
+        "--rig-execution",
+        choices=RIG_EXECUTION_MODES,
+        default="auto",
+        help="auto runs a rig query's cameras concurrently on CUDA; serial is the reference path",
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO)
@@ -282,7 +300,13 @@ def main(argv: Sequence[str] | None = None) -> None:
         if args.output.exists():
             raise FileExistsError("Query output already exists; choose a new file")
         result = query_map(
-            args.map, args.vrs, args.mps, args.mode, args.num_queries, args.stride
+            args.map,
+            args.vrs,
+            args.mps,
+            args.mode,
+            args.num_queries,
+            args.stride,
+            args.rig_execution,
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
         write_json(args.output, result)

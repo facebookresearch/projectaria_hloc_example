@@ -68,14 +68,12 @@ SLAM-camera map has **2,232 views** (1,116 per camera) and **117,790 points**
 (mean reprojection 1.348 px); the RGB map has **930 views** and **95,253 points**
 (1.390 px).
 
-| Query | Map | Accepted | ≤10 cm & ≤5° / covered | Translation median / max | Warm query median |
+| Query | Map | Accepted | ≤10 cm & ≤5° / covered | Translation median / max | Warm query median (serial) |
 |---|---|---:|---:|---:|---:|
 | Two SLAM cameras | SLAM map | 50 / 50 | 48 / 48 | 1.9 / 6.2 mm | 2.38 s |
 | Two SLAM cameras | RGB map | 50 / 50 | 48 / 48 | 4.0 / 22.0 mm | 1.98 s |
 | RGB | RGB map | 50 / 50 | 48 / 48 | 2.5 / 9.8 mm | 1.17 s |
 | RGB | SLAM map | 49 / 50 | 47 / 48 | 5.0 / 17.6 mm | 1.70 s |
-
-![Warm end-to-end query times on the same 50 anchors for RGB queries and for two-SLAM-camera queries, each on the SLAM map and on the RGB map](assets/lamaria-dual-map-results.svg)
 
 All four cohorts use the same **50 matched anchors**, chosen before any query from
 460 eligible of 1,583 calibrated RGB captures: a capture is excluded when its RGB or
@@ -91,9 +89,9 @@ end-to-end query time was about 20% higher (backend-only medians 1.67 vs 1.65 s)
 For RGB queries, the RGB map accepted all 50 and was faster; the SLAM map rejected
 one query for insufficient inliers. Each cohort's two unscored accepted queries are
 the recording-boundary anchors outside MPS reference coverage. Compare timings only
-within one query type: a two-camera query extracts and matches two 512×512 images
-serially against 20 references each (40 matches), while an RGB query is one 1024×768
-image with 20 matches. The cohorts ran one after another on the same GPU; warm end-to-end times include
+within one query type: in this serial run a two-camera query extracted and matched
+two 512×512 images one after the other against 20 references each (40 matches),
+while an RGB query is one 1024×768 image with 20 matches. The cohorts ran one after another on the same GPU; warm end-to-end times include
 decoding and the harness's keyframe and membership checks, and initialization is
 separate. These
 counts describe this one recording; Gen 2 and other RGB devices are untested.
@@ -105,6 +103,41 @@ queries, both against that RGB map) is kept as a dated baseline in
 [17 query RGB frames and fixes](assets/lamaria-localization.gif).
 `R_03_easy` has no recorded VIO, so its MPS trajectory is not used as replay VIO.
 For a genuinely separate query recording and VIO, keep the Pilot example below.
+
+### Parallel rig queries
+
+![Empirical CDFs of warm decode-plus-backend query times, serial and parallel, for two-SLAM-camera and RGB queries on the SLAM and RGB maps of R_03_easy](assets/lamaria-r03-parallel-query.svg)
+
+On CUDA, a rig query runs its cameras concurrently by default
+(`query_map.py --rig-execution auto`; see [Runtime and frame contracts](#runtime-and-frame-contracts)).
+Both variants were measured on the same 50 anchors and maps, each in two fresh
+processes (A/B/B/A order, three warm-up queries each), giving 100 timed rows per variant.
+Accepted counts are per variant and agree between the serial and candidate runs:
+
+| Query | Map | Serial median | Candidate median | Change | Accepted |
+|---|---|---:|---:|---:|---:|
+| Two SLAM cameras (parallel) | RGB map | 1.441 s | 1.134 s | −21.3% | 100 / 100 |
+| Two SLAM cameras (parallel) | SLAM map | 1.486 s | 1.185 s | −20.2% | 100 / 100 |
+| RGB (one camera, serial in both) | RGB map | 0.752 s | 0.783 s | +4.1% | 100 / 100 |
+| RGB (one camera, serial in both) | SLAM map | 0.828 s | 0.828 s | +0.0% | 98 / 100 |
+
+Times are warm decode/rectification plus backend time through CUDA completion. The
+harness's checks and MPS diagnostics ran outside this timer, so these times are not
+comparable with the serial table above. The two-camera gain is mostly in matching
+(median 1.29 → 0.98 s on the RGB map, 1.33 → 1.01 s on the SLAM map); extraction rose
+from 0.030 to 0.039–0.040 s. Poses, gates and inlier counts matched the serial path
+in every timed row, and a separate 50-anchor parity run also matched features, matches
+and cache counters. Each variant's two rejected RGB rows on the SLAM map are anchor 041
+repeated twice. The 100 rows
+repeat 50 anchors and are not independent accuracy cases. Parallel streams raised the
+GPU memory reserved after warm-up (1.16 → 1.69–1.70 GB), and resident initialization
+(about 13–16 s per process) is separate. On the official Gen 2 sample
+(four SLAM cameras, 10 anchors run twice; not the Pilot map) the median moved from
+2.874 to 2.841 s (−1.1%), p90 did not improve and reserved memory rose from 1.16 to
+2.70 GB: no four-camera speedup is shown. All of this is one GPU with four CPU
+threads; other hardware will differ.
+
+[Protocol, per-cohort timings, stage medians, memory peaks and parity scope](benchmarks/lamaria_r03_parallel_query.json).
 
 <details>
 <summary><strong>Preserved Pilot results and recorded-VIO preview</strong></summary>
@@ -458,6 +491,20 @@ feature-to-landmark index are immutable/reused. Reference local features use a
 weights, global descriptors, reconstruction and query tensors are outside that bound.
 Reuse does not retune retrieval, geometry, RANSAC or acceptance thresholds,
 filter weak landmarks, introduce VIO retrieval priors or eliminate false poses.
+
+Native rig queries run their cameras concurrently on CUDA by default
+(`query_map.py --rig-execution auto`): per-camera feature extraction and matching
+use one worker thread and one CUDA stream per camera (two on Gen 1, four on Gen 2)
+with the unchanged single-image and single-pair models. Retrieval, correspondences
+and the gPnP solve stay serial, one query still runs at a time, and a query returns
+only after every camera has finished. Reference features are read from the cache on
+the coordinating thread in the serial order, so cache counters match
+`--rig-execution serial`, the reference path. Up to 20 reference feature sets per
+camera (about 4 MiB each at 4,096 keypoints) are held outside the 256 MiB cache for
+that query and reported as `reference_prefetch_bytes`. `parallel` requests the same
+but runs serially on CPU (reason `requires_cuda`); single-camera RGB and live queries
+always run serially. Each query records `rig_execution`: the requested and actual
+mode, workers, device and reason. Measured on R03: [Parallel rig queries](#parallel-rig-queries).
 
 Query JSON separates `initialization_durations_sec`, `stage_durations_sec`,
 `query_duration_sec` and `query_end_to_end_duration_sec`. End-to-end recorded
