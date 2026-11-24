@@ -1,0 +1,5706 @@
+{
+  "format_version": 1,
+  "dataset": "LaMAria",
+  "sequence": "R_03_easy",
+  "generation": "Aria Gen 1",
+  "public_source": "https://lamaria.ethz.ch/slam_datasets",
+  "attribution": "Anusha Krishnan et al., ICCV 2025; original dataset and derived-media attribution CC BY 4.0",
+  "source_page_sha256": "dc1a274f2d3e1889515ae9a519ef80289469d9adac5a56f674119ef8b4e335fa",
+  "capture_receipt_sha256": "a2cec0d29f8942c15aad5a084d46372217e9d9a2e3e8acabc2aea0b43d868ca8",
+  "original_MPS_graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+  "point_sources": [
+    {
+      "camera_set": "slam",
+      "graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+      "point_count": 117790,
+      "mapping_views": 2232,
+      "camera_labels": [
+        "camera-slam-left",
+        "camera-slam-right"
+      ],
+      "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1",
+      "native_points_npz_sha256": "862216b9fda29d801058c028e4e0a844edc839240561789f34f2412992806ac2",
+      "source_vrs_sha256": [
+        "52962a4934d2b94d77ec276d7cf5579065e598c8e8448e2fd9d87e2bbfdb6229"
+      ],
+      "native_source_positions_or_colors_modified": false,
+      "display_position_format": "little-endian float32 XYZ, uint8 native RGB; 15-byte records",
+      "display_float32_max_abs_error_m": 1.6599949717033269e-06,
+      "source_color_contract": "Native COLMAP color sampled from mapping SLAM images; source grayscale is not RGB-photo colorization",
+      "display_filter_rule": ">=3 native track observations and mean native reprojection<=2px; optional display heuristic, not accuracy",
+      "color_channels_equal_records": 117790
+    },
+    {
+      "camera_set": "rgb",
+      "graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+      "point_count": 95253,
+      "mapping_views": 930,
+      "camera_labels": [
+        "camera-rgb"
+      ],
+      "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e",
+      "native_points_npz_sha256": "275eb7c10d9d87030a1cfd7151ddd054bc9e958a2f04b7a20067f242e6dbc213",
+      "source_vrs_sha256": [
+        "52962a4934d2b94d77ec276d7cf5579065e598c8e8448e2fd9d87e2bbfdb6229"
+      ],
+      "native_source_positions_or_colors_modified": false,
+      "display_position_format": "little-endian float32 XYZ, uint8 native RGB; 15-byte records",
+      "display_float32_max_abs_error_m": 1.6137935858751007e-06,
+      "source_color_contract": "Native COLMAP color from mapping RGB images",
+      "display_filter_rule": ">=3 native track observations and mean native reprojection<=2px; optional display heuristic, not accuracy",
+      "color_channels_equal_records": 188
+    }
+  ],
+  "exact_point_payloads": [
+    {
+      "camera_set": "slam",
+      "points": {
+        "codec": "gzip",
+        "bytes": 1766850,
+        "sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+        "compressed_bytes": 1550337
+      },
+      "stable_mask": {
+        "codec": "gzip",
+        "bytes": 117790,
+        "sha256": "1aaa9f475d6f25dfa3d0188d9ccea3ca5ceeda6f26bd17048a1b03a4f840437e",
+        "compressed_bytes": 16182
+      }
+    },
+    {
+      "camera_set": "rgb",
+      "points": {
+        "codec": "gzip",
+        "bytes": 1428795,
+        "sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+        "compressed_bytes": 1347058
+      },
+      "stable_mask": {
+        "codec": "gzip",
+        "bytes": 95253,
+        "sha256": "72227f65d93b6b84b33cd81613b94b914a0c2c3c512b563cf5113f6dee6bc111",
+        "compressed_bytes": 13584
+      }
+    }
+  ],
+  "source_tints": {
+    "slam": "blue",
+    "rgb": "orange",
+    "display_categories_only": true
+  },
+  "source_position_colors_or_map_files_modified": false,
+  "native_points_drawn_per_source_each_frame": [
+    117790,
+    95253
+  ],
+  "camera_shared_all_source_panes_and_frames": true,
+  "virtual_orbit": {
+    "frames": 60,
+    "yaw_step_rad": 0.10471975511965977,
+    "pitch_rad": 0.5,
+    "zoom": 0.65,
+    "not_device_motion": true
+  },
+  "cutaway_or_point_removal_applied": false,
+  "stable_display_mask_enabled": false,
+  "point_size_CSS_px": 1,
+  "web_GIF": {
+    "size": [
+      960,
+      501
+    ],
+    "frames": 60,
+    "frame_duration_ms": 200,
+    "loop_duration_sec": 12,
+    "encoding": "Lanczos resize and one fixed 128-color palette, display derivative only"
+  },
+  "HD_video": {
+    "size": [
+      1192,
+      622
+    ],
+    "frames": 60,
+    "frame_rate": 5,
+    "duration_sec": 12,
+    "codec": "VP9",
+    "pixel_format": "yuv420p",
+    "color_range": "tv"
+  },
+  "still_PNG_exact_capture_bytes": true,
+  "same_recording_MPS_not_independent_physical_GT": true,
+  "point_count_density_color_not_localization_accuracy": true,
+  "browser_capture": {
+    "product": "HeadlessChrome/158.0.8127.36",
+    "chrome_sha256": "ed65d54a43663fa60ed8a277329fe73f307c31dd5b5db8dcfe91fda4274cf963",
+    "local_opaque_CSP_not_hosted_UI": true,
+    "external_requests": []
+  },
+  "frames": [
+    {
+      "file": "frames/000.png",
+      "bytes": 63973,
+      "sha256": "bba7efe0b7864afa38fdfffe4614840337481362dabb4e2ef67f78e7da28389a",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.8,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "88cac7fd7ecf77c0240cd82e73f0ba16a7c458f2cf73a69a9955a1934b55eae1",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.1012117862701416,
+              -0.5447987914085388,
+              -0.6114298701286316,
+              -0.6114176511764526,
+              1.069512963294983,
+              0.5609458684921265,
+              0.6295517683029175,
+              0.6295391917228699,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.76236629486084,
+              -1.8591060638427734,
+              34.04503631591797,
+              34.11738967895508
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.1012117862701416,
+              -0.5447987914085388,
+              -0.6114298701286316,
+              -0.6114176511764526,
+              1.069512963294983,
+              0.5609458684921265,
+              0.6295517683029175,
+              0.6295391917228699,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.76236629486084,
+              -1.8591060638427734,
+              34.04503631591797,
+              34.11738967895508
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 0,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.8,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/001.png",
+      "bytes": 65188,
+      "sha256": "ce0a9d5da2475b40b7181ececa05bb540378dec008ee92f59444421a9b93d5d7",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.6952802448803402,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "ec01f20ee6479528ecb900dfb7c4fe2ceb5c88985d2fd150eba64d3aedfb657b",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.9833846688270569,
+              -0.6004491448402405,
+              -0.6738864779472351,
+              -0.6738730072975159,
+              1.1787619590759277,
+              0.5009259581565857,
+              0.5621911883354187,
+              0.5621799826622009,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.161900520324707,
+              -1.5941680669784546,
+              34.342376708984375,
+              34.41472244262695
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.9833846688270569,
+              -0.6004491448402405,
+              -0.6738864779472351,
+              -0.6738730072975159,
+              1.1787619590759277,
+              0.5009259581565857,
+              0.5621911883354187,
+              0.5621799826622009,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.161900520324707,
+              -1.5941680669784546,
+              34.342376708984375,
+              34.41472244262695
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 1,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.6952802448803402,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/002.png",
+      "bytes": 63724,
+      "sha256": "0aa39254aa0b57f06595a8d11852ab3633d6b1d10c936ed2169b74fca4018087",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.5905604897606805,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "2b1b20e17a6496cd4b5434f197acff41302e12256799e4cc96d1daad59802081",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.8547834157943726,
+              -0.6495208740234375,
+              -0.728959858417511,
+              -0.728945255279541,
+              1.2750962972640991,
+              0.4354178011417389,
+              0.4886711537837982,
+              0.48866137862205505,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.504879951477051,
+              -1.3094079494476318,
+              34.661964416503906,
+              34.73430252075195
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.8547834157943726,
+              -0.6495208740234375,
+              -0.728959858417511,
+              -0.728945255279541,
+              1.2750962972640991,
+              0.4354178011417389,
+              0.4886711537837982,
+              0.48866137862205505,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.504879951477051,
+              -1.3094079494476318,
+              34.661964416503906,
+              34.73430252075195
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 2,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.5905604897606805,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/003.png",
+      "bytes": 63251,
+      "sha256": "4d51f939ab0a8f2f63cfda71a5f61f89a5fd692d97812eb84b8d76a3a4511c34",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.48584073464102073,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "fbbc900505180660d91119ff5218a8dc755da521869385887b11b0a8528db5b1",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.7168169617652893,
+              -0.6914762854576111,
+              -0.7760465741157532,
+              -0.7760310769081116,
+              1.357460379600525,
+              0.3651391267776489,
+              0.4097971022129059,
+              0.40978890657424927,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.787546634674072,
+              -1.0079455375671387,
+              35.00029754638672,
+              35.0726318359375
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.7168169617652893,
+              -0.6914762854576111,
+              -0.7760465741157532,
+              -0.7760310769081116,
+              1.357460379600525,
+              0.3651391267776489,
+              0.4097971022129059,
+              0.40978890657424927,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.787546634674072,
+              -1.0079455375671387,
+              35.00029754638672,
+              35.0726318359375
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 3,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.48584073464102073,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/004.png",
+      "bytes": 62916,
+      "sha256": "ba668def284a6cfb7a20ec4f2f2d176f6e169a6e0e1d43e20ec442ce54175981",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.381120979521361,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "3944f3707834be3edb0d5549cd5ee2c314af9ce09688dfa05b36b6a09e5e7b10",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.570996880531311,
+              -0.7258557081222534,
+              -0.8146308064460754,
+              -0.814614474773407,
+              1.4249519109725952,
+              0.2908599078655243,
+              0.3264332413673401,
+              0.3264267146587372,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.006803512573242,
+              -0.6930837631225586,
+              35.353668212890625,
+              35.425994873046875
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.570996880531311,
+              -0.7258557081222534,
+              -0.8146308064460754,
+              -0.814614474773407,
+              1.4249519109725952,
+              0.2908599078655243,
+              0.3264332413673401,
+              0.3264267146587372,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.006803512573242,
+              -0.6930837631225586,
+              35.353668212890625,
+              35.425994873046875
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 4,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.381120979521361,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/005.png",
+      "bytes": 62882,
+      "sha256": "471685d3dd3406d34b94f532ef63c4403e7875044d9cc551814a1f64655a1e0e",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.27640122440170123,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c28c9b70704768744a6d6ac6403f40fc4675750de82345097a4efe2a12aea943",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.4189209043979645,
+              -0.7522825598716736,
+              -0.8442897200584412,
+              -0.8442728519439697,
+              1.476831316947937,
+              0.2133939564228058,
+              0.23949289321899414,
+              0.23948810994625092,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.160248756408691,
+              -0.3682723939418793,
+              35.718204498291016,
+              35.790523529052734
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.4189209043979645,
+              -0.7522825598716736,
+              -0.8442897200584412,
+              -0.8442728519439697,
+              1.476831316947937,
+              0.2133939564228058,
+              0.23949289321899414,
+              0.23948810994625092,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.160248756408691,
+              -0.3682723939418793,
+              35.718204498291016,
+              35.790523529052734
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 5,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.27640122440170123,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/006.png",
+      "bytes": 62437,
+      "sha256": "5177386564d6fd841cf19dfbcb31ca3de92527904995a0f20cd6e5c1a721a322",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.17168146928204142,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "65d14b51ba9038992c8bab2bcf98d6f5b41273015e9310de4b52c1965b8b1d75",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.26225510239601135,
+              -0.770467221736908,
+              -0.8646984100341797,
+              -0.8646811246871948,
+              1.5125302076339722,
+              0.13359002768993378,
+              0.14992862939834595,
+              0.1499256193637848,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.246201038360596,
+              -0.037070076912641525,
+              36.08991241455078,
+              36.16222381591797
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.26225510239601135,
+              -0.770467221736908,
+              -0.8646984100341797,
+              -0.8646811246871948,
+              1.5125302076339722,
+              0.13359002768993378,
+              0.14992862939834595,
+              0.1499256193637848,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.246201038360596,
+              -0.037070076912641525,
+              36.08991241455078,
+              36.16222381591797
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 6,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.17168146928204142,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/007.png",
+      "bytes": 63428,
+      "sha256": "05c9d6f11150204e0e37fe3b0f1ae7b480e8da3d9f766959956abcacb839c2ec",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": -0.06696171416238161,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "3d5b78fd1a4e88e7441e890494fc62b18760d3c65137aadf2bdf382a740cf51e",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.10271597653627396,
+              -0.7802104353904724,
+              -0.8756332993507385,
+              -0.8756158351898193,
+              1.5316574573516846,
+              0.05232245475053787,
+              0.05872170254588127,
+              0.05872052535414696,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.263718605041504,
+              0.29689449071884155,
+              36.4647216796875,
+              36.53702926635742
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.10271597653627396,
+              -0.7802104353904724,
+              -0.8756332993507385,
+              -0.8756158351898193,
+              1.5316574573516846,
+              0.05232245475053787,
+              0.05872170254588127,
+              0.05872052535414696,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.263718605041504,
+              0.29689449071884155,
+              36.4647216796875,
+              36.53702926635742
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 7,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": -0.06696171416238161,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/008.png",
+      "bytes": 62584,
+      "sha256": "37d7619d4b60c41d4f5cf90690b8595ba3ca80f65bba71bc405d97856a0ef09c",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.03775804095727808,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "00c6b73ce23f70558397818583d60fce10110d60f0827b49dcd3cf5bffb8b10d",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.0579485148191452,
+              -0.7814055681228638,
+              -0.8769745826721191,
+              -0.8769570589065552,
+              1.5340036153793335,
+              -0.02951837331056595,
+              -0.033128589391708374,
+              -0.03312792629003525,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.212609767913818,
+              0.6299622654914856,
+              36.83852767944336,
+              36.910823822021484
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.0579485148191452,
+              -0.7814055681228638,
+              -0.8769745826721191,
+              -0.8769570589065552,
+              1.5340036153793335,
+              -0.02951837331056595,
+              -0.033128589391708374,
+              -0.03312792629003525,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.212609767913818,
+              0.6299622654914856,
+              36.83852767944336,
+              36.910823822021484
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 8,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.03775804095727808,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/009.png",
+      "bytes": 62987,
+      "sha256": "36043a486ba7ab7a64afff4cb0702166b8dc284f48b3554b99a4e7c17d473d45",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.1424777960769379,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "692280b3f4eba10c71abe75c0ed5f60f9aaa42d13b2e2078ec2522af86374008",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.2179781198501587,
+              -0.7740394473075867,
+              -0.868707537651062,
+              -0.8686901926994324,
+              1.519542932510376,
+              -0.1110357940196991,
+              -0.12461591511964798,
+              -0.12461341917514801,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.093433856964111,
+              0.9584841728210449,
+              37.20722961425781,
+              37.279518127441406
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.2179781198501587,
+              -0.7740394473075867,
+              -0.868707537651062,
+              -0.8686901926994324,
+              1.519542932510376,
+              -0.1110357940196991,
+              -0.12461591511964798,
+              -0.12461341917514801,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -6.093433856964111,
+              0.9584841728210449,
+              37.20722961425781,
+              37.279518127441406
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 9,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.1424777960769379,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/010.png",
+      "bytes": 62240,
+      "sha256": "41f8284c8fabb94ea1f97d3dc779c3f52939afbf8adeca58991429522ca857b5",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.2471975511965976,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c24be4abcda9e1c596290b4d2dd96eb29daed812ca5ca71726592a2bb3b414be",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.375619500875473,
+              -0.758192777633667,
+              -0.8509227633476257,
+              -0.8509057760238647,
+              1.488433837890625,
+              -0.19133667647838593,
+              -0.2147379219532013,
+              -0.21473363041877747,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.907497406005859,
+              1.2788608074188232,
+              37.56678771972656,
+              37.63907241821289
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.375619500875473,
+              -0.758192777633667,
+              -0.8509227633476257,
+              -0.8509057760238647,
+              1.488433837890625,
+              -0.19133667647838593,
+              -0.2147379219532013,
+              -0.21473363041877747,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.907497406005859,
+              1.2788608074188232,
+              37.56678771972656,
+              37.63907241821289
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 10,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.2471975511965976,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/011.png",
+      "bytes": 64158,
+      "sha256": "42bd9b654dedb39217782fd373527aabb00bdb583a558196258518477e3b22bd",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.3519173063162573,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "54647b93da71f7915055bb45872ba991eeb050cc31f760f3d5a0888898a243ea",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.5291455388069153,
+              -0.7340391874313354,
+              -0.823815107345581,
+              -0.823798656463623,
+              1.4410171508789062,
+              -0.2695412337779999,
+              -0.302507221698761,
+              -0.3025011718273163,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.656836986541748,
+              1.587581992149353,
+              37.91326904296875,
+              37.98554229736328
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.5291455388069153,
+              -0.7340391874313354,
+              -0.823815107345581,
+              -0.823798656463623,
+              1.4410171508789062,
+              -0.2695412337779999,
+              -0.302507221698761,
+              -0.3025011718273163,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.656836986541748,
+              1.587581992149353,
+              37.91326904296875,
+              37.98554229736328
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 11,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.3519173063162573,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/012.png",
+      "bytes": 63604,
+      "sha256": "3287959eec9602539e1091394413d735ea24ba114c1fecd1fd40c6177443884d",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.4566370614359172,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "403db552cf3fdb4dd5a3a893bfe22b5cf563ca195ce8a45f00a0fabbbd828ab9",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.6768741011619568,
+              -0.7018433213233948,
+              -0.7876815795898438,
+              -0.7876657843589783,
+              1.3778122663497925,
+              -0.3447926640510559,
+              -0.3869621753692627,
+              -0.3869544267654419,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.344199180603027,
+              1.88126540184021,
+              38.24287033081055,
+              38.31513977050781
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.6768741011619568,
+              -0.7018433213233948,
+              -0.7876815795898438,
+              -0.7876657843589783,
+              1.3778122663497925,
+              -0.3447926640510559,
+              -0.3869621753692627,
+              -0.3869544267654419,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -5.344199180603027,
+              1.88126540184021,
+              38.24287033081055,
+              38.31513977050781
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 12,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.4566370614359172,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/013.png",
+      "bytes": 63881,
+      "sha256": "3ae7b98513c8be1fcae738ff39172079925ab01e0ab44e239e0be8f89585c609",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.5613568165555771,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "98581415ba66215eec2adc99a751a5fa8947fc3b4f7a06f95c58ac82777fdc79",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.817186713218689,
+              -0.661957859992981,
+              -0.7429180145263672,
+              -0.7429031133651733,
+              1.2995119094848633,
+              -0.41626644134521484,
+              -0.46717751026153564,
+              -0.4671681523323059,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.97300910949707,
+              2.156693458557129,
+              38.55198287963867,
+              38.624244689941406
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.817186713218689,
+              -0.661957859992981,
+              -0.7429180145263672,
+              -0.7429031133651733,
+              1.2995119094848633,
+              -0.41626644134521484,
+              -0.46717751026153564,
+              -0.4671681523323059,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.97300910949707,
+              2.156693458557129,
+              38.55198287963867,
+              38.624244689941406
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 13,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.5613568165555771,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/014.png",
+      "bytes": 63457,
+      "sha256": "bc0a030ddab6ab9a04a4add3e4f887e55b62d292d0ce6a40dedbce9d4f4e5ba0",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.6660765716752368,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "4261a4b02b82df8187853b6f25d7b383e7118468cdd58dc0649c2aa3f97df796",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.9485460519790649,
+              -0.6148199439048767,
+              -0.6900148391723633,
+              -0.6900010704994202,
+              1.2069737911224365,
+              -0.4831795394420624,
+              -0.5422743558883667,
+              -0.5422635078430176,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.547333717346191,
+              2.410848379135132,
+              38.837223052978516,
+              38.909481048583984
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.9485460519790649,
+              -0.6148199439048767,
+              -0.6900148391723633,
+              -0.6900010704994202,
+              1.2069737911224365,
+              -0.4831795394420624,
+              -0.5422743558883667,
+              -0.5422635078430176,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.547333717346191,
+              2.410848379135132,
+              38.837223052978516,
+              38.909481048583984
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 14,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.6660765716752368,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/015.png",
+      "bytes": 65120,
+      "sha256": "c0a7e15e91c089c001ef4b2b8ae167c804a9d67ba98f9c890c293a6b143edee1",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.7707963267948963,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "4b1b96ecaa412ad4f60ab723c3a04c5ff5d7098b08a1afabb729b4843dc4bea4",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.069512963294983,
+              -0.5609458684921265,
+              -0.6295517683029175,
+              -0.6295391917228699,
+              1.1012117862701416,
+              -0.5447987914085388,
+              -0.6114298701286316,
+              -0.6114176511764526,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.071836948394775,
+              2.6409454345703125,
+              39.095462799072266,
+              39.1677131652832
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.069512963294983,
+              -0.5609458684921265,
+              -0.6295517683029175,
+              -0.6295391917228699,
+              1.1012117862701416,
+              -0.5447987914085388,
+              -0.6114298701286316,
+              -0.6114176511764526,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.071836948394775,
+              2.6409454345703125,
+              39.095462799072266,
+              39.1677131652832
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 15,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.7707963267948963,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/016.png",
+      "bytes": 65506,
+      "sha256": "852cecc589f07be7f15d13fa41d2612d0e4ffd5eb4dc3a212d4df17edcaa6ecd",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.8755160819145562,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "6a103e12ac666cb087ed969137d80c7e6de1b7637f24da6e4df38251c02d82b0",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.1787619590759277,
+              -0.5009259581565857,
+              -0.5621911883354187,
+              -0.5621799826622009,
+              0.9833846688270569,
+              -0.6004491448402405,
+              -0.6738864779472351,
+              -0.6738730072975159,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.5517280101776123,
+              2.844464063644409,
+              39.32387161254883,
+              39.3961181640625
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.1787619590759277,
+              -0.5009259581565857,
+              -0.5621911883354187,
+              -0.5621799826622009,
+              0.9833846688270569,
+              -0.6004491448402405,
+              -0.6738864779472351,
+              -0.6738730072975159,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.5517280101776123,
+              2.844464063644409,
+              39.32387161254883,
+              39.3961181640625
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 16,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.8755160819145562,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/017.png",
+      "bytes": 64629,
+      "sha256": "41740d62845010520371cb2123e4f29e877c5f21f1b1cbf52606b7f6da013aea",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 0.9802358370342161,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "e4eedbfe8db3bcd7d93d5b0a8a29e98dd0061f0d9f29d1b44982c0d11eae8550",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.2750962972640991,
+              -0.4354178011417389,
+              -0.4886711537837982,
+              -0.48866137862205505,
+              0.8547834157943726,
+              -0.6495208740234375,
+              -0.728959858417511,
+              -0.728945255279541,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.992705821990967,
+              3.019174098968506,
+              39.51994705200195,
+              39.592193603515625
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.2750962972640991,
+              -0.4354178011417389,
+              -0.4886711537837982,
+              -0.48866137862205505,
+              0.8547834157943726,
+              -0.6495208740234375,
+              -0.728959858417511,
+              -0.728945255279541,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.992705821990967,
+              3.019174098968506,
+              39.51994705200195,
+              39.592193603515625
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 17,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 0.9802358370342161,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/018.png",
+      "bytes": 66410,
+      "sha256": "e2f11f42e3f89aae2befaf6285d884ea33dcdc02ec34fd1d9f8c4be418446fd6",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.0849555921538758,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c0ac9fe7445eb041774523575edacaf53a2ff0390ba26484e9058d5dbd38a931",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.357460379600525,
+              -0.3651391267776489,
+              -0.4097971022129059,
+              -0.40978890657424927,
+              0.7168169617652893,
+              -0.6914762854576111,
+              -0.7760465741157532,
+              -0.7760310769081116,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.4008946418762207,
+              3.163161516189575,
+              39.68154525756836,
+              39.753787994384766
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.357460379600525,
+              -0.3651391267776489,
+              -0.4097971022129059,
+              -0.40978890657424927,
+              0.7168169617652893,
+              -0.6914762854576111,
+              -0.7760465741157532,
+              -0.7760310769081116,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.4008946418762207,
+              3.163161516189575,
+              39.68154525756836,
+              39.753787994384766
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 18,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.0849555921538758,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/019.png",
+      "bytes": 66075,
+      "sha256": "474d84523593d68f7ee6fb2860e7d0dc8568e835e511b00564a0cce02b71139a",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.1896753472735355,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "849ecbb7213aeeccdc6eef7c0bd4adca79dcc19977f54b05cec08365b7aa6b0f",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.4249519109725952,
+              -0.2908599078655243,
+              -0.3264332413673401,
+              -0.3264267146587372,
+              0.570996880531311,
+              -0.7258557081222534,
+              -0.8146308064460754,
+              -0.814614474773407,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.7827790975570679,
+              3.2748489379882812,
+              39.80689239501953,
+              39.87913131713867
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.4249519109725952,
+              -0.2908599078655243,
+              -0.3264332413673401,
+              -0.3264267146587372,
+              0.570996880531311,
+              -0.7258557081222534,
+              -0.8146308064460754,
+              -0.814614474773407,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.7827790975570679,
+              3.2748489379882812,
+              39.80689239501953,
+              39.87913131713867
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 19,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.1896753472735355,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/020.png",
+      "bytes": 66954,
+      "sha256": "2e70b550c7b3df7bc4bd4d67fbfd44915223286d8ddd803372abcd4494109761",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.2943951023931952,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "3c5079abec9be2fd0df8e0f9c573bb1a9147a470d3a9595fa09c36b3d075aede",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.476831316947937,
+              -0.2133939564228058,
+              -0.23949289321899414,
+              -0.23948810994625092,
+              0.4189209043979645,
+              -0.7522825598716736,
+              -0.8442897200584412,
+              -0.8442728519439697,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.1451308727264404,
+              3.3530123233795166,
+              39.894615173339844,
+              39.966854095458984
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.476831316947937,
+              -0.2133939564228058,
+              -0.23949289321899414,
+              -0.23948810994625092,
+              0.4189209043979645,
+              -0.7522825598716736,
+              -0.8442897200584412,
+              -0.8442728519439697,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.1451308727264404,
+              3.3530123233795166,
+              39.894615173339844,
+              39.966854095458984
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 20,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.2943951023931952,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/021.png",
+      "bytes": 67049,
+      "sha256": "a50f1aa8b26c90311c163a9c416b9274c7650f84be106c9ad0229e53ae19df93",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.3991148575128551,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "ec73d4376b7439676841a1775a506cf1d8750f850b87ab30ec68af9fcc237319",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.5125302076339722,
+              -0.13359002768993378,
+              -0.14992862939834595,
+              -0.1499256193637848,
+              0.26225510239601135,
+              -0.770467221736908,
+              -0.8646984100341797,
+              -0.8646811246871948,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.49493637681007385,
+              3.3967955112457275,
+              39.943756103515625,
+              40.0159912109375
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.5125302076339722,
+              -0.13359002768993378,
+              -0.14992862939834595,
+              -0.1499256193637848,
+              0.26225510239601135,
+              -0.770467221736908,
+              -0.8646984100341797,
+              -0.8646811246871948,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.49493637681007385,
+              3.3967955112457275,
+              39.943756103515625,
+              40.0159912109375
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 21,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.3991148575128551,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/022.png",
+      "bytes": 67509,
+      "sha256": "ff2909868aff0eb94842fbb2555555bf9e09ae1e332c2139af2129a16aa9c7f1",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.5038346126325146,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "861a8e7e4c6f3a545d866ed30a6d52838aec3931137cab00bfb000b64b1cbc41",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.5316574573516846,
+              -0.05232245475053787,
+              -0.05872170254588127,
+              -0.05872052535414696,
+              0.10271597653627396,
+              -0.7802104353904724,
+              -0.8756332993507385,
+              -0.8756158351898193,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.16068072617053986,
+              3.4057188034057617,
+              39.95376968383789,
+              40.026004791259766
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.5316574573516846,
+              -0.05232245475053787,
+              -0.05872170254588127,
+              -0.05872052535414696,
+              0.10271597653627396,
+              -0.7802104353904724,
+              -0.8756332993507385,
+              -0.8756158351898193,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.16068072617053986,
+              3.4057188034057617,
+              39.95376968383789,
+              40.026004791259766
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 22,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.5038346126325146,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/023.png",
+      "bytes": 68157,
+      "sha256": "2a4babd135fa7c1e55e1920230cdbb1a7d536ad96645d223564bff941fadc35c",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.6085543677521745,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "927e87cd656808f3b7d1a84330830f7ca9c3dc55433580cb6d91a8e9fedf98d9",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.5340036153793335,
+              0.02951837331056595,
+              0.033128589391708374,
+              0.03312792629003525,
+              -0.0579485148191452,
+              -0.7814055681228638,
+              -0.8769745826721191,
+              -0.8769570589065552,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.8145374059677124,
+              3.3796844482421875,
+              39.9245491027832,
+              39.99678421020508
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.5340036153793335,
+              0.02951837331056595,
+              0.033128589391708374,
+              0.03312792629003525,
+              -0.0579485148191452,
+              -0.7814055681228638,
+              -0.8769745826721191,
+              -0.8769570589065552,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.8145374059677124,
+              3.3796844482421875,
+              39.9245491027832,
+              39.99678421020508
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 23,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.6085543677521745,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/024.png",
+      "bytes": 68549,
+      "sha256": "e48c287abf9bed2920d16d6f24a8bd69e51bc2b959d6d6bae5c71ab55590ae63",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.7132741228718344,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "0257fb06b3669d75d1995d72143db15fb0785b07c4ae8373d356649ae46556eb",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.519542932510376,
+              0.1110357940196991,
+              0.12461591511964798,
+              0.12461341917514801,
+              -0.2179781198501587,
+              -0.7740394473075867,
+              -0.868707537651062,
+              -0.8686901926994324,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.4594697952270508,
+              3.3189775943756104,
+              39.85641860961914,
+              39.92865753173828
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.519542932510376,
+              0.1110357940196991,
+              0.12461591511964798,
+              0.12461341917514801,
+              -0.2179781198501587,
+              -0.7740394473075867,
+              -0.868707537651062,
+              -0.8686901926994324,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.4594697952270508,
+              3.3189775943756104,
+              39.85641860961914,
+              39.92865753173828
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 24,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.7132741228718344,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/025.png",
+      "bytes": 69008,
+      "sha256": "0e1123ddca80578eaa5fdda1d612531fcd2354f0fc7455c49711ef87f5b5685b",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.8179938779914944,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "28358060924cea1d6289b075205c8a6ec9ee23d57a62e17321b5ea2834a70898",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.488433837890625,
+              0.19133667647838593,
+              0.2147379219532013,
+              0.21473363041877747,
+              -0.375619500875473,
+              -0.758192777633667,
+              -0.8509227633476257,
+              -0.8509057760238647,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.088412046432495,
+              3.2242634296417236,
+              39.7501220703125,
+              39.82236099243164
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.488433837890625,
+              0.19133667647838593,
+              0.2147379219532013,
+              0.21473363041877747,
+              -0.375619500875473,
+              -0.758192777633667,
+              -0.8509227633476257,
+              -0.8509057760238647,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.088412046432495,
+              3.2242634296417236,
+              39.7501220703125,
+              39.82236099243164
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 25,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.8179938779914944,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/026.png",
+      "bytes": 70444,
+      "sha256": "410c9202c80c070f07ec44166cf9e91ad897eb99207702c1b4df4cdbcc802afd",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 1.9227136331111543,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "67daf84521cf4b92235dc1a39672656d227d62593c94e43d494dd293389dacad",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.4410171508789062,
+              0.2695412337779999,
+              0.302507221698761,
+              0.3025011718273163,
+              -0.5291455388069153,
+              -0.7340391874313354,
+              -0.823815107345581,
+              -0.823798656463623,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.6944730281829834,
+              3.0965795516967773,
+              39.6068229675293,
+              39.67906188964844
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.4410171508789062,
+              0.2695412337779999,
+              0.302507221698761,
+              0.3025011718273163,
+              -0.5291455388069153,
+              -0.7340391874313354,
+              -0.823815107345581,
+              -0.823798656463623,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.6944730281829834,
+              3.0965795516967773,
+              39.6068229675293,
+              39.67906188964844
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 26,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 1.9227136331111543,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/027.png",
+      "bytes": 71136,
+      "sha256": "89e2cc37b741d1eade72975dc68f7554bece01652bba537b2afafc97e5617c91",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.027433388230814,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "0262b9d73bc7222f192fe39e912355e0028ee1d7ed9f50659c530a68f4a5901f",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.3778122663497925,
+              0.3447926640510559,
+              0.3869621753692627,
+              0.3869544267654419,
+              -0.6768741011619568,
+              -0.7018433213233948,
+              -0.7876815795898438,
+              -0.7876657843589783,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.271013021469116,
+              2.9373250007629395,
+              39.4280891418457,
+              39.500335693359375
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.3778122663497925,
+              0.3447926640510559,
+              0.3869621753692627,
+              0.3869544267654419,
+              -0.6768741011619568,
+              -0.7018433213233948,
+              -0.7876815795898438,
+              -0.7876657843589783,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.271013021469116,
+              2.9373250007629395,
+              39.4280891418457,
+              39.500335693359375
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 27,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.027433388230814,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/028.png",
+      "bytes": 71913,
+      "sha256": "7c989150b61d21b707bf84b9ecd8449c74c43b54922ca4bab642cb0104dad1f0",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.1321531433504735,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "f516bbb97a913f349ff871afda4d61151dd6e846a747bc7137699ed64e2d11dc",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.2995119094848633,
+              0.41626644134521484,
+              0.46717751026153564,
+              0.4671681523323059,
+              -0.817186713218689,
+              -0.661957859992981,
+              -0.7429180145263672,
+              -0.7429031133651733,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.8117148876190186,
+              2.7482447624206543,
+              39.215885162353516,
+              39.28813171386719
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.2995119094848633,
+              0.41626644134521484,
+              0.46717751026153564,
+              0.4671681523323059,
+              -0.817186713218689,
+              -0.661957859992981,
+              -0.7429180145263672,
+              -0.7429031133651733,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.8117148876190186,
+              2.7482447624206543,
+              39.215885162353516,
+              39.28813171386719
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 28,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.1321531433504735,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/029.png",
+      "bytes": 71863,
+      "sha256": "d42f9ffa84622521cce8d3e21b252394ad9e62edaa0901ce1a17e8120475a7d5",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.236872898470134,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "d072bb5420faf1683dad468d9a04b6a42ca2595de754b2a074016bede618198a",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.2069737911224365,
+              0.4831795394420624,
+              0.5422743558883667,
+              0.5422635078430176,
+              -0.9485460519790649,
+              -0.6148199439048767,
+              -0.6900148391723633,
+              -0.6900010704994202,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.310655117034912,
+              2.531409978866577,
+              38.972530364990234,
+              39.04478454589844
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.2069737911224365,
+              0.4831795394420624,
+              0.5422743558883667,
+              0.5422635078430176,
+              -0.9485460519790649,
+              -0.6148199439048767,
+              -0.6900148391723633,
+              -0.6900010704994202,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.310655117034912,
+              2.531409978866577,
+              38.972530364990234,
+              39.04478454589844
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 29,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.236872898470134,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/030.png",
+      "bytes": 72589,
+      "sha256": "68345648e68f9d28131d0dc29625733d20ac4de7ca7e12208718481952a8f480",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.3415926535897924,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "bb32801ca88e83104e31b5a4b6c3d9e198664563c3014abf303d3fef99c7fb20",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -1.1012117862701416,
+              0.5447987914085388,
+              0.6114298701286316,
+              0.6114176511764526,
+              -1.069512963294983,
+              -0.5609458684921265,
+              -0.6295517683029175,
+              -0.6295391917228699,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.76236629486084,
+              2.2891969680786133,
+              38.70069122314453,
+              38.772953033447266
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -1.1012117862701416,
+              0.5447987914085388,
+              0.6114298701286316,
+              0.6114176511764526,
+              -1.069512963294983,
+              -0.5609458684921265,
+              -0.6295517683029175,
+              -0.6295391917228699,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.76236629486084,
+              2.2891969680786133,
+              38.70069122314453,
+              38.772953033447266
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 30,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.3415926535897924,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/031.png",
+      "bytes": 73161,
+      "sha256": "2b4f91ee3c660a592b663ffea8d58fb0c00fa61eb7e57aff57b055148e1aee04",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.4463124087094528,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "98d9b483f527c5a45a1dbff3741653758e5a3c1e4624fa8d2607df95dd12fe72",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.9833846688270569,
+              0.6004491448402405,
+              0.6738864779472351,
+              0.6738730072975159,
+              -1.1787619590759277,
+              -0.5009259581565857,
+              -0.5621911883354187,
+              -0.5621799826622009,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.161900520324707,
+              2.024258852005005,
+              38.403350830078125,
+              38.475616455078125
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.9833846688270569,
+              0.6004491448402405,
+              0.6738864779472351,
+              0.6738730072975159,
+              -1.1787619590759277,
+              -0.5009259581565857,
+              -0.5621911883354187,
+              -0.5621799826622009,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.161900520324707,
+              2.024258852005005,
+              38.403350830078125,
+              38.475616455078125
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 31,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.4463124087094528,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/032.png",
+      "bytes": 74131,
+      "sha256": "8c710932113f15c291396e037d3e0c3a1a58660ed109cb32b43a51cf40563880",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.5510321638291122,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "148c1627823bf30d1b6156816c5563f3f9693a7e0ea597c8399b7f3ebcd33797",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.8547834157943726,
+              0.6495208740234375,
+              0.728959858417511,
+              0.728945255279541,
+              -1.2750962972640991,
+              -0.4354178011417389,
+              -0.4886711537837982,
+              -0.48866137862205505,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.504879951477051,
+              1.7394986152648926,
+              38.083763122558594,
+              38.156036376953125
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.8547834157943726,
+              0.6495208740234375,
+              0.728959858417511,
+              0.728945255279541,
+              -1.2750962972640991,
+              -0.4354178011417389,
+              -0.4886711537837982,
+              -0.48866137862205505,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.504879951477051,
+              1.7394986152648926,
+              38.083763122558594,
+              38.156036376953125
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 32,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.5510321638291122,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/033.png",
+      "bytes": 73614,
+      "sha256": "741275a5fbf11b9d177e00aa6d15812d6d5c9cec85a96904c203ec471c08e4f3",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.6557519189487726,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c00b7bc412dcb834b0ee29fb6f4b611e9eebab9493b2b4703f86a418409728b1",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.7168169617652893,
+              0.6914762854576111,
+              0.7760465741157532,
+              0.7760310769081116,
+              -1.357460379600525,
+              -0.3651391267776489,
+              -0.4097971022129059,
+              -0.40978890657424927,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.787546634674072,
+              1.438036322593689,
+              37.74542999267578,
+              37.817710876464844
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.7168169617652893,
+              0.6914762854576111,
+              0.7760465741157532,
+              0.7760310769081116,
+              -1.357460379600525,
+              -0.3651391267776489,
+              -0.4097971022129059,
+              -0.40978890657424927,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.787546634674072,
+              1.438036322593689,
+              37.74542999267578,
+              37.817710876464844
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 33,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.6557519189487726,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/034.png",
+      "bytes": 73070,
+      "sha256": "8424afbc02932dbde3073fa9d2a4c32fb1e1292802a90b3ebd088a45220da9e6",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.760471674068432,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "ea3adec0235d55e1b287d0d03fa0848008fc44ac5605988aa2946fb2f609b98c",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.570996880531311,
+              0.7258557081222534,
+              0.8146308064460754,
+              0.814614474773407,
+              -1.4249519109725952,
+              -0.2908599078655243,
+              -0.3264332413673401,
+              -0.3264267146587372,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.006803512573242,
+              1.1231745481491089,
+              37.392059326171875,
+              37.46434783935547
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.570996880531311,
+              0.7258557081222534,
+              0.8146308064460754,
+              0.814614474773407,
+              -1.4249519109725952,
+              -0.2908599078655243,
+              -0.3264332413673401,
+              -0.3264267146587372,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.006803512573242,
+              1.1231745481491089,
+              37.392059326171875,
+              37.46434783935547
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 34,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.760471674068432,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/035.png",
+      "bytes": 74114,
+      "sha256": "81e2d92147bb0258ecedf654f0f04447716e827a68bd757234045890da3de814",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.8651914291880916,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "9d92528b054efac8548fbf30a04d92b5d9f35baa653132a8bc8ad742e4025b2d",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.4189209043979645,
+              0.7522825598716736,
+              0.8442897200584412,
+              0.8442728519439697,
+              -1.476831316947937,
+              -0.2133939564228058,
+              -0.23949289321899414,
+              -0.23948810994625092,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.160248756408691,
+              0.798363208770752,
+              37.027523040771484,
+              37.099815368652344
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.4189209043979645,
+              0.7522825598716736,
+              0.8442897200584412,
+              0.8442728519439697,
+              -1.476831316947937,
+              -0.2133939564228058,
+              -0.23949289321899414,
+              -0.23948810994625092,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.160248756408691,
+              0.798363208770752,
+              37.027523040771484,
+              37.099815368652344
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 35,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.8651914291880916,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/036.png",
+      "bytes": 72224,
+      "sha256": "5e73769853cd29d7d02a4adf3b9f8b3b7f9d13865b9a667c26c79ada8dcc3417",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 2.969911184307752,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "835ac078bf77080181b95a0310f2766275a79f86a730ab91565f06ded2e55b14",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.26225510239601135,
+              0.770467221736908,
+              0.8646984100341797,
+              0.8646811246871948,
+              -1.5125302076339722,
+              -0.13359002768993378,
+              -0.14992862939834595,
+              -0.1499256193637848,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.246201038360596,
+              0.4671608507633209,
+              36.65581512451172,
+              36.72811508178711
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.26225510239601135,
+              0.770467221736908,
+              0.8646984100341797,
+              0.8646811246871948,
+              -1.5125302076339722,
+              -0.13359002768993378,
+              -0.14992862939834595,
+              -0.1499256193637848,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.246201038360596,
+              0.4671608507633209,
+              36.65581512451172,
+              36.72811508178711
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 36,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 2.969911184307752,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/037.png",
+      "bytes": 71962,
+      "sha256": "bfbf1e2149084210a8443c2446797fb91bbe69e164c21de5cd63143d76f2aa9d",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.0746309394274114,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "7f5885609bb4019da48e4ca4ade29615a92b8880aa180b8455bb9c8c93f621b5",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              -0.10271597653627396,
+              0.7802104353904724,
+              0.8756332993507385,
+              0.8756158351898193,
+              -1.5316574573516846,
+              -0.05232245475053787,
+              -0.05872170254588127,
+              -0.05872052535414696,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.263718605041504,
+              0.13319629430770874,
+              36.281005859375,
+              36.35331344604492
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              -0.10271597653627396,
+              0.7802104353904724,
+              0.8756332993507385,
+              0.8756158351898193,
+              -1.5316574573516846,
+              -0.05232245475053787,
+              -0.05872170254588127,
+              -0.05872052535414696,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.263718605041504,
+              0.13319629430770874,
+              36.281005859375,
+              36.35331344604492
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 37,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.0746309394274114,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/038.png",
+      "bytes": 72478,
+      "sha256": "81e0191abf19857ffbf675d68e3895e5fd47bcb735765a6357aff72a41cb9be7",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.179350694547071,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "edf4f9968a2cf962bc02b3cca17f8e28e4505295979511bc7fe30e9d42621108",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.0579485148191452,
+              0.7814055681228638,
+              0.8769745826721191,
+              0.8769570589065552,
+              -1.5340036153793335,
+              0.02951837331056595,
+              0.033128589391708374,
+              0.03312792629003525,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.212609767913818,
+              -0.1998715102672577,
+              35.90719985961914,
+              35.979515075683594
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.0579485148191452,
+              0.7814055681228638,
+              0.8769745826721191,
+              0.8769570589065552,
+              -1.5340036153793335,
+              0.02951837331056595,
+              0.033128589391708374,
+              0.03312792629003525,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.212609767913818,
+              -0.1998715102672577,
+              35.90719985961914,
+              35.979515075683594
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 38,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.179350694547071,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/039.png",
+      "bytes": 71877,
+      "sha256": "a1c022b3b44f0f4983c5d2e5097acd6755a2c70d34cfb38b19d54f1474423a70",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.2840704496667312,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "7d6fd11a827d18f5ce24620a78868019a4e4700e7ee87227470dc4f02e37c535",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.2179781198501587,
+              0.7740394473075867,
+              0.868707537651062,
+              0.8686901926994324,
+              -1.519542932510376,
+              0.1110357940196991,
+              0.12461591511964798,
+              0.12461341917514801,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.093433856964111,
+              -0.5283933877944946,
+              35.53849792480469,
+              35.61082077026367
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.2179781198501587,
+              0.7740394473075867,
+              0.868707537651062,
+              0.8686901926994324,
+              -1.519542932510376,
+              0.1110357940196991,
+              0.12461591511964798,
+              0.12461341917514801,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              6.093433856964111,
+              -0.5283933877944946,
+              35.53849792480469,
+              35.61082077026367
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 39,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.2840704496667312,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/040.png",
+      "bytes": 73208,
+      "sha256": "5ba135af9785aeaba4add2afe350c7c03e13497a5dd7d120beae6973ae98d424",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.3887902047863907,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "baaef7e2773d76c580746f8b10cd5d43a9a6f251f04e7075e0995d74fb2df3ea",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.375619500875473,
+              0.758192777633667,
+              0.8509227633476257,
+              0.8509057760238647,
+              -1.488433837890625,
+              0.19133667647838593,
+              0.2147379219532013,
+              0.21473363041877747,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.907497406005859,
+              -0.848770022392273,
+              35.17893981933594,
+              35.25127029418945
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.375619500875473,
+              0.758192777633667,
+              0.8509227633476257,
+              0.8509057760238647,
+              -1.488433837890625,
+              0.19133667647838593,
+              0.2147379219532013,
+              0.21473363041877747,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.907497406005859,
+              -0.848770022392273,
+              35.17893981933594,
+              35.25127029418945
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 40,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.3887902047863907,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/041.png",
+      "bytes": 70883,
+      "sha256": "652d3a00e31673bf73c1e4b74cfa737c449f3329cd913088963e53e73f906694",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.49350995990605,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "944d797b9cdd93d0df4409811e7681df9e697f3f8123ba8aa3abfed77c830b5e",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.5291455388069153,
+              0.7340391874313354,
+              0.823815107345581,
+              0.823798656463623,
+              -1.4410171508789062,
+              0.2695412337779999,
+              0.302507221698761,
+              0.3025011718273163,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.656836986541748,
+              -1.1574912071228027,
+              34.832462310791016,
+              34.9047966003418
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.5291455388069153,
+              0.7340391874313354,
+              0.823815107345581,
+              0.823798656463623,
+              -1.4410171508789062,
+              0.2695412337779999,
+              0.302507221698761,
+              0.3025011718273163,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.656836986541748,
+              -1.1574912071228027,
+              34.832462310791016,
+              34.9047966003418
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 41,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.49350995990605,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/042.png",
+      "bytes": 71699,
+      "sha256": "3896c8340428686023fd691e2c6f88d289138019840088d2280f473d564f270a",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.5982297150257105,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "4a1ef68348cd35c61809b0e58c6ed58f1edf3a0b299d3abe4fe6bb13b48a1966",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.6768741011619568,
+              0.7018433213233948,
+              0.7876815795898438,
+              0.7876657843589783,
+              -1.3778122663497925,
+              0.3447926640510559,
+              0.3869621753692627,
+              0.3869544267654419,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.344199180603027,
+              -1.4511747360229492,
+              34.50285720825195,
+              34.57520294189453
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.6768741011619568,
+              0.7018433213233948,
+              0.7876815795898438,
+              0.7876657843589783,
+              -1.3778122663497925,
+              0.3447926640510559,
+              0.3869621753692627,
+              0.3869544267654419,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              5.344199180603027,
+              -1.4511747360229492,
+              34.50285720825195,
+              34.57520294189453
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 42,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.5982297150257105,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/043.png",
+      "bytes": 70538,
+      "sha256": "4d0b15fa2495d26335ac4003477f04dbbcb1079d18251e21c5d26e0e95929528",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.70294947014537,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "da46fbea886b81b57666e8f46933ed5fc8c7087f4b4870fdaf4e06fd8b3ca15a",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.817186713218689,
+              0.661957859992981,
+              0.7429180145263672,
+              0.7429031133651733,
+              -1.2995119094848633,
+              0.41626644134521484,
+              0.46717751026153564,
+              0.4671681523323059,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.97300910949707,
+              -1.7266026735305786,
+              34.19374465942383,
+              34.26609420776367
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.817186713218689,
+              0.661957859992981,
+              0.7429180145263672,
+              0.7429031133651733,
+              -1.2995119094848633,
+              0.41626644134521484,
+              0.46717751026153564,
+              0.4671681523323059,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.97300910949707,
+              -1.7266026735305786,
+              34.19374465942383,
+              34.26609420776367
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 43,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.70294947014537,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/044.png",
+      "bytes": 70629,
+      "sha256": "bd0316143be13fe53f79b791181c2615a9a0a82fb506b89063692bbbc4128925",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.8076692252650295,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "8e6299a6885e14c2345b4c0bfcdf80e5a281cad97d98a77c1d4c49081477e1ff",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              0.9485460519790649,
+              0.6148199439048767,
+              0.6900148391723633,
+              0.6900010704994202,
+              -1.2069737911224365,
+              0.4831795394420624,
+              0.5422743558883667,
+              0.5422635078430176,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.547333717346191,
+              -1.980757474899292,
+              33.908504486083984,
+              33.98086166381836
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              0.9485460519790649,
+              0.6148199439048767,
+              0.6900148391723633,
+              0.6900010704994202,
+              -1.2069737911224365,
+              0.4831795394420624,
+              0.5422743558883667,
+              0.5422635078430176,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.547333717346191,
+              -1.980757474899292,
+              33.908504486083984,
+              33.98086166381836
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 44,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.8076692252650295,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/045.png",
+      "bytes": 71287,
+      "sha256": "c46fedc6e734554f5a96676604d89b1a12840cbd5d58a77f4704ca8683005b43",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 3.91238898038469,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "800116278add460ac57e89b9a1f7b0839affc68eab39c441ae5c4ae0bcabfaef",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.069512963294983,
+              0.5609458684921265,
+              0.6295517683029175,
+              0.6295391917228699,
+              -1.1012117862701416,
+              0.5447987914085388,
+              0.6114298701286316,
+              0.6114176511764526,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.071836948394775,
+              -2.2108547687530518,
+              33.650264739990234,
+              33.722625732421875
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.069512963294983,
+              0.5609458684921265,
+              0.6295517683029175,
+              0.6295391917228699,
+              -1.1012117862701416,
+              0.5447987914085388,
+              0.6114298701286316,
+              0.6114176511764526,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              4.071836948394775,
+              -2.2108547687530518,
+              33.650264739990234,
+              33.722625732421875
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 45,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 3.91238898038469,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/046.png",
+      "bytes": 71617,
+      "sha256": "61fdbfa5228d28cea066996eeda0eaf0cda629be80f8489202f5c577bb55eb98",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.017108735504349,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "32861c5dc7387e48bc04b23b2d8f26303a271eb8e76e004371530bd5923ed8f1",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.1787619590759277,
+              0.5009259581565857,
+              0.5621911883354187,
+              0.5621799826622009,
+              -0.9833846688270569,
+              0.6004491448402405,
+              0.6738864779472351,
+              0.6738730072975159,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.5517280101776123,
+              -2.4143731594085693,
+              33.42185592651367,
+              33.49422073364258
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.1787619590759277,
+              0.5009259581565857,
+              0.5621911883354187,
+              0.5621799826622009,
+              -0.9833846688270569,
+              0.6004491448402405,
+              0.6738864779472351,
+              0.6738730072975159,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              3.5517280101776123,
+              -2.4143731594085693,
+              33.42185592651367,
+              33.49422073364258
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 46,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.017108735504349,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/047.png",
+      "bytes": 70448,
+      "sha256": "a6d759cea1527f962d8cef72e7a246a0442ca36cfee3fd7e14bbf414583d5cd6",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.12182849062401,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "e2fdac41ede318c0fa319de90b59e3e6a7b0caf4ea5cfa5bb049b4677bc821aa",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.2750962972640991,
+              0.4354178011417389,
+              0.4886711537837982,
+              0.48866137862205505,
+              -0.8547834157943726,
+              0.6495208740234375,
+              0.728959858417511,
+              0.728945255279541,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.992705821990967,
+              -2.589083433151245,
+              33.22578048706055,
+              33.29814910888672
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.2750962972640991,
+              0.4354178011417389,
+              0.4886711537837982,
+              0.48866137862205505,
+              -0.8547834157943726,
+              0.6495208740234375,
+              0.728959858417511,
+              0.728945255279541,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.992705821990967,
+              -2.589083433151245,
+              33.22578048706055,
+              33.29814910888672
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 47,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.12182849062401,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/048.png",
+      "bytes": 69141,
+      "sha256": "81650c223c1aace337e174830ae02d276993954d55d7ad15777072928ba68138",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.226548245743669,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "6feadf8a8d6bde4bbe0a5a4d6b866fea8dd980576fed44525fbb68a7404e75da",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.357460379600525,
+              0.3651391267776489,
+              0.4097971022129059,
+              0.40978890657424927,
+              -0.7168169617652893,
+              0.6914762854576111,
+              0.7760465741157532,
+              0.7760310769081116,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.4008946418762207,
+              -2.7330708503723145,
+              33.06418228149414,
+              33.13655471801758
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.357460379600525,
+              0.3651391267776489,
+              0.4097971022129059,
+              0.40978890657424927,
+              -0.7168169617652893,
+              0.6914762854576111,
+              0.7760465741157532,
+              0.7760310769081116,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              2.4008946418762207,
+              -2.7330708503723145,
+              33.06418228149414,
+              33.13655471801758
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 48,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.226548245743669,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/049.png",
+      "bytes": 69582,
+      "sha256": "e9d2c6d8fd82631f7408a3a6f3b682d52baf1250bcc41f41eb1a101a70ab9546",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.331268000863329,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "ad0659aae650731a792e27f86803fe9d84745f0811abab7b05411a295815a290",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.4249519109725952,
+              0.2908599078655243,
+              0.3264332413673401,
+              0.3264267146587372,
+              -0.570996880531311,
+              0.7258557081222534,
+              0.8146308064460754,
+              0.814614474773407,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.7827790975570679,
+              -2.8447580337524414,
+              32.93883514404297,
+              33.011207580566406
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.4249519109725952,
+              0.2908599078655243,
+              0.3264332413673401,
+              0.3264267146587372,
+              -0.570996880531311,
+              0.7258557081222534,
+              0.8146308064460754,
+              0.814614474773407,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.7827790975570679,
+              -2.8447580337524414,
+              32.93883514404297,
+              33.011207580566406
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 49,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.331268000863329,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/050.png",
+      "bytes": 69470,
+      "sha256": "97441a4db3d9adf9ab1dc38b97684c1a89d42d61640d8ffcff6793e2e28af27b",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.435987755982989,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "462f131aebbf54c3a06854a425cc881043e6b1c3ad2aaa8d5641c9df249afc09",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.476831316947937,
+              0.2133939564228058,
+              0.23949289321899414,
+              0.23948810994625092,
+              -0.4189209043979645,
+              0.7522825598716736,
+              0.8442897200584412,
+              0.8442728519439697,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.1451308727264404,
+              -2.9229214191436768,
+              32.851112365722656,
+              32.92348861694336
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.476831316947937,
+              0.2133939564228058,
+              0.23949289321899414,
+              0.23948810994625092,
+              -0.4189209043979645,
+              0.7522825598716736,
+              0.8442897200584412,
+              0.8442728519439697,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              1.1451308727264404,
+              -2.9229214191436768,
+              32.851112365722656,
+              32.92348861694336
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 50,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.435987755982989,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/051.png",
+      "bytes": 68058,
+      "sha256": "bdc41c671d5bb431b491dcf355bc2e23e5d8d61b84253a9f4c51fe34c55ea529",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.5407075111026485,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "410202870964a5357cd0d205dc397feb16c1e3b803302993942e8de8872bf1f0",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.5125302076339722,
+              0.13359002768993378,
+              0.14992862939834595,
+              0.1499256193637848,
+              -0.26225510239601135,
+              0.770467221736908,
+              0.8646984100341797,
+              0.8646811246871948,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.49493637681007385,
+              -2.9667046070098877,
+              32.801971435546875,
+              32.874351501464844
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.5125302076339722,
+              0.13359002768993378,
+              0.14992862939834595,
+              0.1499256193637848,
+              -0.26225510239601135,
+              0.770467221736908,
+              0.8646984100341797,
+              0.8646811246871948,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              0.49493637681007385,
+              -2.9667046070098877,
+              32.801971435546875,
+              32.874351501464844
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 51,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.5407075111026485,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/052.png",
+      "bytes": 68604,
+      "sha256": "d3ece1d6f780398aafedf72ee4c27332ba00fb1b1fc4f500795692eb2eb3ade0",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.645427266222309,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "1821669ae3d5663a90be8e368a9b03f699a6b5f1803351d688ee1b9b72b7e614",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.5316574573516846,
+              0.05232245475053787,
+              0.05872170254588127,
+              0.05872052535414696,
+              -0.10271597653627396,
+              0.7802104353904724,
+              0.8756332993507385,
+              0.8756158351898193,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.16068072617053986,
+              -2.975627899169922,
+              32.79195785522461,
+              32.86433792114258
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.5316574573516846,
+              0.05232245475053787,
+              0.05872170254588127,
+              0.05872052535414696,
+              -0.10271597653627396,
+              0.7802104353904724,
+              0.8756332993507385,
+              0.8756158351898193,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.16068072617053986,
+              -2.975627899169922,
+              32.79195785522461,
+              32.86433792114258
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 52,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.645427266222309,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/053.png",
+      "bytes": 66546,
+      "sha256": "7f9eedcb1d4e42f12057dc245eb5561f45e5fe402cfbc87cd58f137e09431b5d",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.750147021341968,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c2ee749352dcfa294bc4e2cbf92fd684177fa1fd2217affed205bdb2f23486bc",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.5340036153793335,
+              -0.02951837331056595,
+              -0.033128589391708374,
+              -0.03312792629003525,
+              0.0579485148191452,
+              0.7814055681228638,
+              0.8769745826721191,
+              0.8769570589065552,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.8145374059677124,
+              -2.9495935440063477,
+              32.8211784362793,
+              32.8935546875
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.5340036153793335,
+              -0.02951837331056595,
+              -0.033128589391708374,
+              -0.03312792629003525,
+              0.0579485148191452,
+              0.7814055681228638,
+              0.8769745826721191,
+              0.8769570589065552,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -0.8145374059677124,
+              -2.9495935440063477,
+              32.8211784362793,
+              32.8935546875
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 53,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.750147021341968,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/054.png",
+      "bytes": 66298,
+      "sha256": "c80c7a3b4c9cc671b44127dbfb56b8cb59d636f6b657c413b91360edf3ff3ae3",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.854866776461628,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "4ea54b8df863896b34d30b913a75cccdb17b7681c0149e35682c09ca2c241244",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.519542932510376,
+              -0.1110357940196991,
+              -0.12461591511964798,
+              -0.12461341917514801,
+              0.2179781198501587,
+              0.7740394473075867,
+              0.868707537651062,
+              0.8686901926994324,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.4594697952270508,
+              -2.8888866901397705,
+              32.88930892944336,
+              32.96168518066406
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.519542932510376,
+              -0.1110357940196991,
+              -0.12461591511964798,
+              -0.12461341917514801,
+              0.2179781198501587,
+              0.7740394473075867,
+              0.868707537651062,
+              0.8686901926994324,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -1.4594697952270508,
+              -2.8888866901397705,
+              32.88930892944336,
+              32.96168518066406
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 54,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.854866776461628,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/055.png",
+      "bytes": 66475,
+      "sha256": "6dd236cb19b7ffd39ded7be060702057c3d6efbef6fd29c1c2b0f3f71792c46d",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 4.959586531581288,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "88134b339866cbd998673ba8c0accf4a5a5a82fcf0f28e255522995fb1cfb2cd",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.488433837890625,
+              -0.19133667647838593,
+              -0.2147379219532013,
+              -0.21473363041877747,
+              0.375619500875473,
+              0.758192777633667,
+              0.8509227633476257,
+              0.8509057760238647,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.088412046432495,
+              -2.794172525405884,
+              32.99560546875,
+              33.0679817199707
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.488433837890625,
+              -0.19133667647838593,
+              -0.2147379219532013,
+              -0.21473363041877747,
+              0.375619500875473,
+              0.758192777633667,
+              0.8509227633476257,
+              0.8509057760238647,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.088412046432495,
+              -2.794172525405884,
+              32.99560546875,
+              33.0679817199707
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 55,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 4.959586531581288,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/056.png",
+      "bytes": 65426,
+      "sha256": "13f23fc5cc180ba09f70a4176b270a9707322d1c76196b4ef6c6abd1c3c883ea",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 5.064306286700948,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "4ee1937ab0ff56825aef3e5777871d5745ea175561b577d163f1c59d1c2feefa",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.4410171508789062,
+              -0.2695412337779999,
+              -0.302507221698761,
+              -0.3025011718273163,
+              0.5291455388069153,
+              0.7340391874313354,
+              0.823815107345581,
+              0.823798656463623,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.6944730281829834,
+              -2.6664886474609375,
+              33.13890838623047,
+              33.21127700805664
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.4410171508789062,
+              -0.2695412337779999,
+              -0.302507221698761,
+              -0.3025011718273163,
+              0.5291455388069153,
+              0.7340391874313354,
+              0.823815107345581,
+              0.823798656463623,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -2.6944730281829834,
+              -2.6664886474609375,
+              33.13890838623047,
+              33.21127700805664
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 56,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 5.064306286700948,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/057.png",
+      "bytes": 65081,
+      "sha256": "fd055508c6b08eda5b0aa1226577de93b1f1988ad70a065c0fb146a475d91e0e",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 5.169026041820607,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "873f5f5db1e2c5e4ab561d1bd214164be604a9a7c2d69c734c172bbdb768711f",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.3778122663497925,
+              -0.3447926640510559,
+              -0.3869621753692627,
+              -0.3869544267654419,
+              0.6768741011619568,
+              0.7018433213233948,
+              0.7876815795898438,
+              0.7876657843589783,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.271013021469116,
+              -2.5072343349456787,
+              33.3176383972168,
+              33.39000701904297
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.3778122663497925,
+              -0.3447926640510559,
+              -0.3869621753692627,
+              -0.3869544267654419,
+              0.6768741011619568,
+              0.7018433213233948,
+              0.7876815795898438,
+              0.7876657843589783,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.271013021469116,
+              -2.5072343349456787,
+              33.3176383972168,
+              33.39000701904297
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 57,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 5.169026041820607,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/058.png",
+      "bytes": 64538,
+      "sha256": "b9734b13b74c56de05b67f8bbacdd038ceeb85bec4b64d7cd288b09e881a1249",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 5.2737457969402675,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "63ccfc7603811a4dc2f92c7da2c2d397b5ea7f655d5fa42aa119cdcb04d45642",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.2995119094848633,
+              -0.41626644134521484,
+              -0.46717751026153564,
+              -0.4671681523323059,
+              0.817186713218689,
+              0.661957859992981,
+              0.7429180145263672,
+              0.7429031133651733,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.8117148876190186,
+              -2.3181538581848145,
+              33.529842376708984,
+              33.60220718383789
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.2995119094848633,
+              -0.41626644134521484,
+              -0.46717751026153564,
+              -0.4671681523323059,
+              0.817186713218689,
+              0.661957859992981,
+              0.7429180145263672,
+              0.7429031133651733,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -3.8117148876190186,
+              -2.3181538581848145,
+              33.529842376708984,
+              33.60220718383789
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 58,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 5.2737457969402675,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    },
+    {
+      "file": "frames/059.png",
+      "bytes": 65676,
+      "sha256": "83525b5c2f930a38ed0c564b0f6e2142e4270ba65e12a51b51b25bced6aa7529",
+      "state": {
+        "ready": true,
+        "mode": "split",
+        "source_colors": false,
+        "stable": false,
+        "point_size": 1,
+        "yaw": 5.378465552059927,
+        "pitch": 0.5,
+        "zoom": 0.65,
+        "camera_target": [
+          0.3774590632972945,
+          4.064190291215402,
+          -0.15023708983726491
+        ],
+        "camera_hash": "c3e58a03f84789316f20d0e7b0e25dce7d35133569e47984b44f90515c883772",
+        "draws": [
+          {
+            "camera_set": "slam",
+            "records": 117790,
+            "matrix": [
+              1.2069737911224365,
+              -0.4831795394420624,
+              -0.5422743558883667,
+              -0.5422635078430176,
+              0.9485460519790649,
+              0.6148199439048767,
+              0.6900148391723633,
+              0.6900010704994202,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.310655117034912,
+              -2.1013193130493164,
+              33.773197174072266,
+              33.845558166503906
+            ]
+          },
+          {
+            "camera_set": "rgb",
+            "records": 95253,
+            "matrix": [
+              1.2069737911224365,
+              -0.4831795394420624,
+              -0.5422743558883667,
+              -0.5422635078430176,
+              0.9485460519790649,
+              0.6148199439048767,
+              0.6900148391723633,
+              0.6900010704994202,
+              0,
+              1.4313734769821167,
+              -0.47943511605262756,
+              -0.4794255495071411,
+              -4.310655117034912,
+              -2.1013193130493164,
+              33.773197174072266,
+              33.845558166503906
+            ]
+          }
+        ],
+        "clouds": [
+          {
+            "camera_set": "slam",
+            "n": 117790,
+            "stable": 79341,
+            "points_sha256": "9c7d29f9b81d4f7b7f89accd741bbe4f00c1d766a26caed0472271e1730220db",
+            "map_sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+          },
+          {
+            "camera_set": "rgb",
+            "n": 95253,
+            "stable": 64013,
+            "points_sha256": "23b66ca529c90f44ff0e58ea60d09dbd34bd80f6d410610e44fe897e7a101064",
+            "map_sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+          }
+        ],
+        "errors": [],
+        "synthetic_fixture": false
+      },
+      "frame": 59,
+      "presentation_duration_ms": 200,
+      "requested_virtual_camera": {
+        "yaw": 5.378465552059927,
+        "pitch": 0.5,
+        "zoom": 0.65
+      }
+    }
+  ],
+  "media": [
+    {
+      "file": "lamaria-dual-map-comparison.gif",
+      "bytes": 3915466,
+      "sha256": "1d214476f352ce11ab008ebcb9a9ca930d3fd9264c153b4f529125fc1cba23dc"
+    },
+    {
+      "file": "lamaria-dual-map-comparison.png",
+      "bytes": 63973,
+      "sha256": "bba7efe0b7864afa38fdfffe4614840337481362dabb4e2ef67f78e7da28389a"
+    },
+    {
+      "file": "lamaria-dual-map-comparison.webm",
+      "bytes": 2541213,
+      "sha256": "d8774796aac78e34486d0d50686607cc6942461e4c12da2fbd60384067866a7c"
+    },
+    {
+      "file": "lamaria-dual-map-native-colors.png",
+      "bytes": 187802,
+      "sha256": "94aa5d0608280ae4e1cbf54d3459965259ea6203bdccc71e579b3e4c13723991"
+    },
+    {
+      "file": "lamaria-dual-map-overlay.png",
+      "bytes": 107779,
+      "sha256": "279edc236a23cea9a44992fa2de0f030c8429783140a38860c039cabac5c16e9"
+    }
+  ],
+  "ffprobe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "vp9",
+        "width": 1192,
+        "height": 622,
+        "pix_fmt": "yuv420p",
+        "color_range": "tv",
+        "r_frame_rate": "5/1",
+        "nb_read_frames": "60"
+      }
+    ],
+    "format": {
+      "duration": "12.000000",
+      "size": "2541213"
+    }
+  }
+}

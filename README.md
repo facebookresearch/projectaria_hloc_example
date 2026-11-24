@@ -1,53 +1,129 @@
-# Aria Gen 2 HLOC
+# Aria HLOC — Gen 1 and Gen 2
 
-**Two recordings to map. A third to localize.**
+**Map an indoor space. Localize in its visual map.**
 
-Build a metric visual map from Aria VRS/MPS, localize RGB or four-camera SLAM
-queries, and carry visual corrections forward with recorded or live VIO.
+Build metric visual maps from Aria VRS/MPS and localize native SLAM-camera rig
+queries (two cameras on Gen 1, four on Gen 2) or RGB queries. Build a SLAM map for
+Aria recordings and an RGB map for RGB images, both in the same MPS frame.
+Recordings with VIO can also carry visual corrections forward in the optional
+replay or live workflow.
 
 <p>
   <kbd>Python 3.12</kbd>
   <kbd>pycolmap 4.2.1</kbd>
-  <kbd>Offline Pilot replay</kbd>
-  <kbd>RGB + four-camera rig</kbd>
+  <kbd>Indoor LaMAria example</kbd>
+  <kbd>SLAM + RGB maps</kbd>
   <kbd>Rerun</kbd>
 </p>
 
-[Quickstart](#quickstart) · [Your own recordings](#use-your-own-recordings) ·
-[Results](#results-on-pilot) · [Runtime & frames](#runtime-and-frame-contracts) ·
-[Notebook](hloc_example.ipynb) · [Benchmark](benchmarks/pilot_multitrajectory.json)
+[Indoor quickstart](#quickstart) · [Results](#results-on-lamaria) ·
+[Pilot + VIO](#pilot-quickstart-and-vio) · [Your recordings](#use-your-own-recordings) ·
+[Notebook](hloc_example.ipynb) · [Runtime & frames](#runtime-and-frame-contracts)
 
-![MPS, HLOC and Digital Twin shown from the same room camera](assets/pilot-room-comparison.gif)
+![Native SLAM-camera HLOC map (blue) and RGB HLOC map (orange) of LaMAria R_03_easy in one MPS frame](assets/lamaria-dual-map-comparison.gif)
 
-*Same-frame asset preview: official-confidence MPS, stable HLOC with a
-visualization-only neighbourhood filter, and the existing observed Twin aligned
-to that frame. Small points and a matched roof cutaway reveal the room interior;
-original geometry is unchanged. This full-reference preview is separate from
-this example's held-out query evaluation and is not a new Twin reconstruction.*
+*Two HLOC maps built independently from the same public LaMAria `R_03_easy` (Gen 1)
+recording and MPS output, side by side from one shared virtual camera in its MPS
+world frame: the native SLAM-camera map (2,232 views from both SLAM cameras, 117,790
+points; blue) and the RGB map (930 views, 95,253 points; orange). Every point of both
+maps is drawn; the tints are display categories only. The orbit is presentation only.*
 
-[Still image](assets/pilot-room-comparison.jpg) ·
-[Display filters and source provenance](assets/pilot-room-comparison-provenance.json)
+[HD video](assets/lamaria-dual-map-comparison.webm) · [Still image](assets/lamaria-dual-map-comparison.png) ·
+[Overlay](assets/lamaria-dual-map-overlay.png) · [Native point colors](assets/lamaria-dual-map-native-colors.png) ·
+[Media sources and display conventions](assets/README.md#lamaria-indoor-example)
 
 ## What it does
 
-![Two mapping recordings build one metric map; a separate query recording supplies RGB or rig queries and VIO](assets/pilot-workflow.svg)
+![Original indoor VRS is processed with MPS, then selected RGB keyframes build a map and other frames query it](assets/lamaria-workflow.svg)
 
-**Map:** `play_0` + `play_2` → **Query and replay:** `play_1`.
-The query recording never enters mapping features, triangulation or retrieval.
-Its MPS supplies calibration and same-graph reference comparisons, not a pose prior.
+- **Build** a native SLAM-camera map (the default) or an RGB map with known MPS poses
+  and public HLOC features/matches (`build_map.py --camera-set slam|rgb`).
+- **Localize** rig queries with gPnP or RGB queries with PnP, using NetVLAD,
+  SuperPoint/LightGlue and COLMAP (`query_map.py --mode slam|rgb`).
+- **Visualize** the map and solved queries; optionally align recorded or live VIO
+  when that stream exists (`replay_demo.py`, `live_demo.py`).
 
-![Real Pilot frames: play_0 and play_2 are mapping inputs; play_1 is the query recording](assets/pilot-sequences.jpg)
+**Indoor example:** build both maps from LaMAria `R_03_easy`, then query
+non-keyframes from that recording. **Separate-recording example:** map Pilot `play_0` + `play_2`, then
+query and replay `play_1`. Query images never enter mapping features or retrieval;
+MPS query poses provide reference diagnostics, not pose priors.
 
-*Three recordings, separate clocks and calibration, one shared original public
-MPS frame. No new MPS request or glasses are needed for this recorded workflow.*
+## Choose a map
 
-- **Build** with known MPS poses and public HLOC features/matches (`build_map.py`).
-- **Localize** with NetVLAD, SuperPoint/LightGlue and COLMAP PnP or rig gPnP (`query_map.py`).
-- **Align and visualize** VIO with capture-time visual fixes (`replay_demo.py`, `live_demo.py`).
+| Query images | Map to build | Query mode |
+|---|---|---|
+| Native Aria SLAM cameras (two on Gen 1, four on Gen 2) | `--camera-set slam` (builder default) | `--mode slam` |
+| RGB images | `--camera-set rgb` | `--mode rgb` |
+
+Build both maps from the same recordings and MPS when you need both query types.
+They share the MPS world frame and `graph_uid` but are different maps: keep them in
+separate directories and record which map produced each result, with the SHA-256 of
+its `map.json` and `sfm/points3D.bin`. Measured RGB results here use Aria's RGB
+camera; other RGB devices are untested. Live streaming uses RGB only.
+
+## Results on LaMAria
+
+Both maps were built from the same original `R_03_easy` VRS and MPS. The native
+SLAM-camera map has **2,232 views** (1,116 per camera) and **117,790 points**
+(mean reprojection 1.348 px); the RGB map has **930 views** and **95,253 points**
+(1.390 px).
+
+| Query | Map | Accepted | ≤10 cm & ≤5° / covered | Translation median / max | Warm query median |
+|---|---|---:|---:|---:|---:|
+| Two SLAM cameras | SLAM map | 50 / 50 | 48 / 48 | 1.9 / 6.2 mm | 2.38 s |
+| Two SLAM cameras | RGB map | 50 / 50 | 48 / 48 | 4.0 / 22.0 mm | 1.98 s |
+| RGB | RGB map | 50 / 50 | 48 / 48 | 2.5 / 9.8 mm | 1.17 s |
+| RGB | SLAM map | 49 / 50 | 47 / 48 | 5.0 / 17.6 mm | 1.70 s |
+
+![Warm end-to-end query times on the same 50 anchors for RGB queries and for two-SLAM-camera queries, each on the SLAM map and on the RGB map](assets/lamaria-dual-map-results.svg)
+
+All four cohorts use the same **50 matched anchors**, chosen before any query from
+460 eligible of 1,583 calibrated RGB captures: a capture is excluded when its RGB or
+SLAM frames lie within 20 ms of any keyframe of either map, in any camera. The CLI's
+stride sampling skips only exact mapping keyframes and does not reproduce this set.
+These are **same-recording reference checks** against this recording's closed-loop
+MPS, not independent or cross-recording accuracy; failures and unscored queries are
+retained, and gate acceptance is not a correctness guarantee.
+
+For native two-camera queries, both maps placed all 48 reference-covered queries
+within 10 cm and 5°; the SLAM map had smaller same-recording residuals, and its warm
+end-to-end query time was about 20% higher (backend-only medians 1.67 vs 1.65 s).
+For RGB queries, the RGB map accepted all 50 and was faster; the SLAM map rejected
+one query for insufficient inliers. Each cohort's two unscored accepted queries are
+the recording-boundary anchors outside MPS reference coverage. Compare timings only
+within one query type: a two-camera query extracts and matches two 512×512 images
+serially against 20 references each (40 matches), while an RGB query is one 1024×768
+image with 20 matches. The cohorts ran one after another on the same GPU; warm end-to-end times include
+decoding and the harness's keyframe and membership checks, and initialization is
+separate. These
+counts describe this one recording; Gen 2 and other RGB devices are untested.
+
+[Matched-anchor protocol, per-cohort results, timings and map fingerprints](benchmarks/lamaria_r03_dual_map.json).
+An earlier RGB-only run (930 keyframes, 95,203 landmarks; 17 RGB and 50 two-SLAM
+queries, both against that RGB map) is kept as a dated baseline in
+[benchmarks/lamaria_r03.json](benchmarks/lamaria_r03.json), with its
+[17 query RGB frames and fixes](assets/lamaria-localization.gif).
+`R_03_easy` has no recorded VIO, so its MPS trajectory is not used as replay VIO.
+For a genuinely separate query recording and VIO, keep the Pilot example below.
+
+<details>
+<summary><strong>Preserved Pilot results and recorded-VIO preview</strong></summary>
+
+![MPS Semidense Point Cloud and HLOC Point Cloud of the Pilot living room from one shared camera](assets/pilot-pointcloud-comparison.gif)
+
+*Same-camera point-cloud preview: official-confidence MPS Semidense Point Cloud and
+stable HLOC Point Cloud from an RGB-built map, with a visualization-only neighbourhood filter. Small points
+and a matched roof cutaway reveal the room interior; original geometry is unchanged.
+This full-reference preview uses all five living-room recordings, including the query
+recording, so it is separate from the held-out `play_0` + `play_2` → `play_1` results below.*
+
+[Still image](assets/pilot-pointcloud-comparison.jpg) ·
+[Display filters and source provenance](assets/pilot-pointcloud-comparison-provenance.json)
 
 ## Results on Pilot
 
-The RGB map contains **1,360 keyframes** (666 + 694), **135,213 landmarks** and
+These results use an RGB-built map; a Gen 2 SLAM-map comparison is pending. The RGB
+map contains **1,360 keyframes** (666 + 694), **135,213 landmarks** and
 **14,870 cross-recording tracks**. All **100 RGB + 50 rig queries** completed;
 source fingerprints, native tracks and unchanged map contents were checked.
 
@@ -73,6 +149,12 @@ trajectory opening (**18.80 s**) are separate. First RGB query was **8.37 s**;
 subsequent RGB median/p90 was **6.06 / 6.96 s**. One prepared backend served RGB
 then rig; separate CLI invocations each initialize. This is not a controlled
 speed-gain, cold-disk, GPU or real-time benchmark. Peak RSS was about **4.09 GiB**.
+Each rig query processes all four 512×512 SLAM images serially, retrieving 20
+references per camera (up to 80 LightGlue matches) and solving one rig pose; an RGB
+query is one 1024×768 image with up to 20 matches. These are measured
+backend/query durations of this serial implementation, not a per-image or
+parallelized comparison; decode/rectification-inclusive end-to-end durations are
+reported separately in the benchmark.
 
 [Full protocol, timestamps, failures, quantiles and evidence hashes](benchmarks/pilot_multitrajectory.json).
 RGB indices are exactly `0, 34, ..., 3366`. Measured rig queries used 50 uniformly
@@ -104,6 +186,8 @@ throughput. GUI poses are capped at **30 Hz**. RRD shows all sparse-map position
 with uniform colors and a 640-pixel/JPEG-90 RGB preview, not original point RGB
 or a textured reconstruction; separate original-color point exports are not bundled.
 
+</details>
+
 ## Quickstart
 
 > **A passed pose gate is not a correctness guarantee.** Incorrect poses can
@@ -111,15 +195,43 @@ or a textured reconstruction; separate original-color point exports are not bund
 > visual fix can cause a map-frame pose jump and affect subsequent VIO-propagated
 > outputs. Validate with a separate recording before relying on the result.
 
-Use **Python 3.12**, the pinned environment and local disk space for all three
-recordings plus generated maps. Upstream models download weights on first
-inference. This workflow does not accept dataset terms or request MPS for you.
+**Start indoors with LaMAria `R_03_easy` (Gen 1).** Install the pinned environment
+below, download the original 1.14 GB VRS, and process it with the public MPS client.
+Then build the SLAM and RGB maps and query non-keyframes with the matching query
+type. No glasses are needed.
+Source terms and normal MPS account authorization still apply.
 
-**Using your own environment?** [Start with your own recordings](#use-your-own-recordings)
-instead. The Pilot steps below use already-processed public data.
+```bash
+python check_inputs.py --vrs data/lamaria/R_03_easy.vrs \
+  --mps data/lamaria/mps_R_03_easy_vrs --camera-set all
+python build_map.py --vrs data/lamaria/R_03_easy.vrs \
+  --mps data/lamaria/mps_R_03_easy_vrs --camera-set slam \
+  --output-dir maps/lamaria_R03_slam
+python build_map.py --vrs data/lamaria/R_03_easy.vrs \
+  --mps data/lamaria/mps_R_03_easy_vrs --camera-set rgb \
+  --output-dir maps/lamaria_R03_rgb
+python query_map.py --map maps/lamaria_R03_slam --vrs data/lamaria/R_03_easy.vrs \
+  --mps data/lamaria/mps_R_03_easy_vrs --mode slam --stride 64 --num-queries 50 \
+  --output queries/lamaria_R03_slam_map_slam.json
+python query_map.py --map maps/lamaria_R03_rgb --vrs data/lamaria/R_03_easy.vrs \
+  --mps data/lamaria/mps_R_03_easy_vrs --mode rgb --stride 31 --num-queries 1000 \
+  --output queries/lamaria_R03_rgb_map_rgb.json
+```
+
+[Download, hash verification, MPS setup and both query types](docs/lamaria.md)
+· [Indoor notebook](hloc_example.ipynb). Use fresh output paths and report the
+actual query count: in the dated RGB-only run, a requested limit of 1,000 produced
+17 RGB non-keyframe queries. This is a same-recording demonstration, not an
+independent benchmark. `R_03_easy` has no VIO; for that path use [Pilot + VIO](#pilot-quickstart-and-vio).
+
+**Using your own environment?** [Start with your own recordings](#use-your-own-recordings).
+Upstream models download weights on first inference. These examples do not accept
+dataset terms or request MPS for you.
+
+### Install the pinned environment
 
 <details>
-<summary><strong>1. Install the pinned environment</strong></summary>
+<summary><strong>Install and platform notes</strong></summary>
 
 ```bash
 git clone --recurse-submodules https://github.com/facebookresearch/projectaria_hloc_example.git
@@ -168,8 +280,19 @@ Do not use `KMP_DUPLICATE_LIB_OK` or force process exit to hide failures.
 
 </details>
 
+## Pilot quickstart and VIO
+
+**Two mapping recordings. A separate third recording to query and replay.**
+Use the original public Gen 2 Pilot `play_0` + `play_2` map inputs and `play_1`
+query/VIO input. They share a published MPS graph; no new MPS request is needed.
+Install the same pinned environment above and budget local space for all three
+recordings and generated maps. The [preserved Pilot notebook](pilot_replay.ipynb)
+uses these exact original inputs; its benchmark and media are unchanged.
+
+![Real Pilot frames: two mapping recordings and a separate query recording](assets/pilot-sequences.jpg)
+
 <details>
-<summary><strong>2. Download and check all three Pilot recordings</strong></summary>
+<summary><strong>1. Download and check all three Pilot recordings</strong></summary>
 
 Open the [official Pilot Explorer](https://explorer.projectaria.com/gen2pilot),
 follow its access/consent flow and obtain the URL-list JSON for `play_0`, `play_2`
@@ -213,7 +336,7 @@ and the three VRS fingerprints before building.
 </details>
 
 <details>
-<summary><strong>3. Build the RGB map from play_0 + play_2</strong></summary>
+<summary><strong>2. Build the RGB map from play_0 + play_2</strong></summary>
 
 ```bash
 export OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8
@@ -244,7 +367,7 @@ or substitute a map with different inputs.
 </details>
 
 <details>
-<summary><strong>4. Query the separate play_1 recording</strong></summary>
+<summary><strong>3. Query the separate play_1 recording</strong></summary>
 
 ```bash
 python query_map.py --map maps/pilot_play02_rgb --vrs data/pilot/play_1/video.vrs \
@@ -274,7 +397,7 @@ Query caches are not overwritten; choose a new path for a new run.
 </details>
 
 <details>
-<summary><strong>5. Replay play_1 VIO and open Rerun</strong></summary>
+<summary><strong>4. Replay play_1 VIO and open Rerun</strong></summary>
 
 ```bash
 python replay_demo.py --map maps/pilot_play02_rgb --vrs data/pilot/play_1/video.vrs \
@@ -289,7 +412,7 @@ Orbit the sparse map, scrub recorded time and inspect RGB, pose and fix age.
 Replay retains measured cached delays; it does not rerun models, interpolate
 MPS reference poses into outputs or measure hardware throughput.
 
-[The notebook](hloc_example.ipynb) follows these same inputs. Its source cells
+[The Pilot notebook](pilot_replay.ipynb) follows these same inputs. Its source cells
 are intentionally unexecuted with no fabricated outputs.
 
 </details>
@@ -304,18 +427,19 @@ are intentionally unexecuted with no fabricated outputs.
 SDK. Export the VRS over USB. Process only mapping recordings together; keep the
 query recording separate.*
 
-1. **Record:** choose a profile with RGB, four SLAM cameras and IMUs; include VIO
-   if you want replay.
+1. **Record:** choose a profile with RGB, the full native SLAM camera set and
+   IMUs; include VIO if you want replay. Gen 1 has two SLAM cameras, Gen 2 four.
 2. **Transfer:** copy the VRS from the glasses to your computer with Studio or
    the SDK CLI.
 3. **Process:** request MPS SLAM, or Multi-SLAM for multiple mapping recordings.
    Process the independent query separately for its calibration.
-4. **Localize:** check the inputs, build an RGB map, query the new recording and
-   optionally replay its recorded VIO in Rerun.
+4. **Localize:** check the inputs, build a SLAM map (and an RGB map for RGB
+   queries), query the new recording and optionally replay its recorded VIO in Rerun.
 
 [Capture options, MPS commands and own-data quickstart](docs/own_recordings.md).
-This path uses standard external Aria Gen 2 tools and your Project Aria account;
-it does not run recording or MPS requests for you.
+The capture guide covers standard external Aria Gen 2 tools and your Project Aria
+account. Existing Gen 1 VRS/MPS follows the same HLOC input contract; see the
+[Gen 1 indoor example](docs/lamaria.md). Neither path runs recording or MPS for you.
 
 ## Runtime and frame contracts
 
@@ -341,7 +465,10 @@ query time includes decode/rectification and keyframe checks, but excludes
 initialization, VRS hashing, reference-error evaluation and live queue/bracket
 waiting. First-query and subsequent warm durations remain separate measurements.
 
-Full VRS SHA-256 identifies recordings even after copying/renaming. A non-keyframe
+Maps built from the same MPS with different camera sets share a `graph_uid`, and
+query and replay checks compare only `graph_uid`: record each result's map directory
+and its `map.json` and `sfm/points3D.bin` SHA-256. Full VRS SHA-256 identifies
+recordings even after copying/renaming. A non-keyframe
 from a mapping recording is still a same-recording test. Legacy path-only maps
 load with a warning and unknown membership (`null`); they cannot prove independence.
 Raw recordings, generated maps, weights and local outputs are not bundled/hosted.
@@ -373,8 +500,8 @@ are not a guarantee against incorrect accepted poses or corrupted VIO alignment.
 The builder accepts one or more recordings; multiple inputs require MPS paths
 in VRS order, or a Multi-SLAM root with `vrs_to_multi_slam.json`. Mixed/empty
 graphs are rejected. Never include evaluation queries in mapping. Maps rebuilt
-under different MPS poses need matching geometry/metadata; optional Twin/display
-assets are separate future work, not inputs to matching, localization or ground truth.
+under different MPS poses need matching geometry/metadata; display media are never
+inputs to matching, localization or ground truth.
 
 </details>
 
@@ -419,6 +546,10 @@ unverified; recorded-data Rerun web inspection is not live-glasses validation.
 
 ## Scope and support
 
+Recorded VRS/MPS mapping and query modes support Gen 1 and Gen 2. The capture and
+live-streaming instructions remain Gen 2-specific; no Gen 1 hardware streaming
+qualification is claimed.
+
 This is a standalone reference example, not a core Aria Research Kit component,
 hosted localization service, internal algorithm, agent, dense reconstruction or
 other-device port. Raw recordings, generated map binaries and model weights are
@@ -432,7 +563,7 @@ python -m pytest tests
 
 Tests mock SDK/PAT/Rerun at call sites and use synthetic geometry, not glasses,
 recordings, model downloads or online MPS. Native tests exercise pinned public
-COLMAP; unit coverage is distinct from the Pilot evaluation.
+COLMAP; unit coverage is distinct from recorded-data map/query evaluation.
 
 Example/setup issues belong here; upstream algorithm issues may go to
 [HLOC](https://github.com/cvg/Hierarchical-Localization/issues),

@@ -1,0 +1,857 @@
+{
+  "schema_version": 1,
+  "dataset": "LaMAria",
+  "sequence": "R_03_easy",
+  "generation": "Aria Gen 1",
+  "source": "https://lamaria.ethz.ch/slam_datasets",
+  "source_vrs_sha256": "52962a4934d2b94d77ec276d7cf5579065e598c8e8448e2fd9d87e2bbfdb6229",
+  "mps_processing_mode": "Original successful single-recording MPS SLAM",
+  "graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+  "maps": {
+    "slam": {
+      "camera_set": "slam",
+      "graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+      "source_vrs_sha256": [
+        "52962a4934d2b94d77ec276d7cf5579065e598c8e8448e2fd9d87e2bbfdb6229"
+      ],
+      "geometry_files": {
+        "map_json": {
+          "file": "map.json",
+          "bytes": 3494545,
+          "sha256": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1"
+        },
+        "points3D_bin": {
+          "file": "points3D.bin",
+          "bytes": 12929354,
+          "sha256": "97f24af666639d6b760456102e2f5e3ce491dd0c2d00e2726dc415f9aaf3004b"
+        },
+        "native_points_npz": {
+          "file": "NATIVE_POINTS.npz",
+          "bytes": 4162137,
+          "sha256": "862216b9fda29d801058c028e4e0a844edc839240561789f34f2412992806ac2"
+        },
+        "images_bin": {
+          "file": "images.bin",
+          "bytes": 24383252,
+          "sha256": "c46be9c402f6711d0973c4cd6c9a5270c71e1bab1e34c48fd5474ba7abf4205b"
+        },
+        "cameras_bin": {
+          "file": "cameras.bin",
+          "bytes": 125000,
+          "sha256": "8f1025a64380d7dbbc5edf1d799d29d5a4df1f64ceb0df1dd926b87f0934f254"
+        },
+        "POINT_CLOUD_MANIFEST": {
+          "file": "POINT_CLOUD_MANIFEST.json",
+          "bytes": 5116929,
+          "sha256": "c5b3dbe897141458a692b74eed112ecde9aed661d4f7a1e82676a529246abd2e"
+        }
+      },
+      "mapping_views": 2232,
+      "landmarks": 117790,
+      "source_camera_label_counts": {
+        "camera-slam-right": 1116,
+        "camera-slam-left": 1116
+      },
+      "native_track_observations": 865257,
+      "native_mean_reprojection_error_px": 1.3480988669583875,
+      "observation_weighted_mean_reprojection_error_px": 1.3532448737687945,
+      "native_grayscale_fraction": 1.0,
+      "full_build_duration_sec": 1768.6646832209954,
+      "native_inner_build_stats": {
+        "num_keyframes": 2232,
+        "num_pairs": 23402,
+        "num_landmarks": 117790,
+        "mean_reprojection_error_px": 1.3480988669583902,
+        "build_duration_sec": 1692.4207869990205
+      },
+      "build_execution": "Concurrent separate GPUs; observational cost, not a controlled cross-modality speedup measurement",
+      "actual_source_image_dimensions": [
+        {
+          "label": "camera-slam-left",
+          "size": [
+            512,
+            512
+          ],
+          "count": 1116
+        },
+        {
+          "label": "camera-slam-right",
+          "size": [
+            512,
+            512
+          ],
+          "count": 1116
+        }
+      ],
+      "native_point_colors_and_geometry_preserved": true
+    },
+    "rgb": {
+      "camera_set": "rgb",
+      "graph_uid": "eacfa141-9675-9df6-198b-d6a65c9309ad",
+      "source_vrs_sha256": [
+        "52962a4934d2b94d77ec276d7cf5579065e598c8e8448e2fd9d87e2bbfdb6229"
+      ],
+      "geometry_files": {
+        "map_json": {
+          "file": "map.json",
+          "bytes": 1435413,
+          "sha256": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e"
+        },
+        "points3D_bin": {
+          "file": "points3D.bin",
+          "bytes": 9631535,
+          "sha256": "e591ddc98d52fe60048867fb3efb28ce72fc7af2ec6456d4cfc6f010e81d898f"
+        },
+        "native_points_npz": {
+          "file": "NATIVE_POINTS.npz",
+          "bytes": 3416653,
+          "sha256": "275eb7c10d9d87030a1cfd7151ddd054bc9e958a2f04b7a20067f242e6dbc213"
+        },
+        "images_bin": {
+          "file": "images.bin",
+          "bytes": 19195706,
+          "sha256": "cadb76953ad0efc9899fe107fbca55937617402b1421b036a2d6abe5995f41f5"
+        },
+        "cameras_bin": {
+          "file": "cameras.bin",
+          "bytes": 52088,
+          "sha256": "e89bec476c5c53c8628b2828685386a3a6eebdadb80d2c4fca13645626f3ba54"
+        },
+        "POINT_CLOUD_MANIFEST": {
+          "file": "POINT_CLOUD_MANIFEST.json",
+          "bytes": 2074546,
+          "sha256": "7201745a04c5b52ddbac4f2e874e2dbdfed81b09d58ed0ec28bfc76704c382b3"
+        }
+      },
+      "mapping_views": 930,
+      "landmarks": 95253,
+      "source_camera_label_counts": {
+        "camera-rgb": 930
+      },
+      "native_track_observations": 596703,
+      "native_mean_reprojection_error_px": 1.389749218394574,
+      "observation_weighted_mean_reprojection_error_px": 1.4274493577436234,
+      "native_grayscale_fraction": 0.0019736911173401364,
+      "full_build_duration_sec": 1148.1188434330106,
+      "native_inner_build_stats": {
+        "num_keyframes": 930,
+        "num_pairs": 10029,
+        "num_landmarks": 95253,
+        "mean_reprojection_error_px": 1.3897492183945772,
+        "build_duration_sec": 1074.8748562280089
+      },
+      "build_execution": "Concurrent separate GPUs; observational cost, not a controlled cross-modality speedup measurement",
+      "actual_source_image_dimensions": [
+        {
+          "label": "camera-rgb",
+          "size": [
+            1024,
+            768
+          ],
+          "count": 930
+        }
+      ],
+      "native_point_colors_and_geometry_preserved": true
+    }
+  },
+  "cohorts": {
+    "rgb_map__rgb_query": {
+      "map_camera_set": "rgb",
+      "query_camera_set": "rgb",
+      "matched_case_count": 50,
+      "accepted": 50,
+      "rejected_or_failed": 0,
+      "reference_covered_denominator_including_failures": 48,
+      "accepted_scored_denominator": 48,
+      "reference_uncovered_denominator": 2,
+      "accepted_unscored": 2,
+      "accurate_10cm_5deg_count": 48,
+      "accurate_25cm_5deg_count": 48,
+      "accurate_10cm_5deg_rate_all_covered": 1.0,
+      "accurate_25cm_5deg_rate_all_covered": 1.0,
+      "translation_error_m_accepted_covered": {
+        "count": 48,
+        "median": 0.002460798587520464,
+        "p90": 0.005938621916240023,
+        "max": 0.009795449963811593
+      },
+      "rotation_error_deg_accepted_covered": {
+        "count": 48,
+        "median": 0.05788312539971459,
+        "p90": 0.15266263331843527,
+        "max": 0.38453169344677646
+      },
+      "failures_by_reason": {},
+      "first_query_end_to_end_sec": 2.1447888349939603,
+      "warm_query_end_to_end_sec": {
+        "count": 49,
+        "median": 1.173348067997722,
+        "p90": 1.307879444002174,
+        "max": 1.40411474800203
+      },
+      "all_query_end_to_end_sec": {
+        "count": 50,
+        "median": 1.1763102080003591,
+        "p90": 1.3217887220991542,
+        "max": 2.1447888349939603
+      },
+      "native_query_only_sec": {
+        "count": 50,
+        "median": 0.8132483045046683,
+        "p90": 0.9426105284044752,
+        "max": 1.6952692960039712
+      },
+      "decode_rectification_sec": {
+        "count": 50,
+        "median": 0.09772192900709342,
+        "p90": 0.12395930888014846,
+        "max": 0.13591569100390188
+      },
+      "native_stage_cost_sec": {
+        "correspondence_duration_sec": {
+          "count": 50,
+          "median": 0.04934252699604258,
+          "p90": 0.06919408401008696,
+          "max": 0.09094505701796152
+        },
+        "end_to_end_duration_sec": {
+          "count": 50,
+          "median": 0.8131892959936522,
+          "p90": 0.942533191293478,
+          "max": 1.695154177985387
+        },
+        "extraction_duration_sec": {
+          "count": 50,
+          "median": 0.037034140987088904,
+          "p90": 0.04594378359615803,
+          "max": 0.7461267129983753
+        },
+        "matching_duration_sec": {
+          "count": 50,
+          "median": 0.7220153774833307,
+          "p90": 0.8225543875043513,
+          "max": 0.891709515999537
+        },
+        "pose_duration_sec": {
+          "count": 50,
+          "median": 0.007755940503557213,
+          "p90": 0.0181251674075611,
+          "max": 0.035207464010454714
+        },
+        "retrieval_duration_sec": {
+          "count": 50,
+          "median": 0.0027785410056822,
+          "p90": 0.00292225570010487,
+          "max": 0.004161261022090912
+        }
+      },
+      "initialization": {
+        "reconstruction_duration_sec": 2.862144826009171,
+        "map_features_duration_sec": 0.3813730740221217,
+        "models_duration_sec": 10.925562042975798,
+        "initialization_duration_sec": 14.169394752010703
+      },
+      "backend_prepare_wall_sec": 14.395090895006433,
+      "native_input_initialization_sec": 22.37948465201771,
+      "actual_camera_count_cohorts": {
+        "1": 50
+      },
+      "actual_pixel_count_cohorts": {
+        "786432": 50
+      },
+      "actual_retrieved_pair_count_cohorts": {
+        "20": 50
+      },
+      "actual_matching_pair_count_cohorts": {
+        "20": 50
+      },
+      "same_GPU0_serial_workload": "No multicamera threading/batching change",
+      "all_error_records_retained": true,
+      "failed_cases": [],
+      "accepted_unscored_cases": [
+        "R03_matched_000",
+        "R03_matched_049"
+      ],
+      "map_geometry_sha256": {
+        "map_json": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e",
+        "points3D_bin": "e591ddc98d52fe60048867fb3efb28ce72fc7af2ec6456d4cfc6f010e81d898f",
+        "native_points_npz": "275eb7c10d9d87030a1cfd7151ddd054bc9e958a2f04b7a20067f242e6dbc213",
+        "images_bin": "cadb76953ad0efc9899fe107fbca55937617402b1421b036a2d6abe5995f41f5",
+        "cameras_bin": "e89bec476c5c53c8628b2828685386a3a6eebdadb80d2c4fca13645626f3ba54",
+        "POINT_CLOUD_MANIFEST": "7201745a04c5b52ddbac4f2e874e2dbdfed81b09d58ed0ec28bfc76704c382b3"
+      },
+      "query_journal": {
+        "file": "QUERIES.jsonl",
+        "bytes": 123048,
+        "sha256": "7c65811c5b1f4d0c1d22181db49a02d504f66fb4a8316cfdf23dc550967ff621"
+      },
+      "resources": {
+        "process_max_rss_KiB": 2800748,
+        "cuda_peak_allocated_bytes": 1489456640,
+        "cuda_peak_reserved_bytes": 2306867200
+      },
+      "harness_membership_keyframe_and_bookkeeping_overhead_sec": {
+        "count": 50,
+        "median": 0.2630392054998083,
+        "p90": 0.280235461803386,
+        "max": 0.33254292100900784,
+        "scope": "E2E minus measured decode/rectification and native backend; includes exact-keyframe membership checking and harness bookkeeping, not a prediction of production throughput"
+      }
+    },
+    "rgb_map__slam_query": {
+      "map_camera_set": "rgb",
+      "query_camera_set": "slam",
+      "matched_case_count": 50,
+      "accepted": 50,
+      "rejected_or_failed": 0,
+      "reference_covered_denominator_including_failures": 48,
+      "accepted_scored_denominator": 48,
+      "reference_uncovered_denominator": 2,
+      "accepted_unscored": 2,
+      "accurate_10cm_5deg_count": 48,
+      "accurate_25cm_5deg_count": 48,
+      "accurate_10cm_5deg_rate_all_covered": 1.0,
+      "accurate_25cm_5deg_rate_all_covered": 1.0,
+      "translation_error_m_accepted_covered": {
+        "count": 48,
+        "median": 0.003999102790495916,
+        "p90": 0.009412032553302072,
+        "max": 0.022026696474630937
+      },
+      "rotation_error_deg_accepted_covered": {
+        "count": 48,
+        "median": 0.0921804849674292,
+        "p90": 0.18751407168972947,
+        "max": 0.6670396905694492
+      },
+      "failures_by_reason": {},
+      "first_query_end_to_end_sec": 2.8919851329992525,
+      "warm_query_end_to_end_sec": {
+        "count": 49,
+        "median": 1.984634811989963,
+        "p90": 2.1277221165946685,
+        "max": 2.1977433930151165
+      },
+      "all_query_end_to_end_sec": {
+        "count": 50,
+        "median": 1.987886194488965,
+        "p90": 2.137641082002665,
+        "max": 2.8919851329992525
+      },
+      "native_query_only_sec": {
+        "count": 50,
+        "median": 1.6502666940068593,
+        "p90": 1.762317266309401,
+        "max": 2.5446537579991855
+      },
+      "decode_rectification_sec": {
+        "count": 50,
+        "median": 0.06240066800091881,
+        "p90": 0.10869223270565276,
+        "max": 0.16903580102371052
+      },
+      "native_stage_cost_sec": {
+        "correspondence_duration_sec": {
+          "count": 50,
+          "median": 0.061861559996032156,
+          "p90": 0.08472346042108257,
+          "max": 0.09564470197074115
+        },
+        "end_to_end_duration_sec": {
+          "count": 50,
+          "median": 1.6501058589929016,
+          "p90": 1.762199255885207,
+          "max": 2.544502131000627
+        },
+        "extraction_duration_sec": {
+          "count": 50,
+          "median": 0.031203560502035543,
+          "p90": 0.03479275731660891,
+          "max": 0.6472925120033324
+        },
+        "matching_duration_sec": {
+          "count": 50,
+          "median": 1.5062305394967552,
+          "p90": 1.60989145921194,
+          "max": 1.762663570989389
+        },
+        "pose_duration_sec": {
+          "count": 50,
+          "median": 0.04391717951511964,
+          "p90": 0.0704922317963792,
+          "max": 0.08747258898802102
+        },
+        "retrieval_duration_sec": {
+          "count": 50,
+          "median": 0.005197391496039927,
+          "p90": 0.005573993508005515,
+          "max": 0.006691073998808861
+        }
+      },
+      "initialization": {
+        "reconstruction_duration_sec": 2.843987167987507,
+        "map_features_duration_sec": 0.3604204810108058,
+        "models_duration_sec": 10.8545771749923,
+        "initialization_duration_sec": 14.059388760011643
+      },
+      "backend_prepare_wall_sec": 14.270718015002785,
+      "native_input_initialization_sec": 22.47343299500062,
+      "actual_camera_count_cohorts": {
+        "2": 50
+      },
+      "actual_pixel_count_cohorts": {
+        "524288": 50
+      },
+      "actual_retrieved_pair_count_cohorts": {
+        "40": 50
+      },
+      "actual_matching_pair_count_cohorts": {
+        "40": 50
+      },
+      "same_GPU0_serial_workload": "No multicamera threading/batching change",
+      "all_error_records_retained": true,
+      "failed_cases": [],
+      "accepted_unscored_cases": [
+        "R03_matched_000",
+        "R03_matched_049"
+      ],
+      "map_geometry_sha256": {
+        "map_json": "956e0e5c7c918885e7caac8aa22aa6a4dcf9d4664d55098fadb26bc4aac4d67e",
+        "points3D_bin": "e591ddc98d52fe60048867fb3efb28ce72fc7af2ec6456d4cfc6f010e81d898f",
+        "native_points_npz": "275eb7c10d9d87030a1cfd7151ddd054bc9e958a2f04b7a20067f242e6dbc213",
+        "images_bin": "cadb76953ad0efc9899fe107fbca55937617402b1421b036a2d6abe5995f41f5",
+        "cameras_bin": "e89bec476c5c53c8628b2828685386a3a6eebdadb80d2c4fca13645626f3ba54",
+        "POINT_CLOUD_MANIFEST": "7201745a04c5b52ddbac4f2e874e2dbdfed81b09d58ed0ec28bfc76704c382b3"
+      },
+      "query_journal": {
+        "file": "QUERIES.jsonl",
+        "bytes": 162380,
+        "sha256": "99997c72673a49ecd3dd3fc10294043c297db2f86f9f222c2eb8ff7106797504"
+      },
+      "resources": {
+        "process_max_rss_KiB": 2801140,
+        "cuda_peak_allocated_bytes": 934366720,
+        "cuda_peak_reserved_bytes": 1163919360
+      },
+      "harness_membership_keyframe_and_bookkeeping_overhead_sec": {
+        "count": 50,
+        "median": 0.2741406499990262,
+        "p90": 0.292784574086545,
+        "max": 0.32488306701998226,
+        "scope": "E2E minus measured decode/rectification and native backend; includes exact-keyframe membership checking and harness bookkeeping, not a prediction of production throughput"
+      }
+    },
+    "slam_map__rgb_query": {
+      "map_camera_set": "slam",
+      "query_camera_set": "rgb",
+      "matched_case_count": 50,
+      "accepted": 49,
+      "rejected_or_failed": 1,
+      "reference_covered_denominator_including_failures": 48,
+      "accepted_scored_denominator": 47,
+      "reference_uncovered_denominator": 2,
+      "accepted_unscored": 2,
+      "accurate_10cm_5deg_count": 47,
+      "accurate_25cm_5deg_count": 47,
+      "accurate_10cm_5deg_rate_all_covered": 0.9791666666666666,
+      "accurate_25cm_5deg_rate_all_covered": 0.9791666666666666,
+      "translation_error_m_accepted_covered": {
+        "count": 47,
+        "median": 0.004981683979138602,
+        "p90": 0.009098654788433887,
+        "max": 0.017591144852095522
+      },
+      "rotation_error_deg_accepted_covered": {
+        "count": 47,
+        "median": 0.09416122540724924,
+        "p90": 0.25257028137722337,
+        "max": 0.6412883627446447
+      },
+      "failures_by_reason": {
+        "insufficient_inliers": 1
+      },
+      "first_query_end_to_end_sec": 2.2626530110137537,
+      "warm_query_end_to_end_sec": {
+        "count": 49,
+        "median": 1.6992244719876908,
+        "p90": 1.9138083836063742,
+        "max": 2.1602855380042456
+      },
+      "all_query_end_to_end_sec": {
+        "count": 50,
+        "median": 1.7012312874867348,
+        "p90": 1.9196156315912958,
+        "max": 2.2626530110137537
+      },
+      "native_query_only_sec": {
+        "count": 50,
+        "median": 0.9067480730009265,
+        "p90": 1.0760284398915245,
+        "max": 1.527680336002959
+      },
+      "decode_rectification_sec": {
+        "count": 50,
+        "median": 0.1150347295042593,
+        "p90": 0.14669746939907782,
+        "max": 0.19539920199895278
+      },
+      "native_stage_cost_sec": {
+        "correspondence_duration_sec": {
+          "count": 50,
+          "median": 0.02829178998945281,
+          "p90": 0.03958295792108402,
+          "max": 0.04567366495030001
+        },
+        "end_to_end_duration_sec": {
+          "count": 50,
+          "median": 0.906642258487409,
+          "p90": 1.0759383184922626,
+          "max": 1.5275905900052749
+        },
+        "extraction_duration_sec": {
+          "count": 50,
+          "median": 0.04306327500671614,
+          "p90": 0.05069228920619935,
+          "max": 0.5416887790197507
+        },
+        "matching_duration_sec": {
+          "count": 50,
+          "median": 0.8178822669869987,
+          "p90": 0.9505567531945417,
+          "max": 1.1876239080156665
+        },
+        "pose_duration_sec": {
+          "count": 50,
+          "median": 0.010584424002445303,
+          "p90": 0.02174542038701475,
+          "max": 0.041256671043811366
+        },
+        "retrieval_duration_sec": {
+          "count": 50,
+          "median": 0.0061677159974351525,
+          "p90": 0.007080726796993985,
+          "max": 0.008407065004575998
+        }
+      },
+      "initialization": {
+        "reconstruction_duration_sec": 4.033866469020722,
+        "map_features_duration_sec": 0.8918173589918297,
+        "models_duration_sec": 10.965121626999462,
+        "initialization_duration_sec": 15.891212312999414
+      },
+      "backend_prepare_wall_sec": 16.075247064989526,
+      "native_input_initialization_sec": 21.78789411400794,
+      "actual_camera_count_cohorts": {
+        "1": 50
+      },
+      "actual_pixel_count_cohorts": {
+        "786432": 50
+      },
+      "actual_retrieved_pair_count_cohorts": {
+        "20": 50
+      },
+      "actual_matching_pair_count_cohorts": {
+        "20": 50
+      },
+      "same_GPU0_serial_workload": "No multicamera threading/batching change",
+      "all_error_records_retained": true,
+      "failed_cases": [
+        {
+          "case_id": "R03_matched_041",
+          "reason": "insufficient_inliers",
+          "reference_covered": true
+        }
+      ],
+      "accepted_unscored_cases": [
+        "R03_matched_000",
+        "R03_matched_049"
+      ],
+      "map_geometry_sha256": {
+        "map_json": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1",
+        "points3D_bin": "97f24af666639d6b760456102e2f5e3ce491dd0c2d00e2726dc415f9aaf3004b",
+        "native_points_npz": "862216b9fda29d801058c028e4e0a844edc839240561789f34f2412992806ac2",
+        "images_bin": "c46be9c402f6711d0973c4cd6c9a5270c71e1bab1e34c48fd5474ba7abf4205b",
+        "cameras_bin": "8f1025a64380d7dbbc5edf1d799d29d5a4df1f64ceb0df1dd926b87f0934f254",
+        "POINT_CLOUD_MANIFEST": "c5b3dbe897141458a692b74eed112ecde9aed661d4f7a1e82676a529246abd2e"
+      },
+      "query_journal": {
+        "file": "QUERIES.jsonl",
+        "bytes": 122626,
+        "sha256": "28591ef6c423c3eac2e7886f094cb2b89605219185feeba932f515c20f72db00"
+      },
+      "resources": {
+        "process_max_rss_KiB": 2817656,
+        "cuda_peak_allocated_bytes": 1489456640,
+        "cuda_peak_reserved_bytes": 2304770048
+      },
+      "harness_membership_keyframe_and_bookkeeping_overhead_sec": {
+        "count": 50,
+        "median": 0.6732413569843629,
+        "p90": 0.7464665154868271,
+        "max": 0.832519299001433,
+        "scope": "E2E minus measured decode/rectification and native backend; includes exact-keyframe membership checking and harness bookkeeping, not a prediction of production throughput"
+      }
+    },
+    "slam_map__slam_query": {
+      "map_camera_set": "slam",
+      "query_camera_set": "slam",
+      "matched_case_count": 50,
+      "accepted": 50,
+      "rejected_or_failed": 0,
+      "reference_covered_denominator_including_failures": 48,
+      "accepted_scored_denominator": 48,
+      "reference_uncovered_denominator": 2,
+      "accepted_unscored": 2,
+      "accurate_10cm_5deg_count": 48,
+      "accurate_25cm_5deg_count": 48,
+      "accurate_10cm_5deg_rate_all_covered": 1.0,
+      "accurate_25cm_5deg_rate_all_covered": 1.0,
+      "translation_error_m_accepted_covered": {
+        "count": 48,
+        "median": 0.0018740375288775247,
+        "p90": 0.004313091847602155,
+        "max": 0.006181112091376528
+      },
+      "rotation_error_deg_accepted_covered": {
+        "count": 48,
+        "median": 0.0396515854832729,
+        "p90": 0.08173831748528085,
+        "max": 0.15065097750577947
+      },
+      "failures_by_reason": {},
+      "first_query_end_to_end_sec": 3.001119453983847,
+      "warm_query_end_to_end_sec": {
+        "count": 49,
+        "median": 2.3833113459986635,
+        "p90": 2.523480730393203,
+        "max": 2.838856687012594
+      },
+      "all_query_end_to_end_sec": {
+        "count": 50,
+        "median": 2.3834042249945924,
+        "p90": 2.5453339644853257,
+        "max": 3.001119453983847
+      },
+      "native_query_only_sec": {
+        "count": 50,
+        "median": 1.6684283100039465,
+        "p90": 1.7881571673089638,
+        "max": 2.302083638991462
+      },
+      "decode_rectification_sec": {
+        "count": 50,
+        "median": 0.07236154451675247,
+        "p90": 0.10604725562152453,
+        "max": 0.13622075598686934
+      },
+      "native_stage_cost_sec": {
+        "correspondence_duration_sec": {
+          "count": 50,
+          "median": 0.06054149799456354,
+          "p90": 0.0762288347206777,
+          "max": 0.0853135810175445
+        },
+        "end_to_end_duration_sec": {
+          "count": 50,
+          "median": 1.6683189575123833,
+          "p90": 1.788044317724416,
+          "max": 2.301963905018056
+        },
+        "extraction_duration_sec": {
+          "count": 50,
+          "median": 0.03115943599550519,
+          "p90": 0.034657481886097234,
+          "max": 0.5339402240060735
+        },
+        "matching_duration_sec": {
+          "count": 50,
+          "median": 1.5247980779968202,
+          "p90": 1.6380189376999623,
+          "max": 1.8607979030057322
+        },
+        "pose_duration_sec": {
+          "count": 50,
+          "median": 0.046571459010010585,
+          "p90": 0.0701823255920317,
+          "max": 0.09269185698940419
+        },
+        "retrieval_duration_sec": {
+          "count": 50,
+          "median": 0.011680623996653594,
+          "p90": 0.012246687704464422,
+          "max": 0.015620085003320128
+        }
+      },
+      "initialization": {
+        "reconstruction_duration_sec": 4.241463571990607,
+        "map_features_duration_sec": 0.8584122390020639,
+        "models_duration_sec": 10.798585702985292,
+        "initialization_duration_sec": 15.898973924020538
+      },
+      "backend_prepare_wall_sec": 16.115025122999214,
+      "native_input_initialization_sec": 21.922443894989556,
+      "actual_camera_count_cohorts": {
+        "2": 50
+      },
+      "actual_pixel_count_cohorts": {
+        "524288": 50
+      },
+      "actual_retrieved_pair_count_cohorts": {
+        "40": 50
+      },
+      "actual_matching_pair_count_cohorts": {
+        "40": 50
+      },
+      "same_GPU0_serial_workload": "No multicamera threading/batching change",
+      "all_error_records_retained": true,
+      "failed_cases": [],
+      "accepted_unscored_cases": [
+        "R03_matched_000",
+        "R03_matched_049"
+      ],
+      "map_geometry_sha256": {
+        "map_json": "68d11d8f5c7c45ddbefd19aab3afdfdf585593d48decaec9d4b20a57a4c1aba1",
+        "points3D_bin": "97f24af666639d6b760456102e2f5e3ce491dd0c2d00e2726dc415f9aaf3004b",
+        "native_points_npz": "862216b9fda29d801058c028e4e0a844edc839240561789f34f2412992806ac2",
+        "images_bin": "c46be9c402f6711d0973c4cd6c9a5270c71e1bab1e34c48fd5474ba7abf4205b",
+        "cameras_bin": "8f1025a64380d7dbbc5edf1d799d29d5a4df1f64ceb0df1dd926b87f0934f254",
+        "POINT_CLOUD_MANIFEST": "c5b3dbe897141458a692b74eed112ecde9aed661d4f7a1e82676a529246abd2e"
+      },
+      "query_journal": {
+        "file": "QUERIES.jsonl",
+        "bytes": 162381,
+        "sha256": "44de078b1b77908bde8be7b0bbc61b207971e34bcd6b5e76ccc0d2336fac5130"
+      },
+      "resources": {
+        "process_max_rss_KiB": 2813836,
+        "cuda_peak_allocated_bytes": 934366720,
+        "cuda_peak_reserved_bytes": 1163919360
+      },
+      "harness_membership_keyframe_and_bookkeeping_overhead_sec": {
+        "count": 50,
+        "median": 0.6417899689695332,
+        "p90": 0.6879773891152582,
+        "max": 0.7787031969928648,
+        "scope": "E2E minus measured decode/rectification and native backend; includes exact-keyframe membership checking and harness bookkeeping, not a prediction of production throughput"
+      }
+    }
+  },
+  "selection": {
+    "all_RGB_candidates": 1583,
+    "eligible": 460,
+    "selected": 50,
+    "dispositions": {
+      "selected_before_query": 50,
+      "eligible_unselected": 410,
+      "union_all_camera_mapping_keyframe_within_20ms": 1123
+    },
+    "matched_anchor_sha256": "d203b9242a28d9eb24b1ffb603462df342b6a7283ab8a541c1edfd995a044f44",
+    "selected_RGB_indices": [
+      0,
+      33,
+      65,
+      98,
+      129,
+      162,
+      199,
+      225,
+      258,
+      290,
+      326,
+      356,
+      389,
+      419,
+      451,
+      485,
+      517,
+      547,
+      580,
+      612,
+      646,
+      678,
+      710,
+      742,
+      775,
+      807,
+      840,
+      871,
+      904,
+      947,
+      968,
+      1000,
+      1032,
+      1067,
+      1097,
+      1129,
+      1157,
+      1196,
+      1226,
+      1258,
+      1293,
+      1321,
+      1357,
+      1385,
+      1417,
+      1453,
+      1485,
+      1513,
+      1548,
+      1582
+    ],
+    "selection_before_any_query_outcome": true,
+    "pairing_tolerance_ns": 20000000,
+    "native_rig_span_limit_ns": 2000000,
+    "union_all_mapping_camera_raw_and_corrected_exclusion_ns_inclusive": 20000000,
+    "reference_coverage_not_used_to_select": true,
+    "no_outcome_dependent_refill": true
+  },
+  "environment": {
+    "platform": "Linux x86_64, CUDA, sequential same GPU for query cohorts",
+    "python": "3.12.16+meta",
+    "public_environment_python_pin": "3.12.12",
+    "python_patch_difference_disclosed": true,
+    "package_versions": {
+      "numpy": "2.2.6",
+      "scipy": "1.13.1",
+      "pillow": "11.3.0",
+      "h5py": "3.14.0",
+      "opencv-python": "4.11.0.86",
+      "torch": "2.6.0",
+      "torchvision": "0.21.0",
+      "projectaria-tools": "2.3.0",
+      "pycolmap": "4.2.1",
+      "kornia": "0.8.1"
+    },
+    "HLOC_commit": "c13273bd0ecc2917a35910fd843712a1c6243193",
+    "LightGlue_commit": "edb2b838efb2ecfe3f88097c5fad9887d95aedad",
+    "source_export_sha256": "30a38f39707ddfa3df47e38c2b0b37943e148b8aad75d96fed68ca0b5b96f511",
+    "threads": 4,
+    "DataLoader_workers": 0,
+    "query_feature_cache_max_bytes": 268435456,
+    "query_execution": "Serial extraction per camera and serial camera/reference matching; no new batching or parallelization",
+    "end_to_end_scope": "Decode/rectification, exact keyframe/membership checks, native backend plus consistent observation/bookkeeping; initialization reported separately"
+  },
+  "limitations": [
+    "Same-recording, time-separated diagnostic anchors; not an independent recording, unseen place, blind study or physical ground truth.",
+    "Mapping camera poses and diagnostic references come from the same genuine MPS recording.",
+    "Compare map modality within the SAME query modality at identical case IDs. RGB single-image and native two-camera rig have different workloads.",
+    "RGB query is one 1024x768 image and20matches; native SLAM query is two512x512 images and40matches in this serial implementation.",
+    "Do not divide rig latency by camera count as if it measured actual parallel execution.",
+    "Native backend timings and full E2E timings are different. E2E includes harness membership checks; neither is a physical device throughput result.",
+    "Every failure and unscored boundary case is retained; all reference-covered failures count in accuracy denominators.",
+    "The first and last selected cases have no MPS reference in all four cohorts, not two early-only cases.",
+    "Runtime Python patch version differs from the public environment pin; core/HLOC/LightGlue and numerical package pins are explicit.",
+    "Point density, color and reprojection consistency do not prove localization accuracy. No iPhone or Gen2 Pilot result is measured here.",
+    "Native map identity requires geometry/NPZ SHA as well as map.json SHA; RGB metadata alone also identifies the older geometry."
+  ],
+  "preserved_history": "benchmarks/lamaria_r03.json remains the dated RGB-map baseline; these are new maps and200 new matched queries.",
+  "evidence_sha256": {
+    "final_geometry_bound_result": "4b33f7b7ae46b20f385459df46a5c1a65396c1d567c45f04820c200fdedb7ce5",
+    "raw_query_journals": {
+      "rgb_map__rgb_query": "7c65811c5b1f4d0c1d22181db49a02d504f66fb4a8316cfdf23dc550967ff621",
+      "rgb_map__slam_query": "99997c72673a49ecd3dd3fc10294043c297db2f86f9f222c2eb8ff7106797504",
+      "slam_map__rgb_query": "28591ef6c423c3eac2e7886f094cb2b89605219185feeba932f515c20f72db00",
+      "slam_map__slam_query": "44de078b1b77908bde8be7b0bbc61b207971e34bcd6b5e76ccc0d2336fac5130"
+    }
+  }
+}

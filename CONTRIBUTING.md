@@ -15,8 +15,9 @@ We actively welcome your pull requests.
 
 The GitHub workflow runs on pushes to `main` (including ShipIt syncs), pull
 requests targeting `main`, and manual dispatches. It runs the mocked core suite
-on Ubuntu and macOS, plus the four native COLMAP pose tests on
-Ubuntu. These tests need no glasses, recordings, online MPS, or model weights.
+on Ubuntu and macOS, plus the native COLMAP pose tests on Ubuntu. These cover
+central, two-camera and four-camera geometry without glasses, recordings, online
+MPS, or model weights.
 
 For the lightweight core suite in Python 3.12:
 

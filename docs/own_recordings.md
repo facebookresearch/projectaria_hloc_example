@@ -9,8 +9,11 @@ the public Companion App and Client SDK, and a Project Aria account with MPS acc
 Follow the official setup guides for your glasses and computer. If recording or
 USB export is unavailable, use [Project Aria support][support] before proceeding.
 
-The [Pilot quickstart](../README.md#quickstart) uses already-processed public data;
-no glasses or new MPS request are needed. Its notebook keeps those fixed inputs.
+The [Pilot walkthrough](../README.md#pilot-quickstart-and-vio) uses already-processed
+public data; no glasses or new MPS request are needed. Its preserved
+[Pilot notebook](../pilot_replay.ipynb) keeps those fixed inputs. For existing
+Gen 1 recordings, use the same VRS/MPS contract and the [Gen 1 indoor guide](lamaria.md);
+the capture controls below are Gen 2-specific.
 For your own recordings, run the commands below from this repository's root.
 
 ## Map your own space
@@ -167,13 +170,22 @@ QUERY_MPS=/absolute/path/to/mps_query_vrs
 python check_inputs.py --vrs "$MAP_VRS" --mps "$MAP_MPS"
 python check_inputs.py --vrs "$QUERY_VRS" --mps "$QUERY_MPS"
 python build_map.py --vrs "$MAP_VRS" --mps "$MAP_MPS" \
+  --camera-set slam --output-dir maps/my_room_slam
+python build_map.py --vrs "$MAP_VRS" --mps "$MAP_MPS" \
   --camera-set rgb --output-dir maps/my_room_rgb
+python query_map.py --map maps/my_room_slam --vrs "$QUERY_VRS" \
+  --mps "$QUERY_MPS" --mode slam --output queries/my_room_slam_query.json
 python query_map.py --map maps/my_room_rgb --vrs "$QUERY_VRS" \
   --mps "$QUERY_MPS" --mode rgb --output queries/my_room_query.json
 ```
 
+The SLAM map serves native SLAM-camera rig queries; the RGB map serves RGB queries
+and live operation, which uses RGB only. Keep the maps in separate
+directories and record which map produced each result. This guide's measured
+Gen 2 results use an RGB map; a Gen 2 SLAM-map comparison is pending.
+
 For multiple map inputs, check each VRS with its associated per-recording MPS
-folder, then pass the Multi-SLAM root:
+folder, then pass the Multi-SLAM root (use `--camera-set slam` for a SLAM map):
 
 ```bash
 python build_map.py \

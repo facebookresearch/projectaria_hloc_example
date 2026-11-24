@@ -34,7 +34,7 @@
     "No cross-day or unseen-location claim",
     "Full-reference maps are separate from validation maps",
     "Single-recording time splits must not be averaged with cross-device scores",
-    "Digital-twin quality/export checks are separate from these localization measurements"
+    "Optional visualization asset checks are separate from these localization measurements"
   ],
   "groups": [
     {

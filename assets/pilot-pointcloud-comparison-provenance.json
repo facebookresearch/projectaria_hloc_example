@@ -1,0 +1,247 @@
+{
+  "format_version": 2,
+  "scene": "living",
+  "map_graph_uid": "334ef120-0f94-a1bb-34c9-f0ec7b8c8d39",
+  "component_members": [
+    "clean_0",
+    "play_0",
+    "play_1",
+    "play_2",
+    "play_3"
+  ],
+  "asset_role": "Existing full-reference point-cloud visualization, separate from play_0 + play_2 -> play_1 localization evaluation",
+  "representations": [
+    "MPS Semidense Point Cloud",
+    "HLOC Point Cloud"
+  ],
+  "MPS": {
+    "raw_record_count": 23758300,
+    "official_display_count": 3871690,
+    "rule": "inv_dist_std<0.001 AND dist_std<0.05",
+    "global_unique_landmarks_unknown": true
+  },
+  "HLOC": {
+    "raw_landmarks": 303741,
+    "stable_landmarks": 144324,
+    "display_pass_landmarks": 127842,
+    "stable_rule": ">=3 distinct image views AND native mean reprojection<=2px",
+    "additional_display_rule": ">=8 other stable landmarks within15cm"
+  },
+  "camera": {
+    "shared_both_panes": true,
+    "projection": "perspective",
+    "center_m": [
+      -1.05,
+      1.067,
+      -0.15
+    ],
+    "distance_m": 10,
+    "pitch_radians": 0.65,
+    "yaw_angles_radians": [
+      0.4,
+      0.65,
+      0.9,
+      1.15,
+      1.4,
+      1.65,
+      1.9,
+      2.15
+    ]
+  },
+  "display": {
+    "point_size_CSS_px": 0.5,
+    "MPS_opacity": 0.18,
+    "HLOC_opacity": 0.65,
+    "matching_roof_cutaway_both_point_clouds": true,
+    "cutaway_height_m": 0.65,
+    "listed_counts_before_cutaway": true,
+    "native_source_files_changed": false,
+    "new_geometry_or_features": false
+  },
+  "source_media": [
+    {
+      "name": "pilot-room-comparison.gif",
+      "bytes": 2024260,
+      "sha256": "5b0bbf669e49c3228bbff03adc083f6e8df3c202a4139e903b43ed4051b67ec3",
+      "size": [
+        1200,
+        508
+      ],
+      "frames": 14,
+      "durations_ms": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "name": "pilot-room-comparison.jpg",
+      "bytes": 193106,
+      "sha256": "a7ed367612d60bfb5faf900f9ae95f13e4271465871ed6e56c6359889e580596",
+      "size": [
+        1440,
+        610
+      ],
+      "frames": 1
+    },
+    {
+      "name": "pilot-room-comparison-provenance.json",
+      "bytes": 3000,
+      "sha256": "ec2816531725c5dec009ed8aae38ec47d0426b34da0c637c3d242eeb11a86b4a"
+    }
+  ],
+  "derivation": {
+    "type": "Two original captured point-cloud viewport crops and newly authored labels; no new scene rendering",
+    "still_crop_box": [
+      0,
+      125,
+      960,
+      547
+    ],
+    "GIF_crop_box": [
+      0,
+      104,
+      800,
+      454
+    ],
+    "crop_boxes_exclusive_max": true,
+    "existing_point_viewport_pixels_unchanged_before_output_encoding": true,
+    "still_encoding": "JPEG95 4:4:4 display derivative",
+    "animation_encoding": "One fixed 128-color GIF palette; display quantization only",
+    "old_media_unchanged": true
+  },
+  "animation": {
+    "frames": 14,
+    "seconds": 8.4,
+    "duration_ms": [
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600,
+      600
+    ],
+    "motion": "eight rendered angles, then reverse; no synthetic intermediate geometry"
+  },
+  "source_HLOC_SHA256": "885861d4aca6a6d06a1dcb1fba6d643f6da5bf8bb6c3f8c5dd60aec9e35fe1fc",
+  "source_stable_mask_SHA256": "90a294a4bf423efd731e59ae4c1e9ab63f8688f510e07fd842f1ec7b27dfb165",
+  "additional_density_mask_SHA256": "ca1f2f469727c3662317e05a35a53bd6d95df646d0b9326aabfdaa153f62ffb2",
+  "capture": "Existing actual Chrome WebGL captured viewports, cropped and relabelled; not a new benchmark, physical scene, live-device capture or localization ground truth",
+  "frame_proofs": [
+    {
+      "frame": 0,
+      "input_viewport_crop_RGB_sha256": "b8eec53b641316d434ec50bc75a6a26c410644e6b552e4a50e11b95a638f85aa",
+      "encoded_display_RGB_sha256": "3df97311633f281383ca0e13b712910e7af2fca4119a7e36d0358155bbc2f6be",
+      "duration_ms": 600
+    },
+    {
+      "frame": 1,
+      "input_viewport_crop_RGB_sha256": "b89f4c8da06d61b5f89480edbba271b0e4a22618c0622c0d58124f2042499af4",
+      "encoded_display_RGB_sha256": "7f43b274eafa71ec05f16980e6a00d4bf44468fc7c73f257bb15c927cdaf6461",
+      "duration_ms": 600
+    },
+    {
+      "frame": 2,
+      "input_viewport_crop_RGB_sha256": "49a2bf1d89665d9b135f4b27ad8f504d37207414ca776cc36fb43b92087369ad",
+      "encoded_display_RGB_sha256": "c80bf3247035fe5293969740b0ea281a4bc56fd1faa5f7c5a54a44d6a1ebafa5",
+      "duration_ms": 600
+    },
+    {
+      "frame": 3,
+      "input_viewport_crop_RGB_sha256": "f194bdfe1f24c39bffa6fdcc96ab84c78e38990dc2c65ec888087a6df14c8628",
+      "encoded_display_RGB_sha256": "f485652735d16a2514844f91833b54e576937a4a8c1e20d9de5e9822c53a4ef3",
+      "duration_ms": 600
+    },
+    {
+      "frame": 4,
+      "input_viewport_crop_RGB_sha256": "ad1c3bb16f6dfc78dde3a93126446d90e11327820b0711c6171c0a05cb128307",
+      "encoded_display_RGB_sha256": "cac7ba057c8848f6a6dedb2e83e7644e8f8879783aa07025013d6f74e0b04592",
+      "duration_ms": 600
+    },
+    {
+      "frame": 5,
+      "input_viewport_crop_RGB_sha256": "98d24612f7d9d334fa97a7ae835bc4c3174860d6cdeb9983212cf008b36ee351",
+      "encoded_display_RGB_sha256": "1e87aae21a3a0b28d6d119b2326967c231dfb619d76e474c569646a061a5d44f",
+      "duration_ms": 600
+    },
+    {
+      "frame": 6,
+      "input_viewport_crop_RGB_sha256": "94d6c2ab2b18bae4e2466f48d123fa6dd6b95cff61d634e39f148a4e7ce6968a",
+      "encoded_display_RGB_sha256": "8dc4c91f75b023efae8e2e373fbaa525101dcb4e996fe57d690f746e10be403b",
+      "duration_ms": 600
+    },
+    {
+      "frame": 7,
+      "input_viewport_crop_RGB_sha256": "c33ff2f3bc6a83adc7f8d59e2333ad90911bf2d1e9080f117c653baf44e74e5b",
+      "encoded_display_RGB_sha256": "eb4cdac2a2651402d69631550a1f92e7e2aab5b0d94b23fa7ce3874590ea3d8d",
+      "duration_ms": 600
+    },
+    {
+      "frame": 8,
+      "input_viewport_crop_RGB_sha256": "94d6c2ab2b18bae4e2466f48d123fa6dd6b95cff61d634e39f148a4e7ce6968a",
+      "encoded_display_RGB_sha256": "8dc4c91f75b023efae8e2e373fbaa525101dcb4e996fe57d690f746e10be403b",
+      "duration_ms": 600
+    },
+    {
+      "frame": 9,
+      "input_viewport_crop_RGB_sha256": "98d24612f7d9d334fa97a7ae835bc4c3174860d6cdeb9983212cf008b36ee351",
+      "encoded_display_RGB_sha256": "1e87aae21a3a0b28d6d119b2326967c231dfb619d76e474c569646a061a5d44f",
+      "duration_ms": 600
+    },
+    {
+      "frame": 10,
+      "input_viewport_crop_RGB_sha256": "ad1c3bb16f6dfc78dde3a93126446d90e11327820b0711c6171c0a05cb128307",
+      "encoded_display_RGB_sha256": "cac7ba057c8848f6a6dedb2e83e7644e8f8879783aa07025013d6f74e0b04592",
+      "duration_ms": 600
+    },
+    {
+      "frame": 11,
+      "input_viewport_crop_RGB_sha256": "f194bdfe1f24c39bffa6fdcc96ab84c78e38990dc2c65ec888087a6df14c8628",
+      "encoded_display_RGB_sha256": "f485652735d16a2514844f91833b54e576937a4a8c1e20d9de5e9822c53a4ef3",
+      "duration_ms": 600
+    },
+    {
+      "frame": 12,
+      "input_viewport_crop_RGB_sha256": "49a2bf1d89665d9b135f4b27ad8f504d37207414ca776cc36fb43b92087369ad",
+      "encoded_display_RGB_sha256": "c80bf3247035fe5293969740b0ea281a4bc56fd1faa5f7c5a54a44d6a1ebafa5",
+      "duration_ms": 600
+    },
+    {
+      "frame": 13,
+      "input_viewport_crop_RGB_sha256": "b89f4c8da06d61b5f89480edbba271b0e4a22618c0622c0d58124f2042499af4",
+      "encoded_display_RGB_sha256": "7f43b274eafa71ec05f16980e6a00d4bf44468fc7c73f257bb15c927cdaf6461",
+      "duration_ms": 600
+    }
+  ],
+  "outputs": [
+    {
+      "file": "pilot-pointcloud-comparison.jpg",
+      "bytes": 162855,
+      "sha256": "fc1bfb864a82ec40f7a0b57cbb53ddb9c6683c11d271219b3bfcb086d9dc2225"
+    },
+    {
+      "file": "pilot-pointcloud-comparison.gif",
+      "bytes": 1039274,
+      "sha256": "f56e697e6c6806f5db8b61467e796cbff3a4dee2eed17795ff2e2d895f35039a"
+    }
+  ]
+}
