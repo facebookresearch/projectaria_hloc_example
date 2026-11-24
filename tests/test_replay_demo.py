@@ -568,6 +568,7 @@ def test_replay_failed_solve_uses_measured_time_without_applying_missing_pose(
     assert [
         call.args[0]["fix_accepted"]
         for call in replay_inputs.viewer.on_status.call_args_list
+        if "fix_accepted" in call.args[0]
     ] == [False, True]
 
 
@@ -669,3 +670,176 @@ def test_replay_disk_write_failure_closes_both_owned_sinks(monkeypatch, replay_i
     replay_inputs.viewer.close.assert_called_once()
     assert replay_inputs.writers[0].target.closed
     assert not (replay_inputs.output / "replay_stats.json").exists()
+
+
+def test_replay_marks_vio_loss_and_session_reset_for_the_viewer(
+    replay_inputs, vio_samples
+):
+    def vio(stream, index):
+        sample = vio_samples[index]
+        return SimpleNamespace(
+            tracking_timestamp=timedelta(microseconds=sample.timestamp_ns // 1000),
+            transform_odometry_device=transform_value(sample.T_odometry_device),
+            session_uid="session-b" if index >= 10 else "session-a",
+            quality_score=0.0 if index in (6, 7) else 1.0,
+        )
+
+    replay_inputs.recording.provider.get_vio_high_freq_data_by_index.side_effect = vio
+    stats = run_replay(replay_inputs)
+    vio_status = [
+        (call.args[0]["state"], call.args[0]["timestamp_ns"])
+        for call in replay_inputs.viewer.on_status.call_args_list
+        if call.args[0].get("source") == "recorded VIO"
+    ]
+    assert vio_status == [
+        ("session_reset", 0),
+        ("lost", 0),
+        ("lost", 60_000_000),
+        ("tracking", 80_000_000),
+        ("session_reset", 100_000_000),
+        ("lost", 100_000_000),
+    ]
+    resets = [
+        call.args[0]["session_uid"]
+        for call in replay_inputs.viewer.on_status.call_args_list
+        if call.args[0]["state"] == "session_reset"
+    ]
+    assert resets == ["session-a", "session-b"]
+    rows = (replay_inputs.output / "poses.jsonl").read_text().splitlines()
+    assert [json.loads(row)["timestamp_ns"] for row in rows] == [
+        30_000_000,
+        40_000_000,
+        50_000_000,
+        80_000_000,
+        90_000_000,
+    ]
+    assert stats["mapped_pose_samples"] == 5
+
+
+def test_replay_reports_vio_loss_right_after_a_fix(replay_inputs, vio_samples):
+    def vio(stream, index):
+        sample = vio_samples[index]
+        return SimpleNamespace(
+            tracking_timestamp=timedelta(microseconds=sample.timestamp_ns // 1000),
+            transform_odometry_device=transform_value(sample.T_odometry_device),
+            session_uid="session-a",
+            quality_score=0.0 if index == 3 else 1.0,
+        )
+
+    replay_inputs.recording.provider.get_vio_high_freq_data_by_index.side_effect = vio
+    stats = run_replay(replay_inputs)
+    statuses = [
+        (call.args[0]["state"], call.args[0]["source"])
+        for call in replay_inputs.viewer.on_status.call_args_list
+    ]
+    # The fix publishes tracking; the bad VIO sample right after it still reports
+    # lost, and the next good sample reports tracking again.
+    assert statuses == [
+        ("session_reset", "recorded VIO"),
+        ("lost", "recorded VIO"),
+        ("tracking", "cached measured HLOC query"),
+        ("lost", "recorded VIO"),
+        ("tracking", "recorded VIO"),
+    ]
+    vio_times = [
+        call.args[0]["timestamp_ns"]
+        for call in replay_inputs.viewer.on_status.call_args_list
+        if call.args[0]["source"] == "recorded VIO"
+    ]
+    assert vio_times == [0, 0, 30_000_000, 40_000_000]
+    rows = (replay_inputs.output / "poses.jsonl").read_text().splitlines()
+    assert [json.loads(row)["timestamp_ns"] for row in rows] == [
+        index * 10_000_000 for index in range(4, 13)
+    ]
+    assert stats["accepted_fixes"] == 1
+
+
+def test_replay_ignores_vio_status_from_a_retired_session(replay_inputs, vio_samples):
+    sessions = ["session-a"] * 5 + ["session-b"] * 4 + ["session-a"] * 4
+
+    def vio(stream, index):
+        sample = vio_samples[index]
+        return SimpleNamespace(
+            tracking_timestamp=timedelta(microseconds=sample.timestamp_ns // 1000),
+            transform_odometry_device=transform_value(sample.T_odometry_device),
+            session_uid=sessions[index],
+            quality_score=1.0,
+        )
+
+    replay_inputs.recording.provider.get_vio_high_freq_data_by_index.side_effect = vio
+    run_replay(replay_inputs)
+    resets = [
+        (call.args[0]["session_uid"], call.args[0]["timestamp_ns"])
+        for call in replay_inputs.viewer.on_status.call_args_list
+        if call.args[0]["state"] == "session_reset"
+    ]
+    assert resets == [("session-a", 0), ("session-b", 50_000_000)]
+    late = [
+        call.args[0]
+        for call in replay_inputs.viewer.on_status.call_args_list
+        if call.args[0].get("source") == "recorded VIO"
+        and call.args[0]["timestamp_ns"] >= 90_000_000
+    ]
+    assert late == []
+
+
+def write_map_files(path):
+    (path / "sfm").mkdir(parents=True)
+    (path / "map.json").write_text("{}")
+    (path / "sfm" / "points3D.bin").write_bytes(b"points")
+    return {name: file_sha256(path / name) for name in ("map.json", "sfm/points3D.bin")}
+
+
+def test_map_fingerprint_is_compared_when_cached_and_reported(
+    tmp_path, caplog, monkeypatch
+):
+    fingerprint = write_map_files(tmp_path)
+    read = []
+    original = replay.file_sha256
+    monkeypatch.setattr(
+        replay, "file_sha256", lambda path: read.append(path) or original(path)
+    )
+    status = replay.map_fingerprint_status
+    extra = {**fingerprint, "sfm/images.bin": "0" * 64, "../outside": "0" * 64}
+    assert status(tmp_path, {"map_fingerprint": fingerprint}) == "matched"
+    assert status(tmp_path, {"map_fingerprint": extra}) == "matched"
+    assert {path.relative_to(tmp_path).as_posix() for path in read} == {
+        "map.json",
+        "sfm/points3D.bin",
+    }
+    with caplog.at_level("WARNING", logger=replay.__name__):
+        changed = {**fingerprint, "sfm/points3D.bin": "0" * 64}
+        assert status(tmp_path, {"map_fingerprint": changed}) == "differs"
+        (tmp_path / "sfm" / "points3D.bin").unlink()
+        assert status(tmp_path, {"map_fingerprint": fingerprint}) == "differs"
+        for record in (
+            {"map.json": fingerprint["map.json"]},
+            {"../outside": fingerprint["map.json"]},
+            {**fingerprint, "map.json": fingerprint["map.json"].upper()},
+            {**fingerprint, "map.json": "0" * 63},
+            {},
+            [],
+        ):
+            assert status(tmp_path, {"map_fingerprint": record}) == "incomplete"
+        assert status(tmp_path, {}) == "not_recorded"
+    messages = [record.getMessage() for record in caplog.records]
+    assert sum("different map snapshot" in message for message in messages) == 2
+    assert sum("lacks valid map.json" in message for message in messages) == 6
+    assert (
+        sum("record no exact map fingerprint" in message for message in messages) == 1
+    )
+    assert all(path.is_relative_to(tmp_path) for path in read)
+
+
+def test_replay_reports_fingerprint_status_without_rejecting_legacy_caches(
+    replay_inputs,
+):
+    stats = run_replay(replay_inputs)
+    assert stats["map_fingerprint"] == "not_recorded"
+    fingerprint = write_map_files(replay_inputs.map_path)
+    cache = json.loads(replay_inputs.fixes.read_text())
+    replay_inputs.fixes.write_text(
+        json.dumps({**cache, "map_fingerprint": fingerprint})
+    )
+    replay_inputs.output = replay_inputs.output.parent / "second"
+    assert run_replay(replay_inputs)["map_fingerprint"] == "matched"

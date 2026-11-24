@@ -166,6 +166,9 @@ MAP_VRS=/absolute/path/to/mapping.vrs
 MAP_MPS=/absolute/path/to/mps_mapping_vrs
 QUERY_VRS=/absolute/path/to/query.vrs
 QUERY_MPS=/absolute/path/to/mps_query_vrs
+# Spread 50 queries over each stream; see below.
+SLAM_STRIDE=30  # about (SLAM frames in the query recording) / 50
+RGB_STRIDE=30   # about (RGB frames in the query recording) / 50
 
 python check_inputs.py --vrs "$MAP_VRS" --mps "$MAP_MPS"
 python check_inputs.py --vrs "$QUERY_VRS" --mps "$QUERY_MPS"
@@ -174,10 +177,19 @@ python build_map.py --vrs "$MAP_VRS" --mps "$MAP_MPS" \
 python build_map.py --vrs "$MAP_VRS" --mps "$MAP_MPS" \
   --camera-set rgb --output-dir maps/my_room_rgb
 python query_map.py --map maps/my_room_slam --vrs "$QUERY_VRS" \
-  --mps "$QUERY_MPS" --mode slam --output queries/my_room_slam_query.json
+  --mps "$QUERY_MPS" --mode slam --stride "$SLAM_STRIDE" --num-queries 50 \
+  --output queries/my_room_slam_query.json
 python query_map.py --map maps/my_room_rgb --vrs "$QUERY_VRS" \
-  --mps "$QUERY_MPS" --mode rgb --output queries/my_room_query.json
+  --mps "$QUERY_MPS" --mode rgb --stride "$RGB_STRIDE" --num-queries 50 \
+  --output queries/my_room_query.json
 ```
+
+`--stride 1` (the default) queries the first 50 eligible frames, which covers only
+the start of a recording. The rig mode steps through SLAM frames and RGB mode through
+RGB frames, which usually run at different rates, so choose each stride from that
+stream's frame count to spread its queries across the recording. Skipped keyframes
+and uncalibrated frames reduce the count, so report the actual number of queries;
+50 is a limit, not a guarantee.
 
 The SLAM map serves native SLAM-camera rig queries; the RGB map serves RGB queries
 and live operation, which uses RGB only. Keep the maps in separate

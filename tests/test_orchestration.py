@@ -581,6 +581,30 @@ def test_query_cli_rejects_unknown_rig_execution(capsys):
     assert "--rig-execution" in capsys.readouterr().err
 
 
+def test_interrupted_query_closes_its_backend_and_writes_no_results(
+    map_directory, slam_dirs, tmp_path, fake_query_dependencies
+):
+    path, _ = map_directory
+    _, backend = fake_query_dependencies
+    backend.query.side_effect = KeyboardInterrupt
+    output = tmp_path / "interrupted.json"
+    with pytest.raises(KeyboardInterrupt):
+        query.main(
+            [
+                "--map",
+                str(path),
+                "--vrs",
+                str(tmp_path / "heldout.vrs"),
+                "--mps",
+                str(slam_dirs[0]),
+                "--output",
+                str(output),
+            ]
+        )
+    backend.close.assert_called_once_with()
+    assert not output.exists()
+
+
 @pytest.mark.parametrize("module", [build, query])
 def test_cli_requires_arguments(module):
     with pytest.raises(SystemExit) as error:

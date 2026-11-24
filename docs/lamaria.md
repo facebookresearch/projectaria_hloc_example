@@ -110,9 +110,9 @@ Exact mapping keyframes are skipped by VRS fingerprint plus camera/frame identit
 
 ## Measured runs
 
-The native SLAM-camera map has **2,232 views** (1,116 per camera) and **117,790 points** with 1.348 px mean native reprojection error; the RGB map has **930 views** and **95,253 points** (1.390 px). Both come from the same original VRS and MPS.
+The native SLAM-camera map has **2,232 views** (1,116 per camera) and **117,790 points** with 1.348 px mean native reprojection error; the RGB map has **930 views** and **95,253 points** (1.390 px). Both are reconstructed separately from the same original VRS, using its shared MPS poses.
 
-| Query | Map | Accepted | ≤10 cm & ≤5° / covered | Translation median / max | Warm query median (serial) |
+| Query | Map | Accepted | ≤10 cm & ≤5° / covered | MPS reference residual, translation median / max | Serial harness end-to-end median |
 |---|---|---:|---:|---:|---:|
 | Two SLAM cameras | SLAM map | 50 / 50 | 48 / 48 | 1.9 / 6.2 mm | 2.38 s |
 | Two SLAM cameras | RGB map | 50 / 50 | 48 / 48 | 4.0 / 22.0 mm | 1.98 s |

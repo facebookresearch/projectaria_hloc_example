@@ -20,7 +20,9 @@ from __future__ import annotations
 import argparse
 import bisect
 import json
-from collections.abc import Sequence
+import logging
+import re
+from collections.abc import Mapping, Sequence
 from contextlib import ExitStack
 from pathlib import Path
 from typing import cast
@@ -31,6 +33,106 @@ from map_utils import file_sha256, mps_slam_dir, rigid_transform, write_json
 from pose_alignment import PoseAlignment, vio_status_valid, VioSample
 from query_map import load_map
 from visualization import PoseWriter, RerunView
+
+logger: logging.Logger = logging.getLogger(__name__)
+MAP_FINGERPRINT_FILES: tuple[str, ...] = ("map.json", "sfm/points3D.bin")
+GRAPH_ONLY = "replay verifies only the MPS graph_uid and the query VRS SHA-256"
+
+
+def map_fingerprint_status(map_path: Path, fixes: dict[str, object]) -> str:
+    """Compare an optional cached map fingerprint; replay itself requires only the graph.
+
+    Only the documented map.json and sfm/points3D.bin digests are read. Returns
+    "matched" when both cached digests are valid and equal the map's, "differs" when
+    either differs, "incomplete" when the field lacks a valid digest for either file,
+    and "not_recorded" without the field. Each case other than "matched" only logs a
+    warning, because maps sharing an MPS graph share its world frame.
+    """
+    fingerprint = fixes.get("map_fingerprint")
+    if fingerprint is None:
+        logger.warning("Cached fixes record no exact map fingerprint; %s", GRAPH_ONLY)
+        return "not_recorded"
+    cached = (
+        [fingerprint.get(name) for name in MAP_FINGERPRINT_FILES]
+        if isinstance(fingerprint, dict)
+        else []
+    )
+    if len(cached) != len(MAP_FINGERPRINT_FILES) or not all(
+        isinstance(digest, str) and re.fullmatch("[0-9a-f]{64}", digest)
+        for digest in cached
+    ):
+        logger.warning(
+            "Cached map fingerprint lacks valid map.json and sfm/points3D.bin "
+            "SHA-256 values; %s",
+            GRAPH_ONLY,
+        )
+        return "incomplete"
+    current = [
+        file_sha256(map_path / name) if (map_path / name).is_file() else None
+        for name in MAP_FINGERPRINT_FILES
+    ]
+    if current != cached:
+        logger.warning(
+            "Cached fixes were produced against a different map snapshot of the same "
+            "MPS graph (map.json or sfm/points3D.bin SHA-256 differ)"
+        )
+        return "differs"
+    return "matched"
+
+
+class VioStatus:
+    """Send recorded VIO session resets and state changes to the viewer, as live does.
+
+    Without them a viewer keeps the last pose and tracking status after VIO loss or
+    a session reset until another visual fix arrives.
+    """
+
+    def __init__(self, viewer: RerunView) -> None:
+        self.viewer = viewer
+        self.session_uid: str | None = None
+        self.retired_sessions: set[str] = set()
+        self.state: str | None = None
+
+    def before(self, sample: VioSample) -> None:
+        if (
+            sample.session_uid == self.session_uid
+            or sample.session_uid in self.retired_sessions
+        ):
+            return
+        if self.session_uid is not None:
+            self.retired_sessions.add(self.session_uid)
+        self.session_uid = sample.session_uid
+        self.state = None
+        self.viewer.on_status(
+            {
+                "state": "session_reset",
+                "session_uid": sample.session_uid,
+                "timestamp_ns": sample.timestamp_ns,
+                "source": "recorded VIO",
+            }
+        )
+
+    def after(self, sample: VioSample, state: str) -> None:
+        if sample.session_uid != self.session_uid or state == self.state:
+            return
+        self.state = state
+        self.viewer.on_status(
+            {
+                "state": state,
+                "timestamp_ns": sample.timestamp_ns,
+                "source": "recorded VIO",
+            }
+        )
+
+    def publish(self, status: Mapping[str, object]) -> None:
+        """Publish another status, such as a fix arrival, and record its state.
+
+        Keeping one owner of the latest published state lets a VIO change right
+        after a fix still reach the viewer.
+        """
+        self.viewer.on_status(status)
+        state = status.get("state")
+        self.state = state if isinstance(state, str) else None
 
 
 def read_vio(recording: Recording) -> list[VioSample]:
@@ -136,6 +238,7 @@ def replay(  # noqa: C901
         isinstance(query, dict) for query in queries
     ):
         raise ValueError("Cached fixes must contain a list of query records")
+    fingerprint_status = map_fingerprint_status(map_path, fixes)
     recording = Recording(vrs, mps_slam_dir(mps) / "online_calibration.jsonl")
     samples = read_vio(recording)
     labels = recording.select_labels("rgb")
@@ -172,9 +275,11 @@ def replay(  # noqa: C901
     accepted_fixes = 0
     first_pose_timestamp_ns = None
     last_pose_timestamp_ns = None
+    vio = VioStatus(viewer)
     try:
         for timestamp_ns, kind, index in sorted(events):
             if kind == 0:
+                vio.before(samples[index])
                 pose = aligner.add_vio(samples[index])
                 if pose is not None:
                     writer.write(pose)
@@ -182,6 +287,7 @@ def replay(  # noqa: C901
                     if first_pose_timestamp_ns is None:
                         first_pose_timestamp_ns = pose.timestamp_ns
                     last_pose_timestamp_ns = pose.timestamp_ns
+                vio.after(samples[index], aligner.state)
             elif kind == 1:
                 _, query, session_uid = scheduled[index]
                 accepted = False
@@ -194,7 +300,7 @@ def replay(  # noqa: C901
                         session_uid,
                     )
                 accepted_fixes += int(accepted)
-                viewer.on_status(
+                vio.publish(
                     {
                         "state": aligner.state,
                         "fix_accepted": accepted,
@@ -233,6 +339,7 @@ def replay(  # noqa: C901
         / (last_pose_timestamp_ns - first_pose_timestamp_ns),
         "gui_max_rate_hz": 30,
         "freshness_evaluated_on": "recorded device timestamps, not live wall-clock",
+        "map_fingerprint": fingerprint_status,
     }
     write_json(output / "replay_stats.json", stats)
     return stats

@@ -16,17 +16,20 @@ replay or live workflow.
   <kbd>Rerun</kbd>
 </p>
 
-[Indoor quickstart](#quickstart) · [Results](#results-on-lamaria) ·
+[Install](#install-the-pinned-environment) · [Indoor quickstart](#quickstart) ·
+[Results](#results-on-lamaria) · [Pilot results](#results-on-pilot) ·
 [Pilot + VIO](#pilot-quickstart-and-vio) · [Your recordings](#use-your-own-recordings) ·
-[Notebook](hloc_example.ipynb) · [Runtime & frames](#runtime-and-frame-contracts)
+[Notebook](hloc_example.ipynb) · [Runtime, frames & live VIO](#runtime-and-frame-contracts) ·
+[Code license](LICENSE) · [Model licenses](#third-party-licenses)
 
 ![Native SLAM-camera HLOC map (blue) and RGB HLOC map (orange) of LaMAria R_03_easy in one MPS frame](assets/lamaria-dual-map-comparison.gif)
 
-*Two HLOC maps built independently from the same public LaMAria `R_03_easy` (Gen 1)
-recording and MPS output, side by side from one shared virtual camera in its MPS
-world frame: the native SLAM-camera map (2,232 views from both SLAM cameras, 117,790
-points; blue) and the RGB map (930 views, 95,253 points; orange). Every point of both
-maps is drawn; the tints are display categories only. The orbit is presentation only.*
+*Two HLOC maps reconstructed separately from the same public LaMAria `R_03_easy`
+(Gen 1) recording, both using its shared MPS poses, side by side from one shared
+virtual camera in its MPS world frame: the native SLAM-camera map (2,232 views from
+both SLAM cameras, 117,790 points; blue) and the RGB map (930 views, 95,253 points;
+orange). Every point of both maps is drawn; the tints are display categories only.
+The orbit is presentation only.*
 
 [HD video](assets/lamaria-dual-map-comparison.webm) · [Still image](assets/lamaria-dual-map-comparison.png) ·
 [Overlay](assets/lamaria-dual-map-overlay.png) · [Native point colors](assets/lamaria-dual-map-native-colors.png) ·
@@ -34,7 +37,7 @@ maps is drawn; the tints are display categories only. The orbit is presentation 
 
 ## What it does
 
-![Original indoor VRS is processed with MPS, then selected RGB keyframes build a map and other frames query it](assets/lamaria-workflow.svg)
+![Original indoor VRS is processed with MPS; keyframes with their MPS poses build a native SLAM-camera map (the default) and an RGB map, and other frames query them with generalized PnP or PnP](assets/lamaria-workflow.svg)
 
 - **Build** a native SLAM-camera map (the default) or an RGB map with known MPS poses
   and public HLOC features/matches (`build_map.py --camera-set slam|rgb`).
@@ -63,12 +66,13 @@ camera; other RGB devices are untested. Live streaming uses RGB only.
 
 ## Results on LaMAria
 
-Both maps were built from the same original `R_03_easy` VRS and MPS. The native
+Both maps were reconstructed separately from the same original `R_03_easy` VRS, each
+using the shared MPS poses. The native
 SLAM-camera map has **2,232 views** (1,116 per camera) and **117,790 points**
 (mean reprojection 1.348 px); the RGB map has **930 views** and **95,253 points**
 (1.390 px).
 
-| Query | Map | Accepted | ≤10 cm & ≤5° / covered | Translation median / max | Warm query median (serial) |
+| Query | Map | Accepted | ≤10 cm & ≤5° / covered | MPS reference residual, translation median / max | Serial harness end-to-end median |
 |---|---|---:|---:|---:|---:|
 | Two SLAM cameras | SLAM map | 50 / 50 | 48 / 48 | 1.9 / 6.2 mm | 2.38 s |
 | Two SLAM cameras | RGB map | 50 / 50 | 48 / 48 | 4.0 / 22.0 mm | 1.98 s |
@@ -97,8 +101,9 @@ separate. These
 counts describe this one recording; Gen 2 and other RGB devices are untested.
 
 [Matched-anchor protocol, per-cohort results, timings and map fingerprints](benchmarks/lamaria_r03_dual_map.json).
-An earlier RGB-only run (930 keyframes, 95,203 landmarks; 17 RGB and 50 two-SLAM
-queries, both against that RGB map) is kept as a dated baseline in
+An earlier RGB-only run, with an earlier build of the RGB map (930 keyframes,
+95,203 landmarks, versus 95,253 points in the rebuilt map above; 17 RGB and 50
+two-SLAM queries, both against that RGB map), is kept as a dated baseline in
 [benchmarks/lamaria_r03.json](benchmarks/lamaria_r03.json), with its
 [17 query RGB frames and fixes](assets/lamaria-localization.gif).
 `R_03_easy` has no recorded VIO, so its MPS trajectory is not used as replay VIO.
@@ -109,12 +114,15 @@ For a genuinely separate query recording and VIO, keep the Pilot example below.
 ![Empirical CDFs of warm decode-plus-backend query times, serial and parallel, for two-SLAM-camera and RGB queries on the SLAM and RGB maps of R_03_easy](assets/lamaria-r03-parallel-query.svg)
 
 On CUDA, a rig query runs its cameras concurrently by default
-(`query_map.py --rig-execution auto`; see [Runtime and frame contracts](#runtime-and-frame-contracts)).
-Both variants were measured on the same 50 anchors and maps, each in two fresh
-processes (A/B/B/A order, three warm-up queries each), giving 100 timed rows per variant.
+(`query_map.py --rig-execution auto`; see [Runtime and frame contracts](#runtime-and-frame-contracts));
+on CPU every query runs serially. Both variants were measured on the same 50 anchors
+and maps, each in two fresh processes (A/B/B/A order, three warm-up queries each),
+giving 100 timed rows per variant. The serial rows ran the source from before the
+parallel-rig change and the candidate rows the parallel source; the benchmark records
+both commits, so this compares two source versions, not one binary with a flag.
 Accepted counts are per variant and agree between the serial and candidate runs:
 
-| Query | Map | Serial median | Candidate median | Change | Accepted |
+| Query | Map | Serial warm decode+backend median | Candidate warm decode+backend median | Change | Accepted |
 |---|---|---:|---:|---:|---:|
 | Two SLAM cameras (parallel) | RGB map | 1.441 s | 1.134 s | −21.3% | 100 / 100 |
 | Two SLAM cameras (parallel) | SLAM map | 1.486 s | 1.185 s | −20.2% | 100 / 100 |
@@ -123,21 +131,34 @@ Accepted counts are per variant and agree between the serial and candidate runs:
 
 Times are warm decode/rectification plus backend time through CUDA completion. The
 harness's checks and MPS diagnostics ran outside this timer, so these times are not
-comparable with the serial table above. The two-camera gain is mostly in matching
-(median 1.29 → 0.98 s on the RGB map, 1.33 → 1.01 s on the SLAM map); extraction rose
-from 0.030 to 0.039–0.040 s. Poses, gates and inlier counts matched the serial path
-in every timed row, and a separate 50-anchor parity run also matched features, matches
-and cache counters. Each variant's two rejected RGB rows on the SLAM map are anchor 041
-repeated twice. The 100 rows
-repeat 50 anchors and are not independent accuracy cases. Parallel streams raised the
-GPU memory reserved after warm-up (1.16 → 1.69–1.70 GB), and resident initialization
-(about 13–16 s per process) is separate. On the official Gen 2 sample
-(four SLAM cameras, 10 anchors run twice; not the Pilot map) the median moved from
-2.874 to 2.841 s (−1.1%), p90 did not improve and reserved memory rose from 1.16 to
-2.70 GB: no four-camera speedup is shown. All of this is one GPU with four CPU
-threads; other hardware will differ.
+comparable with the serial harness end-to-end times above. The two-camera gain is
+mostly in matching (median 1.29 → 0.98 s on the RGB map, 1.33 → 1.01 s on the SLAM
+map); extraction rose from 0.030 to 0.039–0.040 s. Poses, gates and inlier counts
+matched the serial path in every timed row, and a separate 50-anchor parity run also
+matched features, matches and cache counters. Each variant's two rejected RGB rows on
+the SLAM map are anchor 041 repeated twice. The 100 rows repeat 50 anchors and are not
+independent accuracy cases. One block of runs that overlapped another CPU job was
+repeated whole before any timing was examined, as the benchmark notes.
+
+GPU memory reserved after warm-up depends on the workload: about 2.3 GB for
+single-camera RGB queries, and 1.16 GB serial / 1.69–1.70 GB parallel for two-camera
+queries. These are this run's peaks, not a minimum for other recordings; resident
+initialization (about 13–16 s per process) is separate. On the
+[official Gen 2 sample](benchmarks/gen2_official_sample_parallel_query.json) (four
+SLAM cameras, 10 anchors run twice; not the Pilot map) the median moved from 2.874 to
+2.841 s (−1.1%), p90 from 2.98 to 3.02 s, and reserved memory from 1.16 to 2.70 GB: no
+four-camera speedup is shown. All of this is one GPU with four CPU threads; other
+hardware will differ, and these timings were measured before later fixes to
+interrupt handling and device placement.
 
 [Protocol, per-cohort timings, stage medians, memory peaks and parity scope](benchmarks/lamaria_r03_parallel_query.json).
+
+## Results on Pilot
+
+**Gen 2 Pilot, a separate query recording.** With an RGB-built map from `play_0` +
+`play_2`, accepted `play_1` RGB queries had a median/p90 MPS reference residual of
+26.6/73.4 mm and 0.62/1.87° (97 queries), and four-camera rig queries 18.3/38.4 mm and
+0.53/1.07° (47 queries). The full results, timings and replay follow.
 
 <details>
 <summary><strong>Preserved Pilot results and recorded-VIO preview</strong></summary>
@@ -153,7 +174,7 @@ recording, so it is separate from the held-out `play_0` + `play_2` → `play_1` 
 [Still image](assets/pilot-pointcloud-comparison.jpg) ·
 [Display filters and source provenance](assets/pilot-pointcloud-comparison-provenance.json)
 
-## Results on Pilot
+### Pilot query results
 
 These results use an RGB-built map; a Gen 2 SLAM-map comparison is pending. The RGB
 map contains **1,360 keyframes** (666 + 694), **135,213 landmarks** and
@@ -164,8 +185,8 @@ source fingerprints, native tracks and unchanged map contents were checked.
 
 | Queries | Gate passes | Accepted / MPS-covered | ≤10 cm & ≤5° | ≤25 cm & ≤5° | Median query |
 |---|---:|---:|---:|---:|---:|
-| RGB | 98 / 100 | 97 / 99 | 89 / 99 | 93 / 99 | 6.1044 s |
-| Four SLAM | 48 / 50 | 47 / 48 | 47 / 48 | 47 / 48 | 12.8530 s |
+| RGB | 98 / 100 | 97 / 99 | 89 / 99 | 93 / 99 | 6.10 s |
+| Four SLAM | 48 / 50 | 47 / 48 | 47 / 48 | 47 / 48 | 12.85 s |
 
 Threshold denominators include **all MPS-covered queries, including failures**.
 Gate acceptance is not accuracy: accepted-reference maximum disagreements were
@@ -228,11 +249,12 @@ or a textured reconstruction; separate original-color point exports are not bund
 > visual fix can cause a map-frame pose jump and affect subsequent VIO-propagated
 > outputs. Validate with a separate recording before relying on the result.
 
-**Start indoors with LaMAria `R_03_easy` (Gen 1).** Install the pinned environment
-below, download the original 1.14 GB VRS, and process it with the public MPS client.
-Then build the SLAM and RGB maps and query non-keyframes with the matching query
-type. No glasses are needed.
-Source terms and normal MPS account authorization still apply.
+**Start indoors with LaMAria `R_03_easy` (Gen 1).** No glasses are needed:
+
+1. [Install the pinned environment](#install-the-pinned-environment).
+2. [Download the original 1.14 GB VRS and process it with the public MPS client](docs/lamaria.md).
+   Source terms and normal MPS account authorization still apply.
+3. Build the SLAM and RGB maps and query non-keyframes with the matching query type:
 
 ```bash
 python check_inputs.py --vrs data/lamaria/R_03_easy.vrs \
@@ -441,7 +463,9 @@ rerun --bind 127.0.0.1 outputs/pilot_play1_multi_replay/view.rrd
 
 Use `play_1` VIO and **its** RGB query cache. Outputs are `poses.jsonl`, `view.rrd`
 and `replay_stats.json`; cache checks cover map frame and testing VRS fingerprint.
-Orbit the sparse map, scrub recorded time and inspect RGB, pose and fix age.
+Orbit the sparse map, scrub recorded time and inspect RGB, pose and fix age. The
+viewer marks recorded VIO loss and session resets when they happen, clearing the
+previous pose until tracking resumes.
 Replay retains measured cached delays; it does not rerun models, interpolate
 MPS reference poses into outputs or measure hardware throughput.
 
@@ -497,7 +521,13 @@ Native rig queries run their cameras concurrently on CUDA by default
 use one worker thread and one CUDA stream per camera (two on Gen 1, four on Gen 2)
 with the unchanged single-image and single-pair models. Retrieval, correspondences
 and the gPnP solve stay serial, one query still runs at a time, and a query returns
-only after every camera has finished. Reference features are read from the cache on
+only after every camera has finished. Ctrl+C during a rig query is held until the
+in-flight camera tasks (at most one per camera) finish and the device is drained, then
+raised, with further presses noted on the error. This applies in the main thread
+under Python's own SIGINT handler (the default, also in Jupyter) or another Python
+handler, which is then called once; ignored or default-action SIGINT is left as is.
+Inputs always go to the GPU that holds the weights, even if the caller later changes
+the current CUDA device. Reference features are read from the cache on
 the coordinating thread in the serial order, so cache counters match
 `--rig-execution serial`, the reference path. Up to 20 reference feature sets per
 camera (about 4 MiB each at 4,096 keypoints) are held outside the 256 MiB cache for
@@ -514,7 +544,11 @@ waiting. First-query and subsequent warm durations remain separate measurements.
 
 Maps built from the same MPS with different camera sets share a `graph_uid`, and
 query and replay checks compare only `graph_uid`: record each result's map directory
-and its `map.json` and `sfm/points3D.bin` SHA-256. Full VRS SHA-256 identifies
+and its `map.json` and `sfm/points3D.bin` SHA-256. When a cache carries a
+`map_fingerprint` with both of those digests (as the notebook writes), replay compares
+them and warns on a mismatch; a missing or incomplete fingerprint only warns that the
+graph and query VRS were checked. Replay never rejects a cache for this, and
+`replay_stats.json` records which case applied. Full VRS SHA-256 identifies
 recordings even after copying/renaming. A non-keyframe
 from a mapping recording is still a same-recording test. Legacy path-only maps
 load with a warning and unknown membership (`null`); they cannot prove independence.

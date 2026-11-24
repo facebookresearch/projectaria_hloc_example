@@ -24,6 +24,8 @@ with one CUDA stream each; the call returns only after every worker finished.
 from __future__ import annotations
 
 import importlib
+import signal
+import threading
 import time
 from collections import OrderedDict
 from collections.abc import Callable, Iterator, Mapping, Sequence
@@ -31,7 +33,13 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
-from types import MappingProxyType, ModuleType, SimpleNamespace
+from types import (
+    FrameType,
+    MappingProxyType,
+    ModuleType,
+    SimpleNamespace,
+    TracebackType,
+)
 from typing import cast, Protocol, TypeVar
 
 import h5py
@@ -403,6 +411,74 @@ def annotate(
             primary.add_note(note)
 
 
+class DeferredInterrupt:
+    """Hold Ctrl+C while rig camera tasks run, then hand it to the original handler.
+
+    CPython runs SIGINT handlers in the main thread whichever thread the OS
+    delivers the signal to, so a temporary Python handler holds every Ctrl+C,
+    including repeated ones. It is installed only from the main thread over a
+    Python-level handler (the default and Jupyter's), restored on exit, and the
+    original handler is then called once. Ignored or default-action SIGINT,
+    non-Python handlers and other threads, where no KeyboardInterrupt can arrive,
+    are left alone.
+    """
+
+    def __init__(self) -> None:
+        self.count = 0
+        self.previous: Callable[[int, FrameType | None], object] | None = None
+
+    def __enter__(self) -> DeferredInterrupt:
+        if threading.current_thread() is threading.main_thread():
+            previous = signal.getsignal(signal.SIGINT)
+            if callable(previous):
+                self.previous = previous
+                signal.signal(signal.SIGINT, self._hold)
+        return self
+
+    def _hold(self, signum: int, frame: FrameType | None) -> None:
+        self.count += 1
+
+    def __exit__(
+        self,
+        kind: type[BaseException] | None,
+        error: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        if self.previous is not None:
+            signal.signal(signal.SIGINT, self.previous)
+        if self.count and error is not None:
+            error.add_note(
+                f"Ctrl+C pressed {self.count} time(s) while rig camera tasks finished"
+            )
+            # The original handler still runs once; the coordinator error stays primary.
+            try:
+                self._call_previous()
+            except (Exception, KeyboardInterrupt, SystemExit) as handler_error:
+                error.add_note(
+                    f"The original Ctrl+C handler raised {handler_error!r} after "
+                    "rig camera tasks finished"
+                )
+
+    def _call_previous(self) -> None:
+        if self.previous is not None:
+            self.previous(signal.SIGINT, None)
+
+    def deliver(self, notes: Sequence[tuple[BaseException, str]]) -> None:
+        """Call the restored handler once for held presses; note worker failures."""
+        if not self.count:
+            return
+        try:
+            self._call_previous()
+        except BaseException as error:
+            annotate(error, notes)
+            if self.count > 1:
+                error.add_note(
+                    f"{self.count - 1} more Ctrl+C press(es) arrived while rig camera "
+                    "tasks finished"
+                )
+            raise
+
+
 class ResidentModels:
     """Pinned upstream extractor/matcher instances, retained across map queries."""
 
@@ -416,6 +492,10 @@ class ResidentModels:
             self.device = "cuda" if self.torch.cuda.is_available() else "cpu"
             if self.device == "cuda":
                 self.device_index = int(self.torch.cuda.current_device())
+            # Inputs follow the weights' device, not the caller's later default.
+            self.tensor_device = (
+                f"cuda:{self.device_index}" if self.device == "cuda" else "cpu"
+            )
             self.local_conf = deepcopy(extractor.confs["superpoint_aachen"])
             self.global_conf = deepcopy(extractor.confs["netvlad"])
             self.local_model = extractor.dynamic_load(
@@ -463,32 +543,23 @@ class ResidentModels:
         """Run independent per-camera tasks on bounded threads, one CUDA stream each.
 
         Worker k runs tasks k, k + workers, ... on the device holding the weights;
-        results keep task order. All started workers are joined, their streams and
-        the device synchronized before this returns or raises. A fatal worker error
-        is raised first, else the lowest-index task failure; others become notes.
+        results keep task order. Every submitted task finishes, its stream and the
+        device are synchronized, and its worker exits before this returns or raises.
+        A Ctrl+C meanwhile is held until then (see `DeferredInterrupt`). A fatal
+        worker error is raised first, else the lowest-index task failure; others
+        become notes.
         """
-        if (
-            self.local_model is None
-            or self.global_model is None
-            or self.match_model is None
-        ):
-            raise RuntimeError("Resident models are closed")
-        if self.device != "cuda":
-            raise RuntimeError("Parallel rig execution requires a CUDA device")
-        if type(workers) is not int or not 1 <= workers <= min(
-            len(tasks), MAX_RIG_WORKERS
-        ):
-            raise ValueError("Rig workers must be between 1 and min(cameras, 4)")
+        self._check_parallel(len(tasks), workers)
         streams = self._streams(workers)
         results: list[TaskResult | None] = [None] * len(tasks)
         failed: list[list[tuple[int, Exception]]] = [[] for _ in range(workers)]
         cleanup: list[list[Exception]] = [[] for _ in range(workers + 1)]
         futures: list[Future[None]] = []
-        self.synchronize()
-        try:
-            with ThreadPoolExecutor(
-                workers, thread_name_prefix="aria-hloc-rig"
-            ) as pool:
+        interrupt = DeferredInterrupt()
+        with interrupt:
+            self.synchronize()
+            pool = ThreadPoolExecutor(workers, thread_name_prefix="aria-hloc-rig")
+            try:
                 for slot in range(workers):
                     jobs = [
                         (index, tasks[index])
@@ -504,8 +575,15 @@ class ResidentModels:
                             cleanup[slot],
                         )
                     )
-        finally:
-            # Leaving the pool joined every started worker; also drain the device.
+                for future in futures:
+                    future.exception()
+                pool.shutdown(wait=True)
+            except BaseException as error:
+                # A camera task that already started must not outlive this call,
+                # or the caller could release the session under it.
+                self._quiesce(pool, futures, cleanup[workers])
+                annotate(error, collect_failures(futures, failed, cleanup))
+                raise
             try:
                 self.synchronize()
             except Exception as error:
@@ -514,10 +592,40 @@ class ResidentModels:
                 annotate(error, collect_failures(futures, failed, cleanup))
                 raise
         notes = collect_failures(futures, failed, cleanup)
+        interrupt.deliver(notes)
         if notes:
             annotate(notes[0][0], notes[1:])
             raise notes[0][0]
         return cast(list[TaskResult], results)
+
+    def _check_parallel(self, num_tasks: int, workers: int) -> None:
+        if (
+            self.local_model is None
+            or self.global_model is None
+            or self.match_model is None
+        ):
+            raise RuntimeError("Resident models are closed")
+        if self.device != "cuda":
+            raise RuntimeError("Parallel rig execution requires a CUDA device")
+        if type(workers) is not int or not 1 <= workers <= min(
+            num_tasks, MAX_RIG_WORKERS
+        ):
+            raise ValueError("Rig workers must be between 1 and min(cameras, 4)")
+
+    def _quiesce(
+        self,
+        pool: ThreadPoolExecutor,
+        futures: Sequence[Future[None]],
+        cleanup: list[Exception],
+    ) -> None:
+        """Wait for every submitted task and pool worker, then drain the device."""
+        for future in futures:
+            future.exception()
+        pool.shutdown(wait=True)
+        try:
+            self.synchronize()
+        except Exception as error:
+            cleanup.append(error)
 
     def _run_worker(
         self,
@@ -559,7 +667,7 @@ class ResidentModels:
             model(
                 {
                     "image": self.torch.from_numpy(data["image"][None]).to(
-                        self.device, non_blocking=True
+                        self.tensor_device, non_blocking=True
                     )
                 }
             )
@@ -610,7 +718,7 @@ class ResidentModels:
         data = {
             key: value
             if key.startswith("image")
-            else value.to(self.device, non_blocking=True)
+            else value.to(self.tensor_device, non_blocking=True)
             for key, value in data.items()
         }
         size = tuple(int(value) for value in features["image_size"])[::-1]

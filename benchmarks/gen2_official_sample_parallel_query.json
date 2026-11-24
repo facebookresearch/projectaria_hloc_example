@@ -1,0 +1,353 @@
+{
+  "schema_version": 3,
+  "dataset": "official_Aria_Gen2_sample_1",
+  "not_Pilot_or_new_Pilot_SLAM_map": true,
+  "measurement_source": {
+    "serial_source_export_commit": "43a93c51918fe998d5f73ff5ae0f7e70d9d94193",
+    "serial_source_manifest_sha256": "30a38f39707ddfa3df47e38c2b0b37943e148b8aad75d96fed68ca0b5b96f511",
+    "candidate_measured_commit": "ee0912ea9ee16adbbb8867fbe46018a53d3561e0",
+    "candidate_source_manifest_sha256": "675478ef4722b5fa39972ccfa9c047ebab270482de824a17c0f5354e185e639d",
+    "new_release_fix_source_not_measured_here": true,
+    "do_not_relabel_old_measurement_identity_to_new_fix_hash": true
+  },
+  "model_pins": {
+    "HLOC_commit": "c13273bd0ecc2917a35910fd843712a1c6243193",
+    "LightGlue_code_commit": "edb2b838efb2ecfe3f88097c5fad9887d95aedad",
+    "LightGlue_weight_version": "v0.1_arxiv",
+    "Torch": "2.6.0+cu124",
+    "PyCOLMAP": "4.2.1",
+    "ProjectAriaTools": "2.3",
+    "runtime_Python": "3.12.16+meta",
+    "environment_Python": "3.12.12"
+  },
+  "public_recipe": {
+    "identifier": "projectaria_official_gen2_sample_data_1_mps_dec_2025",
+    "downloader": "download_sample.py",
+    "downloader_sha256": "049b60e8f96e34509513c984fb230925debc91cb7bb8f87ab429ea9ec2ae64bb",
+    "VRS": {
+      "filename": "aria_gen2_sample_data_1.vrs",
+      "sha256": "52e78d73dfc12b1d551292e0598b2babc7851c83297ebaab318686fb372f5c7f",
+      "bytes": 268194147
+    },
+    "MPS_archive": {
+      "filename": "aria_gen2_sample_data_1_mps_output_dec_2025.zip",
+      "sha256": "17a78565047a569469d9dd2a0d8b1648740f28cfbb7ea6d3699eae5f1c07631d"
+    },
+    "MPS_members_sha256": {
+      "closed_loop_trajectory.csv": "3eee67ec3ae83fff1ccfffba02774d27e2179b02fbd48154a076e260c5c1eb01",
+      "online_calibration.jsonl": "194b4537263accf8a549f7714600bdc9d9e062efe0413baebe006b4fb5cdae1e"
+    }
+  },
+  "map": {
+    "camera_set": "slam",
+    "native_camera_labels": [
+      "slam-front-left",
+      "slam-front-right",
+      "slam-side-left",
+      "slam-side-right"
+    ],
+    "reference_views": 276,
+    "matching_pairs": 3042,
+    "landmarks": 11030,
+    "sha256": {
+      "map.json": "1872c585e642de91bbf782379687292e644faacac0e637e8b159aec8cc5bd2e3",
+      "build_stats.json": "8e9b02515f61562126859603612ac43dbe50013aee83f3d5e6569b831ab2073a",
+      "features.h5": "9779026d024b50f8ba68dcf898deb71facc16a1ccb18eade00562b4a0925fe54",
+      "global.h5": "d1e164469ded7b8918678ad0fd3655f034d7bc1e83e16134f83b9c2e940a4802",
+      "sfm/cameras.bin": "154510159167c51a6e24ae35f42fb24b75f244618b56e98f00df2469dc047f6e",
+      "sfm/images.bin": "85ac101a8fe3041f105faa046c0f013945b6ade8a71972cbe00e46534d07f68d",
+      "sfm/points3D.bin": "2c2a161f6694ff55276d1378aba7ad887140fca4714f3f9a4f81270ac96ab4d1",
+      "sfm/rigs.bin": "54c5c9120ad83ff4b7f77123c10e83a2911762a6db580bb5d5ce38dc3cdf6617",
+      "sfm/frames.bin": "0219bb0d62e6d987c37d0da18103e96979ea38d51e301e1e55ac49bdcff67f41"
+    }
+  },
+  "sample_order": {
+    "anchor_ids": [
+      "GEN2_official_000",
+      "GEN2_official_001",
+      "GEN2_official_002",
+      "GEN2_official_003",
+      "GEN2_official_004",
+      "GEN2_official_005",
+      "GEN2_official_006",
+      "GEN2_official_007",
+      "GEN2_official_008",
+      "GEN2_official_009"
+    ],
+    "array_order": "first qualified run then second qualified run per variant; same ten anchors in original query order for each run",
+    "repetitions_per_variant": 2,
+    "ABBA_order": [
+      "serial",
+      "parallel",
+      "parallel",
+      "serial"
+    ],
+    "equal_prior_warmups_per_run": 3,
+    "all_timed_values_are_warm": true,
+    "total_timed_rows": 40,
+    "timed_rows_are_not_independent_accuracy_cases": true
+  },
+  "hardware": {
+    "hardware_model": "NVIDIA PG509-210",
+    "hardware_GPU_memory_MiB": 81920,
+    "reserved_logical_CPU_count": 4,
+    "Torch_threads": 4,
+    "interop_threads": 1,
+    "resident_cache_max_bytes": 268435456,
+    "dataloader_workers": 0
+  },
+  "timer_scope": "actual joined decode/rectification + native backend + final CUDA completion; MPS diagnostics/JSON outside timer",
+  "no_profiler_in_timing": true,
+  "no_latency_division_by_camera_count": true,
+  "reference_scope": "same-recording MPS reference, not independent physical ground truth; functional anchors may overlap mapping keyframes",
+  "memory_scope": "CUDA peaks after equal-warmup reset; RSS lifetime process peak; tree RSS unmeasured; not a minimum GPU requirement",
+  "cohorts": [
+    {
+      "variant": "serial",
+      "actual_execution": "serial",
+      "ABBA_run_slots": [
+        0,
+        3
+      ],
+      "joined_decode_backend_sec": [
+        2.8778338480042294,
+        2.8070894810080063,
+        2.869421155017335,
+        2.553066725988174,
+        2.8948063739808276,
+        3.0179518869845197,
+        2.7811339950130787,
+        2.7222389210073743,
+        2.7691275340039283,
+        2.806908548984211,
+        2.8545773180085234,
+        2.903555953002069,
+        2.9777374170080293,
+        2.5434084809967317,
+        2.9124633059836924,
+        3.0475241579988506,
+        2.9091432050045114,
+        2.8660719110048376,
+        2.974205956008518,
+        2.8868560030241497
+      ],
+      "joined_backend_sec": [
+        2.6886458370136097,
+        2.605916297994554,
+        2.6822784960095305,
+        2.3689727000019047,
+        2.6842812529939692,
+        2.823207531007938,
+        2.5985565700102597,
+        2.533146695001051,
+        2.569747986999573,
+        2.6225562389881816,
+        2.7096546629909426,
+        2.702798979007639,
+        2.7929831460060086,
+        2.353480138001032,
+        2.7282063289894722,
+        2.8592507080174983,
+        2.6987098669924308,
+        2.6786884650064167,
+        2.7482844259939156,
+        2.695354658004362
+      ],
+      "decode_rectification_sec": [
+        0.18918530602240935,
+        0.20117037900490686,
+        0.18714065599488094,
+        0.1840915640059393,
+        0.21052305400371552,
+        0.1947426779952366,
+        0.18257499200990424,
+        0.1890898069832474,
+        0.19937754201237112,
+        0.18435012799454853,
+        0.14492007999797352,
+        0.2007533110154327,
+        0.18475046000094153,
+        0.18992528499802575,
+        0.18425344000570476,
+        0.18827031599357724,
+        0.2104301340004895,
+        0.18737973700626753,
+        0.22591804401599802,
+        0.19149745799950324
+      ],
+      "warm_summary": {
+        "count": 20,
+        "median_sec": 2.873627501510782,
+        "p90_sec": 2.9817588640056782,
+        "max_sec": 3.0475241579988506,
+        "mean_sec": 2.84875610890158
+      },
+      "outcomes": {
+        "timed_rows": 20,
+        "unique_anchors": 10,
+        "accepted": 20,
+        "rejected": 0,
+        "MPS_reference_covered": 20,
+        "accepted_unscored": 0
+      },
+      "stage_median_sec": {
+        "correspondence_duration_sec": 0.051945158003945835,
+        "end_to_end_duration_sec": 2.686318352483795,
+        "extraction_duration_sec": 0.05682663949846756,
+        "matching_duration_sec": 2.4893082055059494,
+        "pose_duration_sec": 0.08252662049198989,
+        "retrieval_duration_sec": 0.00278727849945426
+      },
+      "memory_max": {
+        "lifetime_process_peak_RSS_KiB": 2813112,
+        "cuda_peak_allocated_bytes_after_equal_warmups_reset": 934366720,
+        "cuda_peak_reserved_bytes_after_equal_warmups_reset": 1159725056
+      },
+      "initialization_per_run_sec": {
+        "input": [
+          6.850399829010712,
+          6.995307529985439
+        ],
+        "cold_resident_backend": [
+          10.830092585005332,
+          10.80674481598544
+        ],
+        "models": [
+          10.215830239991192,
+          10.14012600199203
+        ]
+      },
+      "MPS_reference_residual": {
+        "accepted_covered_timed_rows": 20,
+        "translation_m_median": 0.0005132935082809609,
+        "rotation_deg_median": 0.023944238835676347
+      }
+    },
+    {
+      "variant": "parallel",
+      "actual_execution": "parallel_four_camera",
+      "ABBA_run_slots": [
+        1,
+        2
+      ],
+      "joined_decode_backend_sec": [
+        2.9639068600081373,
+        2.9155695640074555,
+        2.8237286990042776,
+        2.400570177996997,
+        2.779572844010545,
+        3.0130599520052783,
+        3.004155899019679,
+        2.8581086229823995,
+        2.978761644975748,
+        2.9251504449930508,
+        2.6905018710240256,
+        2.6553391919878777,
+        2.8791080900118686,
+        2.2352439200039953,
+        2.800834510999266,
+        2.770181743981084,
+        2.7250528470030986,
+        2.7595467570063192,
+        3.1200499330007005,
+        3.0817764250095934
+      ],
+      "joined_backend_sec": [
+        2.761941046017455,
+        2.7119011990143918,
+        2.6199222639843356,
+        2.1980258690018672,
+        2.5851150739763398,
+        2.793126307980856,
+        2.7905474010040052,
+        2.6531623830087483,
+        2.778737907006871,
+        2.725944056001026,
+        2.507692418002989,
+        2.4468021710054018,
+        2.654751929017948,
+        2.053382651996799,
+        2.6117523220018484,
+        2.5851477700052783,
+        2.5432840119756293,
+        2.5609572470129933,
+        2.910224435996497,
+        2.8708938059862703
+      ],
+      "decode_rectification_sec": [
+        0.20196386199677363,
+        0.2036650680238381,
+        0.20380444600596093,
+        0.20254159899195656,
+        0.19445549699594267,
+        0.21993135201046243,
+        0.21360608501709066,
+        0.20494468699325807,
+        0.20002148798084818,
+        0.19920408699545078,
+        0.18280479201348498,
+        0.20853268299833871,
+        0.2243525930098258,
+        0.18185844999970868,
+        0.18907874199794605,
+        0.18503094298648648,
+        0.1817650640150532,
+        0.19858633799594827,
+        0.20982259197626263,
+        0.2108793160005007
+      ],
+      "warm_summary": {
+        "count": 20,
+        "median_sec": 2.8409186609933386,
+        "p90_sec": 3.01993159930571,
+        "max_sec": 3.1200499330007005,
+        "mean_sec": 2.81901099995157
+      },
+      "outcomes": {
+        "timed_rows": 20,
+        "unique_anchors": 10,
+        "accepted": 20,
+        "rejected": 0,
+        "MPS_reference_covered": 20,
+        "accepted_unscored": 0
+      },
+      "stage_median_sec": {
+        "correspondence_duration_sec": 0.05030760797671974,
+        "end_to_end_duration_sec": 2.6362332595017506,
+        "extraction_duration_sec": 0.05194601000403054,
+        "matching_duration_sec": 2.4419799044990214,
+        "pose_duration_sec": 0.08308577150455676,
+        "retrieval_duration_sec": 0.002700367505894974
+      },
+      "memory_max": {
+        "lifetime_process_peak_RSS_KiB": 2813176,
+        "cuda_peak_allocated_bytes_after_equal_warmups_reset": 1404786176,
+        "cuda_peak_reserved_bytes_after_equal_warmups_reset": 2703228928
+      },
+      "initialization_per_run_sec": {
+        "input": [
+          6.360150110005634,
+          6.40248842802248
+        ],
+        "cold_resident_backend": [
+          11.528543788008392,
+          10.888153753010556
+        ],
+        "models": [
+          10.861553268012358,
+          10.131019697000738
+        ]
+      },
+      "MPS_reference_residual": {
+        "accepted_covered_timed_rows": 20,
+        "translation_m_median": 0.0005132935082809609,
+        "rotation_deg_median": 0.023944238835676347
+      }
+    }
+  ],
+  "bounded_claim": "Recorded four-camera execution qualification; no substantive four-camera speedup claim. Original measured source, not later release fixes.",
+  "provenance_sha256": {
+    "existing_private_aggregate": "82c2362e70293c68c70c19719a63493c5ceaaeb398846226bde0c1fce93e503d",
+    "existing_qualified_ABBA_runset": "8ced0d4b3ff4159c5845033dc5156cacb21b907d8ea0eb2e5047c4c72427b4b9"
+  }
+}

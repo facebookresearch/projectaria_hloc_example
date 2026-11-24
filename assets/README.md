@@ -67,9 +67,11 @@ map points, estimator inputs or query outcomes were changed. The original RGB
 pixels retain their camera orientation.
 
 `lamaria-workflow.svg` is an original explanatory diagram, not sensor data or an
-experimental result. The raw indoor VRS is processed through public MPS; selected
-RGB keyframes build the map and other frames query it. All queries come from the
-same recording. There is no recorded VIO in `R_03_easy`.
+experimental result. The raw indoor VRS is processed through public MPS; keyframes
+with their MPS poses build a native SLAM-camera map (the builder default) and an RGB
+map in one MPS world frame, and other frames query them, two-camera rigs with
+generalized PnP and RGB images with PnP. All queries come from the same recording.
+There is no recorded VIO in `R_03_easy`.
 
 [LaMAria source](https://lamaria.ethz.ch) — Anusha Krishnan et al.,
 *Benchmarking Egocentric Visual-Inertial SLAM at City Scale*, ICCV 2025.
@@ -81,8 +83,9 @@ source fingerprints and hashes; no account details or expiring URLs.
 
 ## Preserved Pilot media
 
-The earlier Gen 2 Pilot files remain available for the separate-recording and
-VIO walkthrough; their original provenance and qualification are unchanged:
+The earlier Gen 2 Pilot files described in the sections below remain available for
+the separate-recording and VIO walkthrough; their original provenance and
+qualification are unchanged.
 
 ## Own-recording workflow
 
