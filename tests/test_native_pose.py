@@ -64,7 +64,11 @@ def synthetic_scene(num_cameras: int, outliers: bool):
     )
 
 
-@pytest.mark.parametrize("num_cameras", [1, 4], ids=["central-pnp", "four-camera-gpnp"])
+@pytest.mark.parametrize(
+    "num_cameras",
+    [1, 2, 4],
+    ids=["central-pnp", "two-camera-gpnp", "four-camera-gpnp"],
+)
 @pytest.mark.parametrize("outliers", [False, True], ids=["exact", "ransac-outliers"])
 def test_native_pose_recovers_world_device_and_distinct_landmarks(
     num_cameras, outliers

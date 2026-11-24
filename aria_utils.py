@@ -26,6 +26,7 @@ from map_utils import Camera, MAX_POSE_GAP_NS, SLAM_LABELS
 from numpy.typing import NDArray
 
 MAX_CALIBRATION_GAP_NS: int = 1_000_000_000
+GEN1_SLAM_LABELS: tuple[str, ...] = ("camera-slam-left", "camera-slam-right")
 
 
 @dataclass
@@ -84,14 +85,35 @@ class Recording:
         self.corrected_timestamps_ns = {}
         self.calibration_covered = {}
 
+    def _slam_labels(self, available: set[str]) -> tuple[str, ...]:
+        version = self.device_calibration.get_device_version()
+        generations = self.calibration_module.DeviceVersion
+        if version == generations.Gen1:
+            labels, other = GEN1_SLAM_LABELS, SLAM_LABELS
+        elif version == generations.Gen2:
+            labels, other = SLAM_LABELS, GEN1_SLAM_LABELS
+        else:
+            raise ValueError(
+                f"Unsupported device generation for SLAM cameras: {version}"
+            )
+        conflicting = available.intersection(other)
+        if conflicting:
+            raise ValueError(
+                f"Device generation conflicts with SLAM camera labels: {sorted(conflicting)}"
+            )
+        return labels
+
     def select_labels(self, camera_set: str) -> tuple[str, ...]:
-        """Require the requested streams rather than silently using fewer cameras."""
+        """Require the generation's complete camera set and preserve original labels."""
+        if camera_set not in ("rgb", "slam", "all"):
+            raise ValueError(f"Unknown camera set: {camera_set}")
+        available = set(self.device_calibration.get_camera_labels())
+        slam = self._slam_labels(available) if camera_set != "rgb" else ()
         labels = {
             "rgb": ("camera-rgb",),
-            "slam": SLAM_LABELS,
-            "all": SLAM_LABELS + ("camera-rgb",),
+            "slam": slam,
+            "all": slam + ("camera-rgb",),
         }[camera_set]
-        available = set(self.device_calibration.get_camera_labels())
         if not set(labels).issubset(available):
             raise ValueError(
                 f"Requested camera set {camera_set} is missing streams: {set(labels) - available}"

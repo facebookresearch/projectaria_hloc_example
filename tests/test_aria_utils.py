@@ -56,6 +56,7 @@ def pat(monkeypatch, camera):
         SimpleNamespace(capture_timestamp_ns=1_000_000),
     )
     calibration = Mock()
+    calibration.DeviceVersion = SimpleNamespace(Gen1="Gen1", Gen2="Gen2")
     calibration.rescale_camera_calibration.return_value = source
     calibration.get_linear_camera_calibration.return_value.get_principal_point.return_value = [
         255.5,
@@ -544,3 +545,180 @@ def test_four_camera_query_records_secondary_calibration_gap(
     assert [frame.label for frame in frames] == list(SLAM_LABELS)
     assert [frame.index for frame in frames] == [1] * 4
     backend.close.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "version,slam", [("Gen1", aria.GEN1_SLAM_LABELS), ("Gen2", SLAM_LABELS)]
+)
+@pytest.mark.parametrize("mode", ["rgb", "slam", "all"])
+def test_generation_specific_labels_preserve_source_names(
+    recording, pat, version, slam, mode
+):
+    pat.device.get_device_version.return_value = version
+    pat.device.get_camera_labels.return_value = slam + ("camera-rgb", "camera-et-left")
+    expected = (
+        ("camera-rgb",)
+        if mode == "rgb"
+        else slam + (("camera-rgb",) if mode == "all" else ())
+    )
+    assert recording.select_labels(mode) == expected
+    assert tuple(recording.stream_ids) == expected
+    assert all(
+        recording.timestamps_ns[label] == [1_000_000, 2_000_000, 3_000_000]
+        for label in expected
+    )
+
+
+@pytest.mark.parametrize(
+    "version,labels", [("Gen1", aria.GEN1_SLAM_LABELS), ("Gen2", SLAM_LABELS)]
+)
+def test_generation_specific_set_still_requires_every_camera(
+    recording, pat, version, labels
+):
+    pat.device.get_device_version.return_value = version
+    pat.device.get_camera_labels.return_value = labels[:-1] + ("camera-rgb",)
+    with pytest.raises(ValueError, match="missing streams"):
+        recording.select_labels("all")
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+@pytest.mark.parametrize("version", ["Gen1", "Gen2"])
+def test_mixed_generation_calibrations_fail_before_reading_frames(
+    recording, pat, version
+):
+    pat.device.get_device_version.return_value = version
+    pat.device.get_camera_labels.return_value = SLAM_LABELS + aria.GEN1_SLAM_LABELS
+    with pytest.raises(ValueError, match="generation conflicts"):
+        recording.select_labels("slam")
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "version,labels", [("Gen1", SLAM_LABELS), ("Gen2", aria.GEN1_SLAM_LABELS)]
+)
+def test_opposite_generation_is_not_inferred_from_available_streams(
+    recording, pat, version, labels
+):
+    pat.device.get_device_version.return_value = version
+    pat.device.get_camera_labels.return_value = labels
+    with pytest.raises(ValueError, match="generation conflicts"):
+        recording.select_labels("slam")
+
+
+@pytest.mark.parametrize("mode", ["slam", "all"])
+def test_unknown_generation_is_rejected_for_rig_modes(recording, pat, mode):
+    pat.device.get_device_version.return_value = "NotValid"
+    with pytest.raises(ValueError, match="Unsupported device generation"):
+        recording.select_labels(mode)
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+def test_rgb_does_not_depend_on_slam_generation_or_other_streams(recording, pat):
+    pat.device.get_device_version.return_value = "NotValid"
+    pat.device.get_camera_labels.return_value = ("camera-rgb",)
+    assert recording.select_labels("rgb") == ("camera-rgb",)
+    pat.device.get_device_version.assert_not_called()
+
+
+def test_unknown_camera_set_fails_explicitly(recording, pat):
+    with pytest.raises(ValueError, match="Unknown camera set"):
+        recording.select_labels("stereo")
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+@pytest.mark.parametrize("corrected_sync", [True, False])
+def test_gen1_pair_uses_each_camera_signed_offset(
+    recording, pat, monkeypatch, camera, corrected_sync
+):
+    labels = aria.GEN1_SLAM_LABELS
+    pat.device.get_device_version.return_value = "Gen1"
+    pat.device.get_camera_labels.return_value = labels
+    raw = {
+        labels[0]: [10_000_000],
+        labels[1]: [14_000_000 if corrected_sync else 10_000_000],
+    }
+    offsets = {labels[0]: 0, labels[1]: 4_000_000}
+    pat.provider.get_timestamps_ns.side_effect = lambda stream, domain: raw[stream]
+    pat.sample.get_camera_calib.side_effect = lambda label: SimpleNamespace(
+        get_time_offset_sec_device_camera=lambda: offsets[label] / 1e9
+    )
+    recording.select_labels("slam")
+    monkeypatch.setattr(
+        recording,
+        "frame",
+        lambda label, index: aria.Frame(
+            label,
+            index,
+            raw[label][index],
+            np.zeros((2, 2), dtype=np.uint8),
+            camera,
+            offsets[label],
+        ),
+    )
+    if corrected_sync:
+        frames = recording.frameset(labels, 0)
+        assert [frame.label for frame in frames] == list(labels)
+        assert [frame.corrected_timestamp_ns for frame in frames] == [10_000_000] * 2
+    else:
+        with pytest.raises(ValueError, match="more than 2 ms"):
+            recording.frameset(labels, 0)
+
+
+@pytest.mark.parametrize("mode", ["slam", "all"])
+def test_gen2_partial_two_camera_rig_is_rejected(recording, pat, mode):
+    pat.device.get_device_version.return_value = "Gen2"
+    pat.device.get_camera_labels.return_value = SLAM_LABELS[:2] + ("camera-rgb",)
+    with pytest.raises(ValueError, match="missing streams"):
+        recording.select_labels(mode)
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "version,labels,conflict",
+    [
+        ("Gen1", aria.GEN1_SLAM_LABELS, SLAM_LABELS[0]),
+        ("Gen2", SLAM_LABELS, aria.GEN1_SLAM_LABELS[0]),
+    ],
+)
+def test_one_opposite_generation_camera_rejects_complete_rig(
+    recording, pat, version, labels, conflict
+):
+    pat.device.get_device_version.return_value = version
+    pat.device.get_camera_labels.return_value = labels + (conflict,)
+    with pytest.raises(ValueError, match="generation conflicts"):
+        recording.select_labels("slam")
+    pat.provider.get_timestamps_ns.assert_not_called()
+
+
+@pytest.mark.parametrize("missing", ["stream", "images"])
+def test_gen1_secondary_actual_stream_is_required(recording, pat, missing):
+    left, right = aria.GEN1_SLAM_LABELS
+    pat.device.get_device_version.return_value = "Gen1"
+    pat.device.get_camera_labels.return_value = aria.GEN1_SLAM_LABELS
+    if missing == "stream":
+        pat.provider.get_stream_id_from_label.side_effect = (
+            lambda label: None if label == right else label
+        )
+    else:
+        pat.provider.get_num_data.side_effect = (
+            lambda stream: 0 if stream == right else 3
+        )
+    with pytest.raises(ValueError, match=f"VRS has no images for {right}"):
+        recording.select_labels("slam")
+    assert left in recording.timestamps_ns
+    assert right not in recording.timestamps_ns
+    pat.provider.get_image_data_by_index.assert_not_called()
+
+
+def test_gen1_secondary_online_calibration_is_required(recording, pat):
+    left, right = aria.GEN1_SLAM_LABELS
+    pat.device.get_device_version.return_value = "Gen1"
+    pat.device.get_camera_labels.return_value = aria.GEN1_SLAM_LABELS
+    pat.sample.get_camera_calib.side_effect = (
+        lambda label: None if label == right else pat.source
+    )
+    with pytest.raises(ValueError, match=f"Online calibration is missing {right}"):
+        recording.select_labels("slam")
+    assert left in recording.timestamps_ns
+    assert right not in recording.corrected_timestamps_ns
+    pat.provider.get_image_data_by_index.assert_not_called()

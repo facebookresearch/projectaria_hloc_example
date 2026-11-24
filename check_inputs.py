@@ -26,11 +26,11 @@ from aria_utils import Recording
 from map_utils import mps_slam_dir, Trajectory
 
 
-def check_inputs(vrs: Path, mps: Path) -> dict[str, object]:
+def check_inputs(vrs: Path, mps: Path, camera_set: str = "all") -> dict[str, object]:
     slam = mps_slam_dir(mps)
     trajectory = Trajectory(slam / "closed_loop_trajectory.csv")
     recording = Recording(vrs, slam / "online_calibration.jsonl")
-    labels = recording.select_labels("all")
+    labels = recording.select_labels(camera_set)
     frame_counts = {}
     covered_counts = {}
     for label in labels:
@@ -60,9 +60,10 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vrs", type=Path, default=Path("data/pilot/play_0/video.vrs"))
     parser.add_argument("--mps", type=Path, default=Path("data/pilot/play_0/mps"))
+    parser.add_argument("--camera-set", choices=("rgb", "slam", "all"), default="all")
     args = parser.parse_args(argv)
     try:
-        result = check_inputs(args.vrs, args.mps)
+        result = check_inputs(args.vrs, args.mps, args.camera_set)
     except (OSError, ValueError, ImportError) as error:
         parser.error(str(error))
     print(json.dumps(result, indent=2))

@@ -79,7 +79,7 @@ def test_input_check_cli_explicit_testing_sequence(monkeypatch, capsys):
         ["--vrs", "data/pilot/play_1/video.vrs", "--mps", "data/pilot/play_1/mps"]
     )
     run.assert_called_once_with(
-        Path("data/pilot/play_1/video.vrs"), Path("data/pilot/play_1/mps")
+        Path("data/pilot/play_1/video.vrs"), Path("data/pilot/play_1/mps"), "all"
     )
     assert json.loads(capsys.readouterr().out) == {"trajectory_samples": 7}
 
@@ -89,7 +89,7 @@ def test_input_check_cli_success_and_failure(monkeypatch, capsys):
     monkeypatch.setattr(checker, "check_inputs", run)
     checker.main([])
     run.assert_called_once_with(
-        Path("data/pilot/play_0/video.vrs"), Path("data/pilot/play_0/mps")
+        Path("data/pilot/play_0/video.vrs"), Path("data/pilot/play_0/mps"), "all"
     )
     assert json.loads(capsys.readouterr().out) == {"trajectory_samples": 3}
 
@@ -101,3 +101,11 @@ def test_input_check_cli_success_and_failure(monkeypatch, capsys):
         checker.main([])
     assert caught.value.code == 2
     assert "missing sample" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("camera_set", ["rgb", "slam", "all"])
+def test_input_check_cli_camera_set_is_explicit(monkeypatch, camera_set):
+    run = Mock(return_value={})
+    monkeypatch.setattr(checker, "check_inputs", run)
+    checker.main(["--vrs", "Gen1.vrs", "--mps", "Gen1_mps", "--camera-set", camera_set])
+    run.assert_called_once_with(Path("Gen1.vrs"), Path("Gen1_mps"), camera_set)
